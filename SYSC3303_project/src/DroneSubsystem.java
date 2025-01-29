@@ -10,7 +10,8 @@ public class DroneSubsystem implements Runnable {
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendSocket, receiveSocket;
 
-    private Task currTask;
+    private Scheduler scheduler;
+    private FireRequest currTask;
 
     private float droneId;
     private final float maxVelocity = 20;
@@ -18,7 +19,8 @@ public class DroneSubsystem implements Runnable {
     private float yPos;
     // TODO: Add drone attributes such as battery, acceleration etc.
 
-    public DroneSubsystem() {
+    public DroneSubsystem(Scheduler scheduler) {
+        this.scheduler = scheduler;
         this.droneId = 0;
         this.currTask = null;
     }
@@ -32,10 +34,17 @@ public class DroneSubsystem implements Runnable {
 
     public void run() {
 
+        // TODO: determine a proper condition for thread lifespan
         while(true) {
-            receiveTask();
+            // Future project iteration
+            // receiveTask();
+            // travel();
+            // sendUpdate();
+
+            currTask = scheduler.takeRequest();
             travel();
-            sendUpdate();
+            Response response = new Response(currTask, "completed");
+            scheduler.addResponse(response);
         }
 
     }
@@ -107,33 +116,31 @@ public class DroneSubsystem implements Runnable {
         System.out.println(received + "\n");
 
         // Form the currTask object based on received data
-        processTask(received);
+        // processTask(received);
     }
 
-    private void processTask(String received) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-
-        // Remove all space characters and split by commas
-        received = received.replaceAll("\\s+", "");
-        String[] taskValues = received.split(",");
-
-        currTask.time = LocalTime.parse(taskValues[0], formatter);
-        currTask.zoneId = Integer.parseInt(taskValues[1]);
-        currTask.eventType = taskValues[2];
-        currTask.severity = taskValues[3];
-    }
+//    private void processTask(String received) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+//
+//        // Remove all space characters and split by commas
+//        received = received.replaceAll("\\s+", "");
+//        String[] taskValues = received.split(",");
+//
+//        currTask.time = LocalTime.parse(taskValues[0], formatter);
+//        currTask.zoneId = Integer.parseInt(taskValues[1]);
+//        currTask.eventType = taskValues[2];
+//        currTask.severity = taskValues[3];
+//    }
 
     private void travel() {
         // TODO: sleep for an amount of time equal to destination / maxVelocity
 
-        // For now, arbitrary sleep to test and clear the current task
+        // For now, arbitrary amount of sleep to simulate travel time
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        currTask = null;
     }
 
 }
