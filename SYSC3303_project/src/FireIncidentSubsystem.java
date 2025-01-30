@@ -30,7 +30,6 @@ public class FireIncidentSubsystem implements Runnable {
 
             /*TODO*/
             /*
-
             scheduler.addRequest(tasks.remove(0));
             scheduler.takeResponse();
             */
@@ -97,16 +96,15 @@ public class FireIncidentSubsystem implements Runnable {
     private void receiveUpdate(){
         int serverPort = 9876;
 
-        byte data[] = new byte[1000];
-
         try{
             receiveSocket = new DatagramSocket(serverPort);
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
+        byte[] buffer = new byte[1024];
 
-        receivePacket = new DatagramPacket(data, data.length);
-        System.out.println("Receiving updates from Scheduler.");
+        receivePacket = new DatagramPacket(buffer, buffer.length);
+        System.out.println("Waiting for updates from Scheduler.");
 
         try{
             receiveSocket.receive(receivePacket);
@@ -115,13 +113,8 @@ public class FireIncidentSubsystem implements Runnable {
             System.exit(1);
         }
 
-        System.out.println("Packet information:");
-        System.out.println("Host: " + receivePacket.getAddress());
-        System.out.println("Port: " + receivePacket.getPort());
-
-        int len = receivePacket.getLength();
-        String receiveMessage = new String(data,0,len);
-        System.out.println(receiveMessage);
+        String receiveMessage = new String(receivePacket.getData(),0,receivePacket.getLength());
+        System.out.println("FireIncident received update: " + receiveMessage);
 
     }
 
