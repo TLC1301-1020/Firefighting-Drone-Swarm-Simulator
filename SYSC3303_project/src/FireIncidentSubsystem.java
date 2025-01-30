@@ -20,6 +20,30 @@ public class FireIncidentSubsystem implements Runnable {
         this.tasks = new ArrayList<>();
     }
 
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+    public List<FireRequest> getTasks() {
+        return tasks;
+    }
+
+    public DatagramPacket getSendPacket() {
+        return sendPacket;
+    }
+
+    public DatagramPacket getReceivePacket() {
+        return receivePacket;
+    }
+
+    public DatagramSocket getSendSocket() {
+        return sendSocket;
+    }
+
+    public DatagramSocket getReceiveSocket() {
+        return receiveSocket;
+    }
+
     public void run(){
         while(true){
 
@@ -41,7 +65,7 @@ public class FireIncidentSubsystem implements Runnable {
     //read and store all incidents from input file, as a FireRequest list
     public void readInputFile() {
         //TODO: change the directory if needed
-        String inputFile = "C:\\Users\\TinaC\\Downloads\\SYSC3303_project\\src\\fireincidents.txt";
+        String inputFile = "fireincidents.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
