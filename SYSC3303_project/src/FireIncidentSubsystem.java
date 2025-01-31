@@ -63,16 +63,16 @@ public class FireIncidentSubsystem implements Runnable {
     //read and store all incidents from input file, as a FireRequest list
     public void readInputFile() {
         //TODO: change the directory if needed
-        String inputFile = "fireincidents.txt";
+        String inputFile = "SYSC3303_project/src/fireincidents.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                String time = parts[0];
-                int zoneId = Integer.parseInt(parts[1]);
-                String eventType = parts[2];
-                String severity = parts[3];
+                String time = parts[0].trim();
+                int zoneId = Integer.parseInt(parts[1].trim());
+                String eventType = parts[2].trim();
+                String severity = parts[3].trim();
 
                 FireRequest task = new FireRequest(time, zoneId, eventType, severity);
                 tasks.add(task);
