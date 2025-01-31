@@ -1,4 +1,4 @@
-
+# Work Breakdown
 UML Class Diagram - Mike
 
 UML Sequence Diagram  - Dylan
@@ -11,7 +11,7 @@ Scheduler Code - Damon
 
 Testing Code - Andrew
 
-# Iteration 1 Files
+# Files
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
 - *FireRequest.java*: Data model, manages the variables for each incident
@@ -23,7 +23,9 @@ Testing Code - Andrew
 - *UML Class diagram*: Shows the relationships and structure of the classes
 - *UML Sequence diagram*: Shows the interactions between the components
 
-Setup instruction: Run Main.java, make sure the directory of the input file is correct
+#Setup instruction: 
+Run Main.java, make sure the directory of the input file is correct
 
-Test instruction: Run SchedulerTest
+#Test instruction: 
+Run SchedulerTest
 
