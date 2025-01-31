@@ -24,5 +24,6 @@ Iteration 1 Files
 - *UML Sequence diagram*: Shows the interactions between the components
 
 Setup instruction: Run Main.java, make sure the directory of the input file is correct
+
 Test instruction: Run SchedulerTest
 
