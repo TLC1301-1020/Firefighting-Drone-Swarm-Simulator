@@ -25,6 +25,18 @@ public class DroneSubsystem implements Runnable {
         this.currTask = null;
     }
 
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+    public float getDroneId() {
+        return droneId;
+    }
+
+    public FireRequest getCurrTask() {
+        return currTask;
+    }
+
     private static class Task {
         public LocalTime time;
         public int zoneId;

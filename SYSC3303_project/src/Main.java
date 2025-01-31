@@ -1,0 +1,21 @@
+public class Main {
+
+
+    public static void main(String[] args) {
+        // Create the shared Scheduler
+        Scheduler scheduler = new Scheduler();
+
+        // Start the FireIncidentSubsystem
+        FireIncidentSubsystem fireIncidentSubsystem = new FireIncidentSubsystem(scheduler);
+        Thread fireThread = new Thread(fireIncidentSubsystem);
+        fireThread.start();
+
+        // Start the DroneSubsystem
+        DroneSubsystem droneSubsystem = new DroneSubsystem(scheduler);
+        Thread droneThread = new Thread(droneSubsystem);
+        droneThread.start();
+
+        System.out.println(" Fire Incident System is running...");
+        System.out.println(" Drone System is running...");
+    }
+}

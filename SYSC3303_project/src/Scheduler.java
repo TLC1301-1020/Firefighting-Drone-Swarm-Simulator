@@ -4,6 +4,21 @@ public class Scheduler {
     private boolean requestAvailable = false;
     private boolean responseAvailable = false;
 
+    public FireRequest getCurrentRequest() {
+        return currentRequest;
+    }
+
+    public Response getCurrentResponse() {
+        return currentResponse;
+    }
+
+    public boolean isRequestAvailable() {
+        return requestAvailable;
+    }
+
+    public boolean isResponseAvailable() {
+        return responseAvailable;
+    }
     // To be used by Fire Incident Subsystem
     public synchronized void addRequest(FireRequest request) {
         while (requestAvailable) {
