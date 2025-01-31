@@ -23,9 +23,9 @@ Testing Code - Andrew
 - *UML Class diagram*: Shows the relationships and structure of the classes
 - *UML Sequence diagram*: Shows the interactions between the components
 
-#Setup instruction: 
+# Setup instruction: 
 Run Main.java, make sure the directory of the input file is correct
 
-#Test instruction: 
+# Test instruction: 
 Run SchedulerTest
 
