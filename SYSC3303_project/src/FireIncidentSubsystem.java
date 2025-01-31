@@ -45,18 +45,17 @@ public class FireIncidentSubsystem implements Runnable {
     }
 
     public void run(){
-        while(true){
+        readInputFile();
 
-            readInputFile();
+        while(!tasks.isEmpty()){
 
             // sendIncident();
             // receiveUpdate();
 
             scheduler.addRequest(tasks.remove(0));
             scheduler.takeResponse();
-        
         }
-
+        System.exit(0);
 
     }
 
@@ -76,6 +75,8 @@ public class FireIncidentSubsystem implements Runnable {
 
                 FireRequest task = new FireRequest(time, zoneId, eventType, severity);
                 tasks.add(task);
+
+                System.out.println("Adding task: " + task);
             }
         } catch (IOException e) {
             e.printStackTrace();
