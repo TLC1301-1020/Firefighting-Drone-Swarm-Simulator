@@ -51,7 +51,7 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public void readInputFile() {
         //TODO: change the directory if needed
-        String inputFile = "SYSC3303_project/src/fireincidents.txt";
+        String inputFile = "src/fireincidents.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
