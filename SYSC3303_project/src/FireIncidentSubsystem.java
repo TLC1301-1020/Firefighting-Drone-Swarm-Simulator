@@ -25,14 +25,12 @@ public class FireIncidentSubsystem implements Runnable {
 
             readInputFile();
 
-            sendIncident();
-            receiveUpdate();
+            // sendIncident();
+            // receiveUpdate();
 
-            /*TODO*/
-            /*
             scheduler.addRequest(tasks.remove(0));
             scheduler.takeResponse();
-            */
+        
         }
 
 
