@@ -1,4 +1,4 @@
-# SYSC3303-GROUP-PROJECT
+
 UML Class Diagram - Mike
 
 UML Sequence Diagram  - Dylan
@@ -11,7 +11,7 @@ Scheduler Code - Damon
 
 Testing Code - Andrew
 
-Iteration 1 Files
+# Iteration 1 Files
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
 - *FireRequest.java*: Data model, manages the variables for each incident
