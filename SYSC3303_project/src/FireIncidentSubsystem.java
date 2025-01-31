@@ -59,7 +59,6 @@ public class FireIncidentSubsystem implements Runnable {
 
     }
 
-    //read and store all incidents from input file, as a FireRequest list
     public void readInputFile() {
         //TODO: change the directory if needed
         String inputFile = "SYSC3303_project/src/fireincidents.txt";
