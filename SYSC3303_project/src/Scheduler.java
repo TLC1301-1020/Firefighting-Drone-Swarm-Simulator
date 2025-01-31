@@ -27,7 +27,7 @@ public class Scheduler {
             catch (InterruptedException e) { System.err.println(e); }
         }
         this.currentRequest = request;
-        System.out.println("From Scheduler - sending request from fire incident: \n" + request + "\n");
+        System.out.println("From Scheduler - receiving request from fire incident: \n" + request + "\n");
         requestAvailable = true;
         notifyAll();
     }
@@ -39,7 +39,7 @@ public class Scheduler {
             catch (InterruptedException e) { System.err.println(e); }
         }
         FireRequest req = currentRequest;
-        System.out.println("From Scheduler - taking request from drone: \n" + req  + "\n");
+        System.out.println("From Scheduler - sending request to drone: \n" + req  + "\n");
 
         currentRequest = null;
         requestAvailable = false;
@@ -54,7 +54,7 @@ public class Scheduler {
             catch (InterruptedException e) { System.err.println(e); }
         }
         this.currentResponse = response;
-        System.out.println("From Scheduler - adding response from drone: \n" + response + "\n");
+        System.out.println("From Scheduler - receiving response from drone: \n" + response + "\n");
 
         responseAvailable = true;
         notifyAll();
