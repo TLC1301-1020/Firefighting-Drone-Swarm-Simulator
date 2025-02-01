@@ -6,33 +6,72 @@ import java.net.SocketException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * {@code DroneSubsystem} class simulates a drone responding to fire incidents.
+ * Class receives {@code FireRequest}, simulates traveling to the fire location zone,
+ * and sends completion {@code Response} back to the {@code Scheduler}.
+ * Implements Runnable to execute in a separate thread.
+ */
 public class DroneSubsystem implements Runnable {
+
+    /**
+     * datagram sockets and packets for network communication
+     */
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendSocket, receiveSocket;
-
+    /**
+     * scheduler instance for managing fire requests and responses
+     */
     private Scheduler scheduler;
+    /**
+     * current fire request assigned to the drone
+     */
     private FireRequest currTask;
-
+    /**
+     * unique identifier for the drone
+     */
     private int droneId;
+    /**
+     * maximum velocity of the drone in meters per second
+     */
     private final float maxVelocity = 20;
+    /**
+     * x and y coordinates representing drone position
+     */
     private float xPos;
     private float yPos;
     // TODO: Add drone attributes such as battery, acceleration etc.
 
+    /**
+     * creates a drone subsystem instance with the shared scheduler
+     * @param scheduler the {@code Scheduler} managing all fire requests
+     */
     public DroneSubsystem(Scheduler scheduler) {
         this.scheduler = scheduler;
         this.droneId = 0;
         this.currTask = null;
     }
 
+    /**
+     * returns the scheduler instance
+     * @return scheduler instance
+     */
     public Scheduler getScheduler() {
         return scheduler;
     }
 
+    /**
+     * returns the drone id
+     * @return drone id
+     */
     public float getDroneId() {
         return droneId;
     }
 
+    /**
+     * returns the current fire request assigned to the drone
+     * @return current fire request
+     */
     public FireRequest getCurrTask() {
         return currTask;
     }
@@ -44,6 +83,11 @@ public class DroneSubsystem implements Runnable {
         public String severity;
     }
 
+    /**
+     * thread function for the drone.
+     * continuously receives tasks, simulates travel, and sends updates to the {@code Scheduler}
+     * managing fire requests
+     */
     public void run() {
 
         // TODO: determine a proper condition for thread lifespan
@@ -145,6 +189,9 @@ public class DroneSubsystem implements Runnable {
 //        currTask.severity = taskValues[3];
 //    }
 
+    /**
+     * simulates drone travel to the fire location
+     */
     private void travel() {
         // TODO: sleep for an amount of time equal to destination / maxVelocity
 
