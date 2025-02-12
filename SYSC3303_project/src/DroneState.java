@@ -20,7 +20,7 @@ interface DroneState {
 class DroneIdle implements DroneState {
 
     public void handleEvent(DroneSubsystem drone, DroneEvent event) {
-        if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) ) {
+        if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
             System.out.println("DRONE " + drone.getDroneId() + " is now engaging fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneEngage()) );
         }

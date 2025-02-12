@@ -62,8 +62,9 @@ public class DroneSubsystem implements Runnable {
      * Invoked by the DroneState state machine when changing the state of the drone
      */
     public void setState(DroneState newState) {
+        System.out.print("* DRONE STATE CHANGE * " + this.currentState.display() + " -> ");
         this.currentState = newState;
-        System.out.println("* DRONE STATE CHANGE * " + this.currentState.display());
+        System.out.println(this.currentState.display());
     }
 
     /**
@@ -98,6 +99,19 @@ public class DroneSubsystem implements Runnable {
      */
     public float getDroneId() {
         return droneId;
+    }
+
+
+    /**
+     * the current fire request assigned to the drone is returned,
+     * and a new fire request is swapped in
+     * @return currTask - the previous fire request assigned to this drone
+     */
+    public FireRequest setCurrTask( FireRequest newTask )
+    {
+        FireRequest temp = this.currTask;
+        this.currTask = newTask;
+        return temp;
     }
 
     /**
