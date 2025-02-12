@@ -220,6 +220,38 @@ public class DroneSubsystemTest
         assertTrue( drone.getCurrentState() instanceof DroneIdle );
     }
 
+
+    /**
+     * UNIT TEST: Verify that a drone can switch states from ENGAGE TO ENGAGE for a new request assigned during engagement */
+    @Test
+    public void UNIT_TEST_12()
+    {
+        System.out.println("\nVerify that a drone can switch states from ENGAGE TO ENGAGE for a new request assigned during engagement ");
+
+        DroneSubsystem drone = new DroneSubsystem(null);
+
+        drone.setState( new DroneActive(new DroneEngage()) );
+
+        assertTrue( drone.getCurrentState() instanceof DroneActive );
+        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+
+        // add fire request so event can switch states as intended
+        FireRequest task1 = new FireRequest("00:00:00", 7, "FIRE_DETECTED", "High");
+        drone.setCurrTask(task1);
+        drone.handleEvent( DroneEvent.NEW_FIRE_REQUEST );
+
+        assertTrue( drone.getCurrentState() instanceof DroneActive );
+        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+
+        // add fire request so event can switch states as intended
+        FireRequest task2 = new FireRequest("01:00:00", 5, "FIRE_DETECTED", "Moderate");
+        drone.setCurrTask(task2);
+        drone.handleEvent( DroneEvent.NEW_FIRE_REQUEST );
+
+        assertTrue( drone.getCurrentState() instanceof DroneActive );
+        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+    }
+
     /**
      * INTEGRATION TEST: Verify that a drone Cycle States from Idle through answering a fire request,
      *  then returning to base to an idle state, able to receive another fire request */
