@@ -13,9 +13,19 @@ import java.util.List;
  * Implements Runnable to execute in a separate thread.
  */
 public class FireIncidentSubsystem implements Runnable {
+    /**
+     * scheduler instance for managing fire requests
+     */
     private Scheduler scheduler;
+    /**
+     * list of fire requests created from the data received in the input file
+     * <a href="file:../src/fireincedents.txt">/src/fireincedents.txt</a>
+     */
     private List<FireRequest> tasks;
 
+    /**
+     * datagram sockets and packets for network communication
+     */
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendSocket, receiveSocket;
 
@@ -29,7 +39,10 @@ public class FireIncidentSubsystem implements Runnable {
         this.tasks = new ArrayList<>();
     }
 
-
+    /**
+     * thread function for the fire incident subsystem
+     * reads fire incidents, sends requests, and processes responses
+     */
     public void run(){
         readInputFile();
 
@@ -46,7 +59,8 @@ public class FireIncidentSubsystem implements Runnable {
     }
 
     /**
-     * Reads the fire incident details from an input file and stores them as FireRequest objects.
+     * Reads the fire incident details from an input file <a href="file:../src/fireincedents.txt">/src/fireincedents.txt</a>
+     * and stores them as FireRequest objects.
      * Each line in the file represents a fire incident with details separated by commas.
      */
     public void readInputFile() {
@@ -135,16 +149,21 @@ public class FireIncidentSubsystem implements Runnable {
         System.out.println("FireIncident received update: " + receiveMessage);
 
     }
+
     /**
      * Getters
      *
      * @return The Scheduler instance associated with this subsystem.
      */
-
     public Scheduler getScheduler() {
         return scheduler;
     }
 
+    /**
+     * Getter
+     *
+     * @return list of fire requests
+     */
     public List<FireRequest> getTasks() {
         return tasks;
     }

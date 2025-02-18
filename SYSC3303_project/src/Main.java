@@ -1,6 +1,11 @@
+/**
+ * {@code Main} executable file for the fire-fighting drone embedded systems.
+ */
 public class Main {
 
-
+    /**
+     * main method initializes the scheduler, starts subsystems, and runs the simulation
+     */
     public static void main(String[] args) {
         // Create the shared Scheduler
         Scheduler scheduler = new Scheduler();
