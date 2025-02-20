@@ -7,58 +7,95 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The FireIncidentSubsystem handles fire incident requests and communicates with the Scheduler.
+ * It reads incident data from a file, sends requests to the scheduler, and receives updates.
+ * Implements Runnable to execute in a separate thread.
+ */
 public class FireIncidentSubsystem implements Runnable {
+    /**
+     * the file for fire events
+     */
+    private String inputFile = "SYSC3303_project/src/fireincidents.txt";
+
+    /**
+     * scheduler instance for managing fire requests
+     */
     private Scheduler scheduler;
+    /**
+     * list of fire requests created from the data received in the input file
+     * <a href="file:../src/fireincedents.txt">/src/fireincedents.txt</a>
+     */
     private List<FireRequest> tasks;
 
+    /**
+     * datagram sockets and packets for network communication
+     */
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendSocket, receiveSocket;
 
-
+    /**
+     * Constructs a FireIncidentSubsystem with a given scheduler.
+     *
+     * @param scheduler The scheduler responsible for managing fire incident requests.
+     */
     public FireIncidentSubsystem(Scheduler scheduler) {
         this.scheduler = scheduler;
         this.tasks = new ArrayList<>();
     }
 
-    public void run(){
-        while(true){
 
-            readInputFile();
+    /**
+     * thread function for the fire incident subsystem
+     * reads fire incidents, sends requests, and processes responses
+     */
+    public void run(){
+
+
+        readInputFile(inputFile);
+        while(!tasks.isEmpty()){
 
             // sendIncident();
             // receiveUpdate();
 
             scheduler.addRequest(tasks.remove(0));
             scheduler.takeResponse();
-        
         }
-
+        System.exit(0);
 
     }
 
-    //read and store all incidents from input file, as a FireRequest list
-    public void readInputFile() {
-        //TODO: change the directory if needed
-        String inputFile = "C:\\Users\\TinaC\\Downloads\\SYSC3303_project\\src\\fireincidents.txt";
+    /**
+     * @param inputFile read the incidents' detail from the inputFile
+     * and stores them as FireRequest objects.
+     * Each line in the file represents a fire incident with details separated by commas.
+     */
+    public void readInputFile(String inputFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                String time = parts[0];
-                int zoneId = Integer.parseInt(parts[1]);
-                String eventType = parts[2];
-                String severity = parts[3];
+                String time = parts[0].trim();
+                int zoneId = Integer.parseInt(parts[1].trim());
+                String eventType = parts[2].trim();
+                String severity = parts[3].trim();
 
                 FireRequest task = new FireRequest(time, zoneId, eventType, severity);
                 tasks.add(task);
+
+                System.out.println("Adding task: " + task);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    //prepare and send incident information to Scheduler
+
+    /**
+     * Sends an incident request to the scheduler.
+     * Extracts the next available fire request, formats the data, and sends it via a UDP packet.
+     */
     public void sendIncident(){
         int serverPort = 9876;
         if(tasks.isEmpty()){
@@ -90,7 +127,10 @@ public class FireIncidentSubsystem implements Runnable {
 
     }
 
-    //receive the update from the Scheduler
+    /**
+     * Receives updates from the scheduler via a UDP packet.
+     * Waits for an incoming message and prints the received update.
+     */
     private void receiveUpdate(){
         int serverPort = 9876;
 
@@ -116,5 +156,37 @@ public class FireIncidentSubsystem implements Runnable {
 
     }
 
+    /**
+     * Getters
+     *
+     * @return The Scheduler instance associated with this subsystem.
+     */
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
 
+    /**
+     * Getter
+     *
+     * @return list of fire requests
+     */
+    public List<FireRequest> getTasks() {
+        return tasks;
+    }
+
+    public DatagramPacket getSendPacket() {
+        return sendPacket;
+    }
+
+    public DatagramPacket getReceivePacket() {
+        return receivePacket;
+    }
+
+    public DatagramSocket getSendSocket() {
+        return sendSocket;
+    }
+
+    public DatagramSocket getReceiveSocket() {
+        return receiveSocket;
+    }
 }
