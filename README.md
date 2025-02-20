@@ -11,7 +11,7 @@ Scheduler Code - Damon
 
 Testing Code - Andrew
 
-## Files
+### Files
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
 - *FireRequest.java*: Data model, manages the variables for each incident
@@ -25,7 +25,7 @@ Testing Code - Andrew
 
 
 
-## Setup instruction
+### Setup instruction
 Run Main.java, make sure the directory of the input file is correct
 
 ## Test instruction
@@ -49,7 +49,7 @@ Sequence Diagram + Update the Class diagram UML + Update Readme - Damon
 
 Updated test classes - Tina
 
-# Files
+### Files
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
 - *FireRequest.java*: Data model, manages the variables for each incident
@@ -64,7 +64,7 @@ Updated test classes - Tina
 - *UML Sequence diagram*: Shows the interactions between the components
 - *State Machine diagram*: Shows the states
 
-# Setup instruction
+### Setup instruction
 Run Main.java, make sure the directory of the input file is correct
 
 # Test instruction
