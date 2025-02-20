@@ -15,6 +15,10 @@ import java.time.format.DateTimeFormatter;
 public class DroneSubsystem implements Runnable {
 
     /**
+     * State Machine Object to handle the state of the drone */
+    public DroneState currentState;
+
+    /**
      * datagram sockets and packets for network communication
      */
     private DatagramPacket sendPacket, receivePacket;
@@ -47,9 +51,38 @@ public class DroneSubsystem implements Runnable {
      * @param scheduler the {@code Scheduler} managing all fire requests
      */
     public DroneSubsystem(Scheduler scheduler) {
+        this.currentState = new DroneIdle();
         this.scheduler = scheduler;
         this.droneId = 0;
         this.currTask = null;
+    }
+
+    /**
+     * @param newState to change the DroneState machine object representing the current state of the drone.
+     * Invoked by the DroneState state machine when changing the state of the drone
+     */
+    public void setState(DroneState newState) {
+        System.out.print("* DRONE STATE CHANGE * " + this.currentState.display() + " -> ");
+        this.currentState = newState;
+        System.out.println(this.currentState.display());
+    }
+
+    /**
+     * @return currentState of the drone.
+     * invoked in the context of checking the current state:
+     * {@code drone.getCurrentState() instanceof DroneActive}
+     */
+    public DroneState getCurrentState() {
+        return this.currentState;
+    }
+
+    /**
+     * @param event leading to the DroneState machine object changing state from the DroneEvent enum list.
+     * invoked in the context of changing the current state of the drone given the passed event parameter:
+     * {@code drone.handleEvent(DroneEvent.NEW_FIRE_REQUEST)}
+     */
+    public void handleEvent(DroneEvent event) {
+        this.currentState.handleEvent(this, event);
     }
 
     /**
@@ -66,6 +99,19 @@ public class DroneSubsystem implements Runnable {
      */
     public float getDroneId() {
         return droneId;
+    }
+
+
+    /**
+     * the current fire request assigned to the drone is returned,
+     * and a new fire request is swapped in
+     * @return currTask - the previous fire request assigned to this drone
+     */
+    public FireRequest setCurrTask( FireRequest newTask )
+    {
+        FireRequest temp = this.currTask;
+        this.currTask = newTask;
+        return temp;
     }
 
     /**
