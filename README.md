@@ -11,7 +11,7 @@ Scheduler Code - Damon
 
 Testing Code - Andrew
 
-# Files
+## Files
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
 - *FireRequest.java*: Data model, manages the variables for each incident
@@ -25,10 +25,10 @@ Testing Code - Andrew
 
 
 
-# Setup instruction
+## Setup instruction
 Run Main.java, make sure the directory of the input file is correct
 
-# Test instruction
+## Test instruction
 Run SchedulerTest, make sure Junit is added to the path
 
 
