@@ -67,6 +67,6 @@ Updated test classes - Tina
 ### Setup instruction
 Run Main.java, make sure the directory of the input file is correct
 
-# Test instruction
+### Test instruction
 Run SchedulerTest, FireIncidentSubsystemTest, DroneSubsystemTest.
 Make sure Junit is added to the path
