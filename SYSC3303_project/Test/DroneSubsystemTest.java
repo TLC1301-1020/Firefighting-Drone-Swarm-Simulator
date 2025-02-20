@@ -1,5 +1,5 @@
-import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.*;
 
 public class DroneSubsystemTest
 {
@@ -11,19 +11,19 @@ public class DroneSubsystemTest
         System.out.println("\nVerify that a drone can switch states from IDLE TO ENGAGE");
         DroneSubsystem drone = new DroneSubsystem(null);
 
-        assertTrue( drone.getCurrentState() instanceof DroneIdle );
+        Assertions.assertInstanceOf(DroneIdle.class, drone.getCurrentState());
 
         // test to see if switching drone to active with no fire request remains in idle
         drone.handleEvent( DroneEvent.NEW_FIRE_REQUEST );
-        assertFalse( drone.getCurrentState() instanceof DroneActive );
+        Assertions.assertFalse( drone.getCurrentState() instanceof DroneActive );
 
         // add fire request so event can switch states as intended
         FireRequest task = new FireRequest("00:00:00", 7, "FIRE_DETECTED", "High");
         drone.setCurrTask(task);
         drone.handleEvent( DroneEvent.NEW_FIRE_REQUEST );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneEngage.class, ((DroneActive) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -37,13 +37,13 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneActive(new DroneEngage()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneEngage.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.DRONE_STUCK );
 
-        assertTrue( drone.getCurrentState() instanceof DroneFault );
-        assertTrue( ((DroneFault) drone.getCurrentState()).getSubState() instanceof DroneFaultStuck );
+        Assertions.assertInstanceOf(DroneFault.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneFaultStuck.class, ((DroneFault) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -56,16 +56,16 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneActive(new DroneEngage()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneEngage.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         // add fire request so event can switch states as intended
         FireRequest task = new FireRequest("00:00:00", 7, "FIRE_DETECTED", "High");
         drone.setCurrTask(task);
         drone.handleEvent( DroneEvent.PERMISSION_TO_DROP );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneDeploy );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneDeploy.class, ((DroneActive) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -78,13 +78,13 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneActive(new DroneDeploy()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneDeploy );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneDeploy.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.PAYLOAD_DROPPED );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneReturn );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneReturn.class, ((DroneActive) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -97,13 +97,13 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneActive(new DroneDeploy()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneDeploy );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneDeploy.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.PAYLOAD_DEPLOY_FAILURE );
 
-        assertTrue( drone.getCurrentState() instanceof DroneFault );
-        assertTrue( ((DroneFault) drone.getCurrentState()).getSubState() instanceof DroneFaultDeploy );
+        Assertions.assertInstanceOf(DroneFault.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneFaultDeploy.class, ((DroneFault) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -116,16 +116,16 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneFault(new DroneFaultDeploy()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneFault );
-        assertTrue( ((DroneFault) drone.getCurrentState()).getSubState() instanceof DroneFaultDeploy );
+        Assertions.assertInstanceOf(DroneFault.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneFaultDeploy.class, ((DroneFault) drone.getCurrentState()).getSubState());
 
         // add fire request so event can switch states as intended
         FireRequest task = new FireRequest("00:00:00", 7, "FIRE_DETECTED", "High");
         drone.setCurrTask(task);
         drone.handleEvent( DroneEvent.PERMISSION_TO_DROP );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneDeploy );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneDeploy.class, ((DroneActive) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -138,13 +138,13 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneFault(new DroneFaultDeploy()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneFault );
-        assertTrue( ((DroneFault) drone.getCurrentState()).getSubState() instanceof DroneFaultDeploy );
+        Assertions.assertInstanceOf(DroneFault.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneFaultDeploy.class, ((DroneFault) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.DEPLOY_FAILURE_ACKNOWLEDGED );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneReturn );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneReturn.class, ((DroneActive) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -157,12 +157,12 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneActive(new DroneReturn()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneReturn );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneReturn.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.RETURNED_TO_BASE );
 
-        assertTrue( drone.getCurrentState() instanceof DroneRefill );
+        Assertions.assertInstanceOf(DroneRefill.class, drone.getCurrentState());
     }
 
     /**
@@ -175,13 +175,13 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneActive(new DroneReturn()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneReturn );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneReturn.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.DRONE_STUCK );
 
-        assertTrue( drone.getCurrentState() instanceof DroneFault );
-        assertTrue( ((DroneFault) drone.getCurrentState()).getSubState() instanceof DroneFaultStuck );
+        Assertions.assertInstanceOf(DroneFault.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneFaultStuck.class, ((DroneFault) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -194,13 +194,13 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneFault(new DroneFaultStuck()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneFault );
-        assertTrue( ((DroneFault) drone.getCurrentState()).getSubState() instanceof DroneFaultStuck );
+        Assertions.assertInstanceOf(DroneFault.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneFaultStuck.class, ((DroneFault) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.STUCK_RESOLVED );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneReturn );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneReturn.class, ((DroneActive) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -213,11 +213,11 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneRefill() );
 
-        assertTrue( drone.getCurrentState() instanceof DroneRefill );
+        Assertions.assertInstanceOf(DroneRefill.class, drone.getCurrentState());
 
         drone.handleEvent( DroneEvent.REFILL_COMPLETE );
 
-        assertTrue( drone.getCurrentState() instanceof DroneIdle );
+        Assertions.assertInstanceOf(DroneIdle.class, drone.getCurrentState());
     }
 
 
@@ -232,24 +232,24 @@ public class DroneSubsystemTest
 
         drone.setState( new DroneActive(new DroneEngage()) );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneEngage.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         // add fire request so event can switch states as intended
         FireRequest task1 = new FireRequest("00:00:00", 7, "FIRE_DETECTED", "High");
         drone.setCurrTask(task1);
         drone.handleEvent( DroneEvent.NEW_FIRE_REQUEST );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneEngage.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         // add fire request so event can switch states as intended
         FireRequest task2 = new FireRequest("01:00:00", 5, "FIRE_DETECTED", "Moderate");
         drone.setCurrTask(task2);
         drone.handleEvent( DroneEvent.NEW_FIRE_REQUEST );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneEngage.class, ((DroneActive) drone.getCurrentState()).getSubState());
     }
 
     /**
@@ -262,33 +262,33 @@ public class DroneSubsystemTest
                 " then returning to base to an idle state, able to receive another fire request");
         DroneSubsystem drone = new DroneSubsystem(null);
 
-        assertTrue( drone.getCurrentState() instanceof DroneIdle );
+        Assertions.assertInstanceOf(DroneIdle.class, drone.getCurrentState());
 
         // add fire request so event can switch states as intended
         FireRequest task1 = new FireRequest("00:00:00", 7, "FIRE_DETECTED", "High");
         drone.setCurrTask(task1);
         drone.handleEvent( DroneEvent.NEW_FIRE_REQUEST );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneEngage );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneEngage.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.PERMISSION_TO_DROP );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneDeploy );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneDeploy.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.PAYLOAD_DROPPED );
 
-        assertTrue( drone.getCurrentState() instanceof DroneActive );
-        assertTrue( ((DroneActive) drone.getCurrentState()).getSubState() instanceof DroneReturn );
+        Assertions.assertInstanceOf(DroneActive.class, drone.getCurrentState());
+        Assertions.assertInstanceOf(DroneReturn.class, ((DroneActive) drone.getCurrentState()).getSubState());
 
         drone.handleEvent( DroneEvent.RETURNED_TO_BASE );
 
-        assertTrue( drone.getCurrentState() instanceof DroneRefill );
+        Assertions.assertInstanceOf(DroneRefill.class, drone.getCurrentState());
 
         drone.handleEvent( DroneEvent.REFILL_COMPLETE );
 
-        assertTrue( drone.getCurrentState() instanceof DroneIdle );
+        Assertions.assertInstanceOf(DroneIdle.class, drone.getCurrentState());
 
         // add fire request so event can switch states as intended
         FireRequest task2 = new FireRequest("01:00:00", 5, "FIRE_DETECTED", "Moderate");

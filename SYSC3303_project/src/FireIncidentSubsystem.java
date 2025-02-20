@@ -14,6 +14,11 @@ import java.util.List;
  */
 public class FireIncidentSubsystem implements Runnable {
     /**
+     * the file for fire events
+     */
+    private String inputFile = "SYSC3303_project/src/fireincidents.txt";
+
+    /**
      * scheduler instance for managing fire requests
      */
     private Scheduler scheduler;
@@ -39,13 +44,15 @@ public class FireIncidentSubsystem implements Runnable {
         this.tasks = new ArrayList<>();
     }
 
+
     /**
      * thread function for the fire incident subsystem
      * reads fire incidents, sends requests, and processes responses
      */
     public void run(){
-        readInputFile();
 
+
+        readInputFile(inputFile);
         while(!tasks.isEmpty()){
 
             // sendIncident();
@@ -59,13 +66,11 @@ public class FireIncidentSubsystem implements Runnable {
     }
 
     /**
-     * Reads the fire incident details from an input file <a href="file:../src/fireincedents.txt">/src/fireincedents.txt</a>
+     * @param inputFile read the incidents' detail from the inputFile
      * and stores them as FireRequest objects.
      * Each line in the file represents a fire incident with details separated by commas.
      */
-    public void readInputFile() {
-        //TODO: change the directory if needed
-        String inputFile = "SYSC3303_project/src/fireincidents.txt";
+    public void readInputFile(String inputFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
@@ -85,6 +90,7 @@ public class FireIncidentSubsystem implements Runnable {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Sends an incident request to the scheduler.
