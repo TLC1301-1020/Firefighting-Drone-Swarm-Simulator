@@ -6,6 +6,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the Scheduler class
+ */
 class SchedulerTest {
 
     private Scheduler scheduler;
@@ -13,6 +16,10 @@ class SchedulerTest {
     private DroneSubsystem drone2;
     private FireRequest request1;
     private FireRequest request2;
+
+    /**
+     * Set up data before each test case
+     */
     @BeforeEach
     void setup() {
         scheduler = new Scheduler();
@@ -24,6 +31,9 @@ class SchedulerTest {
         request2 = new FireRequest("06:35:00", 2, "FIRE_DETECTED", "Medium");
     }
 
+    /**
+     * Testing state transition from Idle to Processing
+     */
     @Test
     public void testSetState_IdleToProcessData() {
         SchedulerState idleState = new Idle();
@@ -36,6 +46,9 @@ class SchedulerTest {
         assertEquals("[PROCESSING][RECEIVING DATA]", scheduler.getCurrentState().display());
     }
 
+    /**
+     * Testing state transition from Processing to Task Drone
+     */
     @Test
     public void testSetState_ProcessDataToTaskDrone() {
         SchedulerState processingState = new ProcessData(new ReceiveData());
@@ -48,6 +61,9 @@ class SchedulerTest {
         assertEquals("[PROCESSING][TASKING DRONE]", scheduler.getCurrentState().display());
     }
 
+    /**
+     * Testing state transition from Task Drone to Send Data
+     */
     @Test
     public void testSetState_TaskDroneToSendData() {
         SchedulerState taskDroneState = new ProcessData(new TaskDrone());
@@ -60,6 +76,9 @@ class SchedulerTest {
         assertEquals("[SENDING DATA]", scheduler.getCurrentState().display());
     }
 
+    /**
+     * Testing state transition from Processing to Idle
+     */
     @Test
     public void testSetState_BackToIdle() {
         SchedulerState processingState = new ProcessData(new ReceiveData());
@@ -72,6 +91,9 @@ class SchedulerTest {
         assertEquals("[IDLE]", scheduler.getCurrentState().display());
     }
 
+    /**
+     * Testing registering one drone
+     */
     @Test
     public void testRegisterSingleDrone() {
         DroneSubsystem drone = new DroneSubsystem(scheduler);
@@ -83,6 +105,9 @@ class SchedulerTest {
         assertTrue(registeredDrones.contains(drone));
     }
 
+    /**
+     * Testing registering multiple drones
+     */
     @Test
     public void testRegisterMultipleDrones() {
         DroneSubsystem drone1 = new DroneSubsystem(scheduler);
@@ -100,6 +125,9 @@ class SchedulerTest {
         assertTrue(registeredDrones.contains(drone3));
     }
 
+    /**
+     * Testing registering drone multiple times
+     */
     @Test
     public void testRegisterSameDroneTwice() {
         DroneSubsystem drone = new DroneSubsystem(scheduler);
@@ -111,6 +139,10 @@ class SchedulerTest {
         assertEquals(3, registeredDrones.size());
     }
 
+    /**
+     * tests the {@code addRequest} method
+     * ensures that a fire request is correctly added to the scheduler
+     */
     @Test
     void addRequest() {
         System.out.println("Test: adding Request to Scheduler");
@@ -122,6 +154,9 @@ class SchedulerTest {
         Assertions.assertEquals(request, scheduler.takeRequest(drone));
     }
 
+    /**
+     * Testing assigning single request
+     */
     @Test
     public void testAssignSingleRequestToAvailableDrone() {
         scheduler.addRequest(request1);
@@ -135,6 +170,9 @@ class SchedulerTest {
         assertTrue(requestAssigned, "Request should be assigned to an available drone.");
     }
 
+    /**
+     * Testing assigning multiple requests
+     */
     @Test
     public void testAssignMultipleRequestsToAvailableDrones() {
         scheduler.addRequest(request1);
@@ -147,6 +185,9 @@ class SchedulerTest {
         assertNotEquals(drone1.getCurrTask(), drone2.getCurrTask(), "Each drone should receive a different request.");
     }
 
+    /**
+     * Testing requests remain in the queue when no drones are available
+     */
     @Test
     public void testNoAssignmentWhenNoAvailableDrones() {
         drone1.setCurrTask(new FireRequest("06:25:00", 3, "FIRE_DETECTED", "Low"));
@@ -158,6 +199,10 @@ class SchedulerTest {
         assertEquals(1, scheduler.getRequestQueueSize(), "Request should remain in queue if no drones are available.");
     }
 
+    /**
+     * tests the {@code takeRequest} method
+     * ensures that the request is correctly taken by the scheduler
+     */
     @Test
     void takeRequest() {
         System.out.println("Test: taking Request from Scheduler");
@@ -168,7 +213,10 @@ class SchedulerTest {
         scheduler.registerDrone(drone);
         Assertions.assertEquals(request, scheduler.takeRequest(drone));
     }
-
+    /**
+     * tests the {@code addResponse} method
+     * ensures the response to the current task is sent to the scheduler
+     */
     @Test
     void addResponse() {
         System.out.println("Test: adding response to scheduler");
@@ -179,7 +227,10 @@ class SchedulerTest {
 
         Assertions.assertEquals(scheduler.getCurrentResponse(),response);
     }
-
+    /**
+     * tests the {@code takeResponse} method
+     * ensures the response to the current task being taken is correct
+     */
     @Test
     void takeResponse() {
         System.out.println("Test: taking response from scheduler");
