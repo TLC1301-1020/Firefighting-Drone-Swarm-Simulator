@@ -219,7 +219,6 @@ public class Scheduler {
      * @return the response from the drone subsystem
      */
     public synchronized Response takeResponse() {
-        System.out.println("take response called");
         while (!responseAvailable) {
             try { wait(); }
             catch (InterruptedException e) { System.err.println(e); }
