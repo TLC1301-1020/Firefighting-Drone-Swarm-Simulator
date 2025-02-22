@@ -17,6 +17,7 @@ public class Main {
 
         // Start the DroneSubsystem
         DroneSubsystem droneSubsystem = new DroneSubsystem(scheduler);
+        scheduler.registerDrone(droneSubsystem);
         Thread droneThread = new Thread(droneSubsystem);
         droneThread.start();
 

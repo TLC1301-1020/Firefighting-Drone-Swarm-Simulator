@@ -143,11 +143,22 @@ public class DroneSubsystem implements Runnable {
             // travel();
             // sendUpdate();
 
-            currTask = scheduler.takeRequest();
+            currTask = scheduler.takeRequest(this);
             System.out.println("Drone " + this.droneId + ": received task: " + currTask.toString() + "\n");
             travel();
-            Response response = new Response(currTask, "completed");
-            scheduler.addResponse(response);
+            scheduler.addResponse(new Response(currTask, "arrived_at_zone"), this);
+            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+
+            scheduler.addResponse(new Response(currTask, "payload_dropped"), this);
+            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+
+            scheduler.addResponse(new Response(currTask, "returned_to_base"), this);
+            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+
+            scheduler.addResponse(new Response(currTask, "refill_complete"), this);
+            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+
+            scheduler.addResponse(new Response(currTask, "completed"), this);
         }
 
     }
@@ -248,7 +259,7 @@ public class DroneSubsystem implements Runnable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Drone " + this.droneId + ": fire in zone " + currTask.getZoneId() + " has been extinguished\n");
+        System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
     }
 
 }

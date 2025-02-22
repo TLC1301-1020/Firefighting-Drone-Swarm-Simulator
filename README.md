@@ -17,7 +17,7 @@ Testing Code - Andrew
 - *FireRequest.java*: Data model, manages the variables for each incident
 - *Response.java*: Data model, contains the status of a fire incident request
 - *DroneSubsystem.java*: Manages drones, interacts with Scheduler class
-- *SchedulerTest.java*: Contains the tests for sending request from fire incident subsystem class and sending response from drone subsystem class
+- *SchedulerTestOld.java*: Contains the tests for sending request from fire incident subsystem class and sending response from drone subsystem class
 - *Main.java*: Set up scheduler and starts the threads
 - *Fireincidents.txt*: Contains the incidents information, used in FireIncidentSubsystem class
 - *UML Class diagram*: Shows the relationships and structure of the classes
@@ -29,7 +29,7 @@ Testing Code - Andrew
 Run Main.java, make sure the directory of the input file is correct
 
 ## Test instruction
-Run SchedulerTest, make sure Junit is added to the path
+Run SchedulerTestOld, make sure Junit is added to the path
 
 
 
@@ -55,7 +55,7 @@ Updated test classes - Tina
 - *FireRequest.java*: Data model, manages the variables for each incident
 - *Response.java*: Data model, contains the status of a fire incident request
 - *DroneSubsystem.java*: Manages drones, interacts with Scheduler class
-- *SchedulerTest.java*: Contains the tests for sending request from fire incident subsystem class and sending response from drone subsystem class
+- *SchedulerTestOld.java*: Contains the tests for sending request from fire incident subsystem class and sending response from drone subsystem class
 - *FireIncidentSubsystemTest.java*: Contains the tests for the fireIncidentSubsystem class
 - *DroneSubsystemTest.java*: Contains the tests for the dronesubsystem class, tests for the states
 - *Main.java*: Set up scheduler and starts the threads
@@ -68,5 +68,5 @@ Updated test classes - Tina
 Run Main.java, make sure the directory of the input file is correct
 
 ### Test instruction
-Run SchedulerTest, FireIncidentSubsystemTest, DroneSubsystemTest.
+Run SchedulerTestOld, FireIncidentSubsystemTest, DroneSubsystemTest.
 Make sure Junit is added to the path
