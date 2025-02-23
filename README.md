@@ -58,7 +58,6 @@ Updated test classes, javadoc, updated Readme - Tina
 - *Response.java*: Data model, contains the status of a fire incident request
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *SchedulerState.java*: Stores the states to be used for the scheduler
-- *fireincidents.txt*: Contains the incidents information, used in FireIncidentSubsystem class
 
 
 ### Files - Test code
