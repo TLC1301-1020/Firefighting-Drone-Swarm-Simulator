@@ -37,7 +37,7 @@ Run SchedulerTestOld, make sure Junit is added to the path
 
 # Work Breakdown - Iteration 2
 
-Scheduler code + javadoc - Dylan
+Updated Scheduler code + Scheduler test code - Dylan
 
 State Machine Diagram - Jake
 
@@ -45,28 +45,41 @@ Updated DroneSubsystem code + javadoc + State tests - Mike
 
 Sequence Diagram + Update the Class diagram UML + Update Readme - Damon
 
-- Andrew
+Updated Scheduler code + Scheduler test code - Andrew
 
-Updated test classes - Tina
+Updated test classes, javadoc, updated Readme - Tina
 
-### Files
-- *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
+### Files - Source code
+- *DroneState.java*: Stores the states to be used for the drones
+- *DroneSubsystem.java* Manages drones, interacts with Scheduler class
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
 - *FireRequest.java*: Data model, manages the variables for each incident
-- *Response.java*: Data model, contains the status of a fire incident request
-- *DroneSubsystem.java*: Manages drones, interacts with Scheduler class
-- *SchedulerTestOld.java*: Contains the tests for sending request from fire incident subsystem class and sending response from drone subsystem class
-- *FireIncidentSubsystemTest.java*: Contains the tests for the fireIncidentSubsystem class
-- *DroneSubsystemTest.java*: Contains the tests for the dronesubsystem class, tests for the states
 - *Main.java*: Set up scheduler and starts the threads
+- *Response.java*: Data model, contains the status of a fire incident request
+- *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
+- *SchedulerState.java*: Stores the states to be used for the scheduler
+- *fireincidents.txt*: Contains the incidents information, used in FireIncidentSubsystem class
+
+
+### Files - Test code
+- *SchedulerTestOld.java*: Contains the test methods(iteration 1) for sending request from fire incident subsystem class and sending response from drone subsystem class
+- *SchedulerTest.java*: Contains the test methods for the scheduler source code, focusing on the state transitions
+- *FireIncidentSubsystemTest.java*: Contains the test methods for the fire incident subsystem class
+- *DroneSubsystemTest.java*: Contains the test methods for the drone subsystem, focusing on the state transitions
+
+
+### Files - Diagrams and others
+- *README.md*: Contains the explanation of the project for this iteration (2), including names of the files, team members, work breakdown, and instruction to set and run the program
 - *Fireincidents.txt*: Contains the incidents information, used in FireIncidentSubsystem class
 - *UML Class diagram*: Shows the relationships and structure of the classes
 - *UML Sequence diagram*: Shows the interactions between the components
-- *State Machine diagram*: Shows the states
+- *SchedulerStateDiagram*: The behavioural diagram for the Scheduler that represents the transitions between the states on events/conditions
+- *DroneStateDiagram*: The behavioural diagram for the DroneSubsystem that represents the transitions between the states on events/conditions
+
 
 ### Setup instruction
 Run Main.java, make sure the directory of the input file is correct
 
 ### Test instruction
-Run SchedulerTestOld, FireIncidentSubsystemTest, DroneSubsystemTest.
-Make sure Junit is added to the path
+Run SchedulerTestOld, FireIncidentSubsystemTest, DroneSubsystemTest, SchedulerTest.
+Project uses Junit5.8.1, JDK22
