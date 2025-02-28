@@ -82,3 +82,17 @@ Run Main.java, make sure the directory of the input file is correct
 ### Test instruction
 Run SchedulerTestOld, FireIncidentSubsystemTest, DroneSubsystemTest, SchedulerTest.
 Project uses Junit5.8.1, JDK22
+
+
+
+# Work Breakdown - Iteration 2
+
+### Files - Source code
+
+### Files - Test code
+
+### Files - Diagrams and others
+
+### Setup instruction
+
+### Test instruction
