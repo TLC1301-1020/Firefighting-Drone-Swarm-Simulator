@@ -70,10 +70,12 @@ Updated test classes, javadoc, updated Readme - Tina
 ### Files - Diagrams and others
 - *README.md*: Contains the explanation of the project for this iteration (2), including names of the files, team members, work breakdown, and instruction to set and run the program
 - *Fireincidents.txt*: Contains the incidents information, used in FireIncidentSubsystem class
-- *UML Class diagram*: Shows the relationships and structure of the classes
-- *UML Sequence diagram*: Shows the interactions between the components
-- *SchedulerStateDiagram*: The behavioural diagram for the Scheduler that represents the transitions between the states on events/conditions
-- *DroneStateDiagram*: The behavioural diagram for the DroneSubsystem that represents the transitions between the states on events/conditions
+- *UMLClassDiagram-iteration1*: Shows the relationships and structure of the classes for iteration 1
+- *DroneSequenceDiagram-iteration1*: Shows interactions between the components for iteration 1
+- *UMLClassDiagram-iteration2*: Shows the relationships and structure of the classes for iteration 2
+- *UMLSequenceDiagram-iteration2*: Shows the interactions between the components for iteration 2
+- *SchedulerStateDiagram-iteration2*: The behavioural diagram for the Scheduler that represents the transitions between the states on events/conditions
+- *DroneStateDiagram-iteration2*: The behavioural diagram for the DroneSubsystem that represents the transitions between the states on events/conditions
 
 
 ### Setup instruction
