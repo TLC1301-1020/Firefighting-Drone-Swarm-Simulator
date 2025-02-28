@@ -1,3 +1,10 @@
+# Work Breakdown - Iteration 0
+Data collection
+
+### Files
+- *Data Analysis.docx*
+- *Data.xlsx*
+
 # Work Breakdown - Iteration 1
 UML Class Diagram - Mike
 
