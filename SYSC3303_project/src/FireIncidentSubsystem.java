@@ -28,20 +28,20 @@ public class FireIncidentSubsystem implements Runnable {
      */
     private List<FireRequest> tasks;
 
-    /**
-     * datagram sockets and packets for network communication
-     */
-    private DatagramPacket sendPacket, receivePacket;
-    private DatagramSocket sendSocket, receiveSocket;
+    private DatagramSocket receiveSocket, sendSocket;
 
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
-     *
-     * @param scheduler The scheduler responsible for managing fire incident requests.
      */
-    public FireIncidentSubsystem(Scheduler scheduler) {
-        this.scheduler = scheduler;
+    public FireIncidentSubsystem() {
         this.tasks = new ArrayList<>();
+
+        try {
+            sendSocket = new DatagramSocket();
+            receiveSocket = new DatagramSocket(Scheduler.FIRE_INCIDENT_SUBSYSTEM_PORT);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -51,17 +51,27 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public void run(){
 
-
         readInputFile(inputFile);
+
+        // Send all of our requests read from file
         while(!tasks.isEmpty()){
 
-            // sendIncident();
-            // receiveUpdate();
+            sendIncident(tasks.remove(0).toString());
 
-            scheduler.addRequest(tasks.remove(0));
-            scheduler.takeResponse();
+            // This should just be an acknowledgement
+            System.out.println(receiveUpdate());
+
         }
-        System.exit(0);
+
+        // Now we request and wait for future Scheduler updates
+        while(true) {
+
+            // Request the scheduler for updates
+            sendIncident("FIRE_DATA_REQUEST");
+
+            // This should be an update that a drone has completed a FireRequest
+            System.out.println(receiveUpdate());
+        }
 
     }
 
@@ -96,64 +106,48 @@ public class FireIncidentSubsystem implements Runnable {
      * Sends an incident request to the scheduler.
      * Extracts the next available fire request, formats the data, and sends it via a UDP packet.
      */
-    public void sendIncident(){
-        int serverPort = 9876;
-        if(tasks.isEmpty()){
-            System.out.println("No tasks to send.");
-            return;
-        }
+    public void sendIncident(String request){
+        byte msg[] = request.toString().getBytes();
+        DatagramPacket packet;
 
-        try{
-            sendSocket = new DatagramSocket();
-        } catch (SocketException e) {
+        try {
+            packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), Scheduler.FIRE_TO_SCHEDULER_PORT);
+        } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            InetAddress serverAddress = InetAddress.getByName("localhost");
-            FireRequest task = tasks.remove(0);
-            String taskData = String.format("%s,%d,%s,%s",
-                    task.getTime(), task.getZoneId(), task.getEventType(), task.getSeverity());
-            byte[] data = taskData.getBytes();
-
-            sendPacket = new DatagramPacket(data, data.length, serverAddress, serverPort);
-            sendSocket.send(sendPacket);
+            sendSocket.send(packet);
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException(e);
         }
-        sendSocket.close();
-        receiveSocket.close();
-
     }
 
     /**
      * Receives updates from the scheduler via a UDP packet.
      * Waits for an incoming message and prints the received update.
      */
-    private void receiveUpdate(){
-        int serverPort = 9876;
+    private String receiveUpdate(){
+        byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
+        DatagramPacket receivePacket = new DatagramPacket(data, data.length);
 
-        try{
-            receiveSocket = new DatagramSocket(serverPort);
-        } catch (SocketException e) {
+        try {
+            // Block until a datagram is received via socket
+            receiveSocket.receive(receivePacket);
+        } catch(IOException e) {
             throw new RuntimeException(e);
         }
-        byte[] buffer = new byte[1024];
 
-        receivePacket = new DatagramPacket(buffer, buffer.length);
-        System.out.println("Waiting for updates from Scheduler.");
+        int len = receivePacket.getLength();
 
-        try{
-            receiveSocket.receive(receivePacket);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        // Return a String from the byte array
+        return new String(data,0,len);
+    }
 
-        String receiveMessage = new String(receivePacket.getData(),0,receivePacket.getLength());
-        System.out.println("FireIncident received update: " + receiveMessage);
-
+    public static void main(String[] args) {
+        FireIncidentSubsystem fis = new FireIncidentSubsystem();
+        Thread thread = new Thread(fis);
+        thread.start();
     }
 
     /**
@@ -174,13 +168,13 @@ public class FireIncidentSubsystem implements Runnable {
         return tasks;
     }
 
-    public DatagramPacket getSendPacket() {
-        return sendPacket;
-    }
-
-    public DatagramPacket getReceivePacket() {
-        return receivePacket;
-    }
+//    public DatagramPacket getSendPacket() {
+//        return sendPacket;
+//    }
+//
+//    public DatagramPacket getReceivePacket() {
+//        return receivePacket;
+//    }
 
     public DatagramSocket getSendSocket() {
         return sendSocket;

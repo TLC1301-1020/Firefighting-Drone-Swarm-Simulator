@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,10 +31,80 @@ public class Scheduler {
     private Queue<FireRequest> requestQueue;
     private SchedulerState currentState;
 
+    public static final int DATA_BUFFER_SIZE = 256;
+    public static final int FIRE_TO_SCHEDULER_PORT = 5000;
+    public static final int DRONE_TO_SCHEDULER_PORT = 5001;
+    public static final int FIRE_INCIDENT_SUBSYSTEM_PORT = 5002;
+    public static final int DRONE_SUBSYSTEM_PORT = 5003;
+    private DatagramSocket fireReceiveSocket, droneReceiveSocket, sendSocket;
+
+    /**
+     * Thread to listen to FireIncidentSubsystem.
+     */
+    private class listenToFire extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+
+                // This request will be a new FireRequest to add, or just a data request for an available Drone response
+                String request = receivePacket(fireReceiveSocket);
+
+                // This is a data request, and we will wait via takeResponse() until an available Drone response is ready to send back
+                // At this point currentResponse should be a list of responses since we will most likely be taking more than one at a time
+                if (request.contains("FIRE_DATA_REQUEST")) {
+                    sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, takeResponse().toString());
+                }
+
+                // Otherwise it's a new FireRequest. Add it, and send back an acknowledgement
+                else {
+                    addRequest(new FireRequest(request));
+                    sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Thread to listen to DroneSubsystem.
+     */
+    private class listenToDrone extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                // Receive packet from the DroneSubsystem
+                String request = receivePacket(droneReceiveSocket);
+                // Parse the packet (assuming we are not actually storing physical Drones anymore, and instead are only storing crucial data for each drone):
+                // (If parsing with processResponse(), need to update that logic to include checking for which droneId, etc.)
+                // If it's a request for a FireRequest, provide a request from takeRequest()
+                // If it's a status update for a certain drone, store that information, reply with a proper acknowledgement/response
+                // etc.
+                // Example: sending DroneSubsystem a new request after it has asked for one
+                // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, takeRequest().toString())
+                // Example: sending a general acknowledgement after a drone sends us its updated location
+                // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED")
+            }
+        }
+    }
+
     public Scheduler() {
         this.drones = new ArrayList<>();
         this.requestQueue = new LinkedList<>();
         this.currentState = new Idle();
+
+        try {
+            sendSocket = new DatagramSocket();
+            fireReceiveSocket = new DatagramSocket(FIRE_TO_SCHEDULER_PORT);
+            droneReceiveSocket = new DatagramSocket(DRONE_TO_SCHEDULER_PORT);
+        } catch (SocketException e) {
+            System.err.println(e);
+        }
+
+        // Create and start threads to listen to other subsystems
+        Thread droneHandler = new listenToDrone();
+        Thread fireHandler = new listenToFire();
+        droneHandler.start();
+        fireHandler.start();
     }
 
     public void setState(SchedulerState newState){
@@ -230,5 +302,58 @@ public class Scheduler {
         responseAvailable = false;
         notifyAll();
         return res;
+    }
+
+    /**
+     * Receive a UDP packet.
+     * @param socket which socket to receive on.
+     * @return the message received.
+     */
+    private String receivePacket(DatagramSocket socket) {
+        byte data[] = new byte[DATA_BUFFER_SIZE];
+        DatagramPacket receivePacket = new DatagramPacket(data, data.length);
+
+        try {
+            // Block until a datagram is received via socket
+            socket.receive(receivePacket);
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        int len = receivePacket.getLength();
+
+        // Return a String from the byte array
+        return new String(data,0,len);
+    }
+
+    /**
+     * Send a UDP packet.
+     * @param socket which socket to send on.
+     * @param port port number for the packet.
+     * @param response message to send.
+     */
+    private void sendPacket(DatagramSocket socket, int port, String response) {
+        byte msg[] = response.getBytes();
+        DatagramPacket packet;
+
+        try {
+            packet = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), port);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Create a new Scheduler and start listening to a FireIncidentSubsystem and DroneSubsystem.
+     * @param args CLI arguments.
+     */
+    public static void main(String[] args) {
+        Scheduler s = new Scheduler();
     }
 }

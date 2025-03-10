@@ -35,6 +35,33 @@ public class FireRequest {
         this.severity = severity;
     }
 
+    /**
+     * Create a FireRequest instance using a String representation created by toString().
+     * @param request the String representation.
+     */
+    public FireRequest(String request) {
+        request = request.replace("FireRequest{", "").replace("}", "");
+        String[] parts = request.split(", ");
+
+        for (String part : parts) {
+            String[] value = part.split("=");
+            switch (value[0]) {
+                case "time":
+                    this.time = value[1];
+                    break;
+                case "zone":
+                    this.zoneId = Integer.parseInt(value[1]);
+                    break;
+                case "event":
+                    this.eventType = value[1];
+                    break;
+                case "severity":
+                    this.severity = value[1];
+                    break;
+            }
+        }
+    }
+
     // Getters and toString()
 
     /**
