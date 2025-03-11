@@ -1,9 +1,6 @@
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * {@code Scheduler} coordinates fire requests between the fire incident and drone subsystem threads.
@@ -27,7 +24,41 @@ public class Scheduler {
      */
     private boolean responseAvailable = false;
 
-    private List<DroneSubsystem> drones;
+    class DroneStatus
+    {
+        private final int droneId;
+        private String state;   // string
+        private int x;
+        private int y;
+
+        /**
+         * initializes drone status for drone object with given drone id,
+         * current state as "[REFILLING]" and location at (0,0)
+            @param droneId drone id to be given to drone when initialized
+         */
+        public DroneStatus(int droneId) {
+            this.droneId = droneId;
+            this.state = "[REFILLING]";
+            this.x = 0;
+            this.y = 0;
+        }
+
+        public int getDroneId() { return droneId; }
+        public String getState() { return state; }
+        public void setState(String newState) { this.state = newState; }
+        public int getX() { return this.x; }
+        public int getY() { return this.y; }
+        public void setLocation(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        public String toString(); // TODO
+    }
+
+    private HashMap<Integer,DroneStatus> drones;
+
+//    private List<DroneSubsystem> drones;    // old
     private Queue<FireRequest> requestQueue;
     private SchedulerState currentState;
 
@@ -38,7 +69,7 @@ public class Scheduler {
     public static final int DRONE_SUBSYSTEM_PORT = 5003;
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, sendSocket;
 
-    /**
+     /**
      * Thread to listen to FireIncidentSubsystem.
      */
     private class listenToFire extends Thread {
@@ -49,7 +80,12 @@ public class Scheduler {
                 // This request will be a new FireRequest to add, or just a data request for an available Drone response
                 String request = receivePacket(fireReceiveSocket);
 
+                /* TODO: need to handle scheduler set state here with two threads
+                 droneHandler and fireHandler threads
+                * */
+
                 // This is a data request, and we will wait via takeResponse() until an available Drone response is ready to send back
+
                 // At this point currentResponse should be a list of responses since we will most likely be taking more than one at a time
                 if (request.contains("FIRE_DATA_REQUEST")) {
                     sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, takeResponse().toString());
@@ -74,21 +110,113 @@ public class Scheduler {
             while (true) {
                 // Receive packet from the DroneSubsystem
                 String request = receivePacket(droneReceiveSocket);
+
+                /* TODO: need to handle scheduler set state here with two threads
+                    droneHandler and fireHandler threads
+                 */
+
+                // get drone status -
+
                 // Parse the packet (assuming we are not actually storing physical Drones anymore, and instead are only storing crucial data for each drone):
-                // (If parsing with processResponse(), need to update that logic to include checking for which droneId, etc.)
-                // If it's a request for a FireRequest, provide a request from takeRequest()
-                // If it's a status update for a certain drone, store that information, reply with a proper acknowledgement/response
-                // etc.
-                // Example: sending DroneSubsystem a new request after it has asked for one
-                // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, takeRequest().toString())
-                // Example: sending a general acknowledgement after a drone sends us its updated location
-                // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED")
+                String response = handleDroneRequest(request);
+                // send response
+                sendPacket( sendSocket, DRONE_SUBSYSTEM_PORT, response );
             }
         }
     }
 
+    private String handleDroneRequest(String request)
+    {
+        // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y"
+        String[] items = request.split(":");
+        if (items.length != 5) return "ERROR: Invalid request format:" + request;
+
+        // get drone id     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y"
+        int droneId = -1;
+        try {
+            droneId = Integer.parseInt(items[0]);
+        } catch (NumberFormatException e) {
+            return "ERROR: Invalid drone ID";
+        }
+        // check drone collection for this drone id
+        DroneStatus drone = this.drones.get(droneId);
+        // if drone does not exist with scheduler, register drone and return register event
+        if (drone == null) return registerDrone(droneId) + ":" + request;
+
+        // otherwise parse & handle request...
+
+        // get current state of this drone     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y"
+        String droneState = items[1];
+
+        // get request of this drone and convert it to DroneEvent
+        DroneEvent eventRequest;
+        try {
+            eventRequest = DroneEvent.valueOf(items[2]); // Convert string to enum
+        } catch (IllegalArgumentException e) {
+            return "ERROR: Unknown drone event: " + items[2];
+        }
+
+        // get location of this drone
+        int x,y = -1;
+        try {
+            x = Integer.parseInt(items[3]);
+            y = Integer.parseInt(items[4]);
+            drone.setLocation(x, y);
+        } catch (NumberFormatException e) {
+            return "ERROR: Invalid location value";
+        }
+
+        drone.setState(droneState);
+        drone.setLocation(x, y);
+
+        /* request types
+            "STATUS"   DRONE_ID:[DroneActive]:REQUEST:X:Y  -> when there is a request
+            DRONE_ID:<STATE>:STATE:X:Y  -> when there is a request
+         */
+
+        /*  response types
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST      - for saying acknowledge
+            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST  - for reassigning current task and state
+         */
+
+        // handle request to proceed with the state corresponding to when this event occurs
+        switch(eventRequest)
+        {
+            case NEW_FIRE_REQUEST:
+                return handleIdleDrone(drone);
+            case PERMISSION_TO_DROP:
+                return handleIdleDrone(drone);
+            case PAYLOAD_DROPPED:
+                return handleIdleDrone(drone);
+            case PAYLOAD_DEPLOY_FAILURE:
+                return handleIdleDrone(drone);
+            case DEPLOY_FAILURE_ACKNOWLEDGED:
+                return handleIdleDrone(drone);
+            case RETURNED_TO_BASE:
+                return handleIdleDrone(drone);
+            case REFILL_COMPLETE:
+                return handleIdleDrone(drone);
+            case DRONE_STUCK:
+                return handleIdleDrone(drone);
+            case STUCK_RESOLVED:
+                return handleIdleDrone(drone);
+            default:
+                return "ERROR: UNKNOWN drone request: " + request; // should never hit
+        }
+
+        // (If parsing with processResponse(), need to update that logic to include checking for which droneId, etc.)
+        // If it's a request for a FireRequest, provide a request from takeRequest()
+        // If it's a status update for a certain drone, store that information, reply with a proper acknowledgement/response
+        // etc.
+        // Example: sending DroneSubsystem a new request after it has asked for one
+        // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, takeRequest().toString())
+        // Example: sending a general acknowledgement after a drone sends us its updated location
+        // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED")
+
+    }
+
     public Scheduler() {
-        this.drones = new ArrayList<>();
+        this.drones = new HashMap<>();
         this.requestQueue = new LinkedList<>();
         this.currentState = new Idle();
 
@@ -103,15 +231,22 @@ public class Scheduler {
         // Create and start threads to listen to other subsystems
         Thread droneHandler = new listenToDrone();
         Thread fireHandler = new listenToFire();
+
         droneHandler.start();
         fireHandler.start();
+
+        // alternative use thread methods
+//        new Thread(this::droneHandler).start();
+//        new Thread(this::fireHandler).start();
     }
 
+    // todo : setState needs to be synchronized
     public void setState(SchedulerState newState){
         System.out.println("* SCHEDULER STATE CHANGE * " + this.currentState.display() + " -> " + newState.display());
         this.currentState = newState;
     }
 
+    // todo : getCurrentState needs to be synchronized
     public SchedulerState getCurrentState(){
         return this.currentState;
     }
@@ -148,16 +283,20 @@ public class Scheduler {
         return responseAvailable;
     }
 
-    public void registerDrone(DroneSubsystem drone){
-        if (!drones.contains(drone)){
-            drones.add(drone);
-        } else {
-            System.out.println("Drone is already registered.");
+    public String registerDrone(int droneId)
+    {
+        // drone is not initialized
+        if (droneId!=-1)
+        {
+            this.drones.put( droneId, new DroneStatus( droneId ) );
+            return "ACK";
         }
+        else return "ERROR: drone initialization with id error " + droneId;
     }
 
     public List<DroneSubsystem> getDrones(){
-        return drones;
+//        return drones;
+        return null;
     }
 
     private synchronized DroneSubsystem getAvailableDrone(){
