@@ -121,8 +121,9 @@ public class DroneSubsystem implements Runnable {
 
         while(true)
         {
-            // check request queue
+            // check request queue - communication from drones
             String request = this.requestQueue.poll();
+            // return null
             System.out.println("[DRONE SUBSYSTEM->SCHEDULER] handling drone request: " + request);
 //            String packagedRequest = handleDroneRequest(request);
             // send udp packet direct to scheduler with drone request

@@ -182,6 +182,7 @@ public class Scheduler {
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
          */
 
+
         // handle request to proceed with the state corresponding to when this event occurs
         switch(eventRequest)
         {

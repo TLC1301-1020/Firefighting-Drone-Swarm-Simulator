@@ -134,7 +134,7 @@ public class Drone implements Runnable
             this.droneSubsystem.addRequest( makeRequest() );
 
             // check the droneSubsystem for next instructions for this drone
-            String response = this.droneSubsystem.getResponse();
+            String response = this.droneSubsystem.getResponse(this.droneId);
 
             // handle instructions given
             handleResponse(response);
