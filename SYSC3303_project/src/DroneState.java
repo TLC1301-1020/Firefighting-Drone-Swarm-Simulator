@@ -12,13 +12,15 @@ enum DroneEvent {
 }
 
 interface DroneState {
-    public void handleEvent(DroneSubsystem drone, DroneEvent event);
+    public void handleEvent(Drone drone, DroneEvent event);
     public String display();
+    public String getRequest();
 }
 
 class DroneIdle implements DroneState {
 
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    @Override
+    public void handleEvent(Drone drone, DroneEvent event) {
         if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
             System.out.println("DRONE " + drone.getDroneId() + " is now engaging fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneEngage()) );
@@ -28,6 +30,11 @@ class DroneIdle implements DroneState {
     @Override
     public String display() {
         return "[IDLE]";
+    }
+
+    @Override
+    public String getRequest() {
+        return String.valueOf(DroneEvent.NEW_FIRE_REQUEST);
     }
 }
 
@@ -56,7 +63,7 @@ class DroneActive implements DroneState {
     }
 
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         this.subState.handleEvent(drone, event);
     }
 
@@ -68,12 +75,17 @@ class DroneActive implements DroneState {
     public DroneState getSubState() {
         return this.subState;
     }
+
+    @Override
+    public String getRequest() {
+        return this.subState.getRequest();
+    }
 }
 
 class DroneEngage implements DroneState {
 
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) ) {
             // arrived at zone and is asking to open payload doors
             System.out.println("DRONE " + drone.getDroneId() + " is given permission to drop payload on fire in zone " + drone.getCurrTask().getZoneId());
@@ -96,12 +108,17 @@ class DroneEngage implements DroneState {
     public String display() {
         return "[ENGAGING]";
     }
+
+    @Override
+    public String getRequest() {
+        return String.valueOf(DroneEvent.PERMISSION_TO_DROP);
+    }
 }
 
 class DroneDeploy implements DroneState {
 
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.PAYLOAD_DROPPED )) {
             // deployed payload successfully
             System.out.println("DRONE " + drone.getDroneId() + " has deployed the payload and is returning to base");
@@ -117,11 +134,16 @@ class DroneDeploy implements DroneState {
     public String display() {
         return "[DEPLOYING]";
     }
+
+    @Override
+    public String getRequest() {
+        return String.valueOf(DroneEvent.PAYLOAD_DROPPED);
+    }
 }
 
 class DroneReturn implements DroneState {
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.RETURNED_TO_BASE )) {
             // arrived at base and is now refilling
             System.out.println("DRONE " + drone.getDroneId() + " has returned to base and is now refilling payload");
@@ -138,12 +160,17 @@ class DroneReturn implements DroneState {
     public String display() {
         return "[RETURNING]";
     }
+
+    @Override
+    public String getRequest() {
+        return String.valueOf(DroneEvent.RETURNED_TO_BASE);
+    }
 }
 
 class DroneRefill implements DroneState {
 
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.REFILL_COMPLETE )) {
             System.out.println("DRONE " + drone.getDroneId() + " has refilled its payload successfully and is now idle");
             drone.setState( new DroneIdle() );
@@ -152,6 +179,11 @@ class DroneRefill implements DroneState {
     @Override
     public String display() {
         return "[REFILLING]";
+    }
+
+    @Override
+    public String getRequest() {
+        return String.valueOf(DroneEvent.REFILL_COMPLETE);
     }
 }
 
@@ -164,7 +196,7 @@ class DroneFault implements DroneState {
     }
 
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         this.subState.handleEvent(drone, event);
     }
 
@@ -176,11 +208,16 @@ class DroneFault implements DroneState {
     public DroneState getSubState() {
         return this.subState;
     }
+
+    @Override
+    public String getRequest() {
+        return this.subState.getRequest();
+    }
 }
 
 class DroneFaultStuck implements DroneState {
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.STUCK_RESOLVED )) {
             System.out.println("DRONE " + drone.getDroneId() + " is no longer stuck and is returning to base");
             drone.setState( new DroneActive(new DroneReturn()) );
@@ -191,11 +228,16 @@ class DroneFaultStuck implements DroneState {
     public String display() {
         return "[STUCK]";
     }
+
+    @Override
+    public String getRequest() {
+        return String.valueOf(DroneEvent.STUCK_RESOLVED);
+    }
 }
 
 class DroneFaultDeploy implements DroneState {
     @Override
-    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
+    public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.DEPLOY_FAILURE_ACKNOWLEDGED )) {
             System.out.println("DRONE " + drone.getDroneId() + " is returning to base following a deployment failure");
             drone.setState( new DroneActive(new DroneReturn()) );
@@ -210,6 +252,11 @@ class DroneFaultDeploy implements DroneState {
     @Override
     public String display() {
         return "[DEPLOY FAILURE]";
+    }
+
+    @Override
+    public String getRequest() {
+        return String.valueOf(DroneEvent.DEPLOY_FAILURE_ACKNOWLEDGED);
     }
 }
 

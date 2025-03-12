@@ -53,7 +53,10 @@ public class Scheduler {
             this.x = x;
             this.y = y;
         }
-        public String toString(); // TODO
+        public String toString()
+        {
+            return this.droneId+":"+this.state+":"+this.x+":"+this.y;
+        }
     }
 
     private HashMap<Integer,DroneStatus> drones;
@@ -163,20 +166,20 @@ public class Scheduler {
             y = Integer.parseInt(items[4]);
             drone.setLocation(x, y);
         } catch (NumberFormatException e) {
-            return "ERROR: Invalid location value";
+            return "ERROR: Invalid location value: " + items[3] + "," + items[4];
         }
-
+        // update state/location of drone
         drone.setState(droneState);
         drone.setLocation(x, y);
 
         /* request types
-            "STATUS"   DRONE_ID:[DroneActive]:REQUEST:X:Y  -> when there is a request
-            DRONE_ID:<STATE>:STATE:X:Y  -> when there is a request
+            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y  -> when there is a request
+            DRONE_ID:<STATE>:REQUEST:X:Y  -> when there is a request
          */
 
         /*  response types
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST      - for saying acknowledge
-            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST  - for reassigning current task and state
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y     - for saying acknowledge
+            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
          */
 
         // handle request to proceed with the state corresponding to when this event occurs

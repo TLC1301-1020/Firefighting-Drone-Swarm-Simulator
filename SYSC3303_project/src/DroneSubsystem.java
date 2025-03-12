@@ -2,7 +2,10 @@ import java.io.IOException;
 import java.net.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * {@code DroneSubsystem} class simulates a drone responding to fire incidents.
@@ -21,29 +24,12 @@ public class DroneSubsystem implements Runnable {
      * list of Drone objects being controlled by DroneSubsystem process through direction
      * of the scheduler
      */
-    private final HashMap<Integer,Drone> drones = new HashMap<>();
+    private final HashMap<Integer,Thread> drones = new HashMap<>();
 
     private boolean dronesInitialized;
-    // private Scheduler scheduler;
-//    /**
-//     * current fire request assigned to the drone
-//     */
-//    private FireRequest currTask;
-//    /**
-//     * unique identifier for the drone
-//     */
-//    private int droneId;
-//    /**
-//     * maximum velocity of the drone in meters per second
-//     */
-//    private final float maxVelocity = 20;
-//    /**
-//     * x and y coordinates representing drone position
-//     */
-//    private float xPos;
-//    private float yPos;
 
-    // TODO: Add drone attributes such as battery, acceleration etc.
+    private final ConcurrentLinkedQueue<String> requestQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentHashMap<Integer, String> responseQueue = new ConcurrentHashMap<>();
 
     /**
      * creates a drone subsystem instance with the shared scheduler
@@ -57,79 +43,32 @@ public class DroneSubsystem implements Runnable {
             throw new RuntimeException(e);
         }
     }
-//
-//    /**
-//     * @param newState to change the DroneState machine object representing the current state of the drone.
-//     * Invoked by the DroneState state machine when changing the state of the drone
-//     */
-//    public void setState(DroneState newState) {
-//        System.out.print("* DRONE STATE CHANGE * " + this.currentState.display() + " -> ");
-//        this.currentState = newState;
-//        System.out.println(this.currentState.display());
-//    }
-//
-//    /**
-//     * @return currentState of the drone.
-//     * invoked in the context of checking the current state:
-//     * {@code drone.getCurrentState() instanceof DroneActive}
-//     */
-//    public DroneState getCurrentState() {
-//        return this.currentState;
-//    }
-//
-//    /**
-//     * @param event leading to the DroneState machine object changing state from the DroneEvent enum list.
-//     * invoked in the context of changing the current state of the drone given the passed event parameter:
-//     * {@code drone.handleEvent(DroneEvent.NEW_FIRE_REQUEST)}
-//     */
-//    public void handleEvent(DroneEvent event) {
-//        this.currentState.handleEvent(this, event);
-//    }
-//
-//    /**
-//     * returns the scheduler instance
-//     * @return scheduler instance
-//     */
-////    public Scheduler getScheduler() {
-////        return scheduler;
-////    }
-//
-//    /**
-//     * returns the drone id
-//     * @return drone id
-//     */
-//    public float getDroneId() {
-//        return droneId;
-//    }
 
+    // drones will submit requests here
+    public void addRequest(String request)
+    {
+        this.requestQueue.offer(request);
+    }
 
-//    /**
-//     * the current fire request assigned to the drone is returned,
-//     * and a new fire request is swapped in
-//     * @return currTask - the previous fire request assigned to this drone
-//     */
-//    public FireRequest setCurrTask( FireRequest newTask )
-//    {
-//        FireRequest temp = this.currTask;
-//        this.currTask = newTask;
-//        return temp;
-//    }
-//
-//    /**
-//     * returns the current fire request assigned to the drone
-//     * @return current fire request
-//     */
-//    public FireRequest getCurrTask() {
-//        return currTask;
-//    }
-//
-//    private static class Task {
-//        public LocalTime time;
-//        public int zoneId;
-//        public String eventType;
-//        public String severity;
-//    }
-    public void initializeAllDrones( int numberOfDrones )
+    // subsystem retrieves and processes request at head of queue
+    public String pollRequest()
+    {
+        return this.requestQueue.poll();
+    }
+
+    // subsystem places response for a specific drone given by scheduler
+    public void addResponse(int droneId, String response)
+    {
+        this.responseQueue.put(droneId, response);
+    }
+
+    // drones will retrieve its response here
+    public String getResponse(int droneId)
+    {
+        return this.responseQueue.remove(droneId);
+    }
+
+    public void initializeAllDrones( DroneSubsystem droneSubsystem, int numberOfDrones )
     {
         // check if drones already initialized
         if( this.dronesInitialized ) return;
@@ -145,7 +84,7 @@ public class DroneSubsystem implements Runnable {
             String response = receivePacket();
             if(response.contains("ACK"))
             {
-                this.drones.put( i, new Drone(i));
+                this.drones.put( i, new Thread(new Drone(droneSubsystem, i) ) );
                 ++droneCounter;
                 System.out.println( " DRONE " + i + " is online");
             }
@@ -165,29 +104,84 @@ public class DroneSubsystem implements Runnable {
 
         // TODO: determine a proper condition for thread lifespan
 
+        // start thread functions for all drones
+        Collection<Thread> allDrones = this.drones.values();
+        for ( Thread drone : allDrones )
+        {
+            drone.start();
+        }
 
-        while(true) {
-            // Convert these steps from this format to sending UDP messages instead
+        // TODO: if needs to make drones extend inherit for access to thread and object functions
+//        Collection<Drone> allDrones = this.drones.values();
+//        for ( Drone drone : allDrones )
+//        {
+//            (new Thread(drone)).start();
+//        }
+        // DRONE_ID:<STATE>:REQUEST:X:Y  -> when there is a request
 
-            currTask = scheduler.takeRequest(this);
-            System.out.println("Drone " + this.droneId + ": received task: " + currTask.toString() + "\n");
-            travel();
-            scheduler.addResponse(new Response(currTask, "arrived_at_zone"), this);
-            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+        while(true)
+        {
+            // check request queue
+            String request = this.requestQueue.poll();
+            System.out.println("[DRONE SUBSYSTEM->SCHEDULER] handling drone request: " + request);
+//            String packagedRequest = handleDroneRequest(request);
+            // send udp packet direct to scheduler with drone request
+            sendPacket(request);
 
-            scheduler.addResponse(new Response(currTask, "payload_dropped"), this);
-            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+            // receive response from scheduler
+            String response = receivePacket();
+            System.out.println("[SCHEDULER->DRONE SUBSYSTEM] received response: " + response);
 
-            scheduler.addResponse(new Response(currTask, "returned_to_base"), this);
-            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+            // handle the response and the drone its intended for
+            handleDroneResponse(response);
+        }
+    }
 
-            scheduler.addResponse(new Response(currTask, "refill_complete"), this);
-            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+    // handle the response passed to the drone subsystem from the scheduler
+    private void handleDroneResponse(String response)
+    {
+        /*  response types
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y      - for saying acknowledge
+            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
+         */
+        String[] items = response.split(":");
+//        if (items.length != 6) return;
 
-            scheduler.addResponse(new Response(currTask, "completed"), this);
+        String schedulerInstructions = items[0];
+
+        // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
+        int droneId = -1;
+        try {droneId = Integer.parseInt(items[1]);}
+        catch (NumberFormatException e) {
+            System.out.println("ERROR: Invalid int parsing handleDroneResponse");
+            return;
+        }
+
+        // get current state of this drone     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
+        String droneState = items[2];
+
+        // get request of this drone and convert it to DroneEvent
+        DroneEvent eventRequest;
+        try { eventRequest = DroneEvent.valueOf(items[3]); }
+        catch (IllegalArgumentException e) {
+            System.out.println("ERROR: Unknown drone event: " + items[3]);
+            return;
+        }
+
+        // if schedulerInstructions is acknowledgement
+        if( schedulerInstructions.equals("ACK") )
+        {
+            // proceed with drone request
+
+        }
+        else if( schedulerInstructions.equals("NEW") )
+        {
+            // new tasking for that drone
 
         }
 
+        this.responseQueue.put(droneId, response);
+        System.out.println(" DRONE SUBSYSTEM added response to shared queue for drone: " + droneId);
     }
 
 //    /**
@@ -251,7 +245,7 @@ public class DroneSubsystem implements Runnable {
     public static void main(String[] args)
     {
         DroneSubsystem dss = new DroneSubsystem();
-        dss.initializeAllDrones(1);
+        dss.initializeAllDrones(dss, 1);
 
         Thread droneSubsystem = new Thread( dss );
         droneSubsystem.start();

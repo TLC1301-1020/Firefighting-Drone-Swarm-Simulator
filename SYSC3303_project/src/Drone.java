@@ -21,11 +21,25 @@ public class Drone implements Runnable
     private float xPos;
     private float yPos;
 
-    public Drone( int id )
+    private int payloadCount;
+    private final int MAX_PAYLOAD = 10;
+
+    // TODO: Add drone attributes such as battery, acceleration etc.
+
+    private DroneSubsystem droneSubsystem;
+
+    /**
+     * Constructor automatically initializes the drone as IDLE, no fireRequest, and full payload
+     * @param droneSubsystem shared object to interact with DroneSubsystem controller invoking requestQueue and response queue
+     * @param id drone initialized with this id
+     */
+    public Drone( DroneSubsystem droneSubsystem, int id )
     {
-        this.currentState = new DroneRefill(); // initialized state needs to refill
-        this.droneId = 0;
+        this.droneSubsystem = droneSubsystem;
+        this.droneId = id;
+        this.currentState = new DroneIdle(); // initialized state as is idle (has payload loaded)
         this.currTask = null;
+        this.payloadCount = MAX_PAYLOAD; // initialed with full payload
     }
 
     /**
@@ -55,14 +69,6 @@ public class Drone implements Runnable
     public void handleEvent(DroneEvent event) {
         this.currentState.handleEvent(this, event);
     }
-
-    /**
-     * returns the scheduler instance
-     * @return scheduler instance
-     */
-//    public Scheduler getScheduler() {
-//        return scheduler;
-//    }
 
     /**
      * returns the drone id
@@ -106,6 +112,33 @@ public class Drone implements Runnable
             throw new RuntimeException(e);
         }
         System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
+    }
+
+    private String makeRequest()
+    {
+        return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest();
+    }
+
+    /**
+     * thread function for Drone
+     *  1. adds the request to the controller based on the current state and next successful action
+     *  2. check the droneSubsystem for next instructions for this drone
+     *  3. handle instructions given
+     */
+    @Override
+    public void run()
+    {
+        while (true)
+        {
+            // adds the request to the controller based on the current state and next successful action
+            this.droneSubsystem.addRequest( makeRequest() );
+
+            // check the droneSubsystem for next instructions for this drone
+            String response = this.droneSubsystem.getResponse();
+
+            // handle instructions given
+            handleResponse(response);
+        }
     }
 
 }
