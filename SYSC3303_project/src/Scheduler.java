@@ -24,41 +24,6 @@ public class Scheduler {
      */
     private boolean responseAvailable = false;
 
-    class DroneStatus
-    {
-        private final int droneId;
-        private String state;   // string
-        private int x;
-        private int y;
-
-        /**
-         * initializes drone status for drone object with given drone id,
-         * current state as "[REFILLING]" and location at (0,0)
-            @param droneId drone id to be given to drone when initialized
-         */
-        public DroneStatus(int droneId) {
-            this.droneId = droneId;
-            this.state = "[REFILLING]";
-            this.x = 0;
-            this.y = 0;
-        }
-
-        public int getDroneId() { return droneId; }
-        public String getState() { return state; }
-        public void setState(String newState) { this.state = newState; }
-        public int getX() { return this.x; }
-        public int getY() { return this.y; }
-        public void setLocation(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-        public String toString()
-        {
-            return this.droneId+":"+this.state+":"+this.x+":"+this.y;
-        }
-    }
-
     private HashMap<Integer,DroneStatus> drones;
 
 //    private List<DroneSubsystem> drones;    // old
@@ -183,7 +148,7 @@ public class Scheduler {
          */
 
 
-        // handle request to proceed with the state corresponding to when this event occurs
+        // TODO: handle request to proceed with the state corresponding to when this event occurs
         switch(eventRequest)
         {
             case NEW_FIRE_REQUEST:
@@ -303,6 +268,7 @@ public class Scheduler {
         return null;
     }
 
+    // TODO: Damon & Dylan update this logic to pick a suitable drone from the DroneStatus objects available in this.drones
     private synchronized DroneSubsystem getAvailableDrone(){
         for (DroneSubsystem drone : drones) {
             if (drone.getCurrentState() instanceof DroneIdle && drone.getCurrTask() == null){
@@ -328,6 +294,8 @@ public class Scheduler {
         currentState.handleEvent(this, SchedulerEvent.REQUEST_RECEIVED);
         notifyAll();
     }
+
+    // TODO: Damon & Dylan update this logic to pick a suitable drone from the DroneStatus objects available in this.drones
     public synchronized void assignRequests(){
         while (!requestQueue.isEmpty()) {
             DroneSubsystem availableDrone = getAvailableDrone();

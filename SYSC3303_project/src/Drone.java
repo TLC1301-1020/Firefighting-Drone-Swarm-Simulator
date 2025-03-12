@@ -141,9 +141,12 @@ public class Drone implements Runnable
         }
     }
 
+    /**
+     * Parse the incoming response and proceed accordingly.
+     * @param response the incoming response.
+     */
     private void handleResponse(String response) {
-        // parse response
-        /*  response types
+        /*  Response types
             "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y      - for saying acknowledge
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
          */
@@ -176,6 +179,8 @@ public class Drone implements Runnable
                 System.out.println("ERROR: Unknown drone event: " + items[3]);
                 return;
             }
+
+            this.currentState.handleEvent(this, eventRequest);
 
         }
         else if( schedulerInstructions.equals("NEW") )

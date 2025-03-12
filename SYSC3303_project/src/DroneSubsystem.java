@@ -44,28 +44,47 @@ public class DroneSubsystem implements Runnable {
         }
     }
 
-    // drones will submit requests here
+    /**
+     * Method used by Drone instances to store a request for the Scheduler.
+     * @param request the Drone's request.
+     */
     public void addRequest(String request)
     {
-        this.requestQueue.offer(request);
+        synchronized (requestQueue) {
+            this.requestQueue.offer(request);
+        }
     }
 
     // subsystem retrieves and processes request at head of queue
-    public String pollRequest()
-    {
-        return this.requestQueue.poll();
-    }
+//    public String pollRequest()
+//    {
+//        return this.requestQueue.poll();
+//    }
 
     // subsystem places response for a specific drone given by scheduler
-    public void addResponse(int droneId, String response)
-    {
-        this.responseQueue.put(droneId, response);
-    }
+//    public void addResponse(int droneId, String response)
+//    {
+//        this.responseQueue.put(droneId, response);
+//    }
 
-    // drones will retrieve its response here
+    /**
+     * Method used by Drone instances to retrieve Scheduler responses.
+     * @param droneId the requesting Drone's ID.
+     * @return the Scheduler's request.
+     */
     public String getResponse(int droneId)
     {
-        return this.responseQueue.remove(droneId);
+        synchronized (responseQueue) {
+            while (!responseQueue.containsKey(droneId)) {
+                try {
+                    responseQueue.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            notifyAll();
+            return responseQueue.get(droneId);
+        }
     }
 
     public void initializeAllDrones( DroneSubsystem droneSubsystem, int numberOfDrones )
@@ -158,22 +177,6 @@ public class DroneSubsystem implements Runnable {
         this.responseQueue.put(droneId, response);
         System.out.println(" DRONE SUBSYSTEM added response to shared queue for drone: " + droneId);
     }
-
-//    /**
-//     * simulates drone travel to the fire location
-//     */
-//    private void travel() {
-//        // TODO: sleep for an amount of time equal to destination / maxVelocity
-//
-//        // For now, arbitrary amount of sleep to simulate travel time
-//        System.out.println("Drone " + this.droneId + ": travelling to zone " + currTask.getZoneId() + "\n");
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//        System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
-//    }
 
     /**
      * Send a UDP packet to the Scheduler.
