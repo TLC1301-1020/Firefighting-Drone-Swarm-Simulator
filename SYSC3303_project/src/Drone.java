@@ -4,33 +4,35 @@ public class Drone implements Runnable
      * State Machine Object to handle the state of the drone */
     public DroneState currentState;
     /**
-     * current fire request assigned to the drone
-     */
+     * current fire request assigned to the drone */
     private FireRequest currTask;
     /**
-     * unique identifier for the drone
-     */
+     * unique identifier for the drone */
     private int droneId;
     /**
-     * maximum velocity of the drone in meters per second
-     */
+     * maximum velocity of the drone in meters per second */
     private final float maxVelocity = 20;
     /**
-     * x and y coordinates representing drone position
-     */
-    private float xPos;
-    private float yPos;
-
+     * coordinates representing drone position */
+    private int xPos,yPos = 0;
+    /**
+     * number of fire extinguisher balls currently loaded on the drone */
     private int payloadCount;
+    /**
+     * max payload the drone can carry of fire extinguisher balls */
     private final int MAX_PAYLOAD = 10;
 
     // TODO: Add drone attributes such as battery, acceleration etc.
 
+    /**
+     * Pointer to the DroneSubsystem instance controlling all drones. Purpose
+     * is so each drone can communicate with it in a thread safe way via
+     * DroneSubsystem.requestQueue and DroneSubsystem.responseQueue*/
     private DroneSubsystem droneSubsystem;
 
     /**
      * Constructor automatically initializes the drone as IDLE, no fireRequest, and full payload
-     * @param droneSubsystem shared object to interact with DroneSubsystem controller invoking requestQueue and response queue
+     * @param droneSubsystem shared object to interact with DroneSubsystem router invoking requestQueue and response queue
      * @param id drone initialized with this id
      */
     public Drone( DroneSubsystem droneSubsystem, int id )
@@ -121,7 +123,7 @@ public class Drone implements Runnable
 
     /**
      * thread function for Drone
-     *  1. adds the request to the controller based on the current state and next successful action
+     *  1. adds the request to the router host based on the current state and next successful action
      *  2. check the droneSubsystem for next instructions for this drone
      *  3. handle instructions given
      */
@@ -130,7 +132,7 @@ public class Drone implements Runnable
     {
         while (true)
         {
-            // adds the request to the controller based on the current state and next successful action
+            // adds the request to the router host based on the current state and next successful action
             this.droneSubsystem.addRequest( makeRequest() );
 
             // check the droneSubsystem for next instructions for this drone
@@ -142,7 +144,11 @@ public class Drone implements Runnable
     }
 
     /**
-     * Parse the incoming response and proceed accordingly.
+     * Parse the incoming response and drone proceeds accordingly to a new state.
+     * <p>
+     * * Also handles if the scheduler tasked the drone to have a new fire request
+     * and handles what happens to the old fire request
+     * <p>
      * @param response the incoming response.
      */
     private void handleResponse(String response) {
@@ -199,9 +205,6 @@ public class Drone implements Runnable
             this.currentState.handleEvent(this, DroneEvent.NEW_FIRE_REQUEST);
 
         }
-
-
-
     }
 
 }

@@ -1,5 +1,8 @@
+/**
+ * StateMachine Event that causes the transitions for drones from
+ * one state to another
+ */
 enum DroneEvent {
-    // ALL EVENTS GO HERE leading to state changes
     NEW_FIRE_REQUEST,
     PERMISSION_TO_DROP,
     PAYLOAD_DROPPED,
@@ -11,9 +14,32 @@ enum DroneEvent {
     STUCK_RESOLVED
 }
 
+/**
+ * Interface for Drone context switching state pattern machine
+ */
 interface DroneState {
+
+    /**
+     * transitions to next state given the event passed in for the drone specified.
+     * Also invokes any available actions for the drone.
+     * @param drone the state is transitioning for this drone
+     * @param event the event that causes the state transition
+     */
     public void handleEvent(Drone drone, DroneEvent event);
+
+    /**
+     * @return string value for the current state of the drone
+     */
     public String display();
+
+    /**
+     * when a drone is asking permission from the scheduler to
+     * transission to the next state, it calls this function and
+     * sends the contents as the request body in the UDP communication.<p>
+     * This request corresponds to the next successful event a drone will
+     * transition from. <p> see {@code enum DroneEvent} for the request body options
+     * @return String value of the request body corresponding to the {@code enum DroneEvent}
+     * */
     public String getRequest();
 }
 
@@ -38,24 +64,13 @@ class DroneIdle implements DroneState {
     }
 }
 
-//
-//class DroneIdle implements DroneState {
-//
-//    public void handleEvent(DroneSubsystem drone, DroneEvent event) {
-//        if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
-//            System.out.println("DRONE " + drone.getDroneId() + " is now engaging fire in zone " + drone.getCurrTask().getZoneId());
-//            drone.setState( new DroneActive(new DroneEngage()) );
-//        }
-//    }
-//
-//    @Override
-//    public String display() {
-//        return "[IDLE]";
-//    }
-//}
-
 class DroneActive implements DroneState {
 
+    /**
+     * Substate is the DroneState within the superstate DroneActive.
+     * Substates for DroneActive include:
+     * <p>DroneEngage, DroneDeploy, and DroneReturn
+     * */
     private DroneState subState;
 
     public DroneActive(DroneState substate) {
@@ -72,6 +87,11 @@ class DroneActive implements DroneState {
         return "[ACTIVE]" + this.subState.display();
     }
 
+    /**
+     * Substate is the DroneState within the superstate DroneActive.
+     * Substates for DroneActive include:
+     * @return the substate of this Superstate:  DroneEngage, DroneDeploy, and DroneReturn
+     * */
     public DroneState getSubState() {
         return this.subState;
     }
