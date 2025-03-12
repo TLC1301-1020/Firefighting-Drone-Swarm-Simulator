@@ -141,4 +141,62 @@ public class Drone implements Runnable
         }
     }
 
+    private void handleResponse(String response) {
+        // parse response
+        /*  response types
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y      - for saying acknowledge
+            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
+         */
+        String[] items = response.split(":");
+//        if (items.length != 6) return;
+
+        String schedulerInstructions = items[0];
+
+        // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
+        int droneId = -1;
+        try {droneId = Integer.parseInt(items[1]);}
+        catch (NumberFormatException e) {
+            System.out.println("ERROR: Invalid int parsing handleDroneResponse");
+            return;
+        }
+
+        // get current state of this drone     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
+        String droneState = items[2];
+
+
+        // if schedulerInstructions is acknowledgement
+        if( schedulerInstructions.equals("ACK") )
+        {
+            // proceed with drone request
+
+            // get request of this drone and convert it to DroneEvent
+            DroneEvent eventRequest;
+            try { eventRequest = DroneEvent.valueOf(items[3]); }
+            catch (IllegalArgumentException e) {
+                System.out.println("ERROR: Unknown drone event: " + items[3]);
+                return;
+            }
+
+        }
+        else if( schedulerInstructions.equals("NEW") )
+        {
+            // new tasking for that drone
+            // idle || doing something == rerouted
+            // request = "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
+
+            // get request of this drone and convert it to DroneEvent
+            String newFireRequest= items[3];
+
+            // handles if currently has a fire request -> reassigning that
+                // sending to scheduler or to subsystem
+            setCurrTask( new FireRequest(newFireRequest) );
+
+            this.currentState.handleEvent(this, DroneEvent.NEW_FIRE_REQUEST);
+
+        }
+
+
+
+    }
+
 }

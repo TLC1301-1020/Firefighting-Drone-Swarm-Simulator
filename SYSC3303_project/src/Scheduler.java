@@ -386,6 +386,8 @@ public class Scheduler {
     private void processResponse(Response response, DroneSubsystem drone) {
         String message = response.getStatus();
 
+        // response in expected format "KEYWORD:DRONE_ID:STATE:RESPONSE:X:Y"
+
         switch (message) {
             case "arrived_at_zone":
                 drone.handleEvent(DroneEvent.PERMISSION_TO_DROP);

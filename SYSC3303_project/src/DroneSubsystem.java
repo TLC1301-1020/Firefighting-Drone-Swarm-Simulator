@@ -146,9 +146,6 @@ public class DroneSubsystem implements Runnable {
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
          */
         String[] items = response.split(":");
-//        if (items.length != 6) return;
-
-        String schedulerInstructions = items[0];
 
         // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
         int droneId = -1;
@@ -156,29 +153,6 @@ public class DroneSubsystem implements Runnable {
         catch (NumberFormatException e) {
             System.out.println("ERROR: Invalid int parsing handleDroneResponse");
             return;
-        }
-
-        // get current state of this drone     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
-        String droneState = items[2];
-
-        // get request of this drone and convert it to DroneEvent
-        DroneEvent eventRequest;
-        try { eventRequest = DroneEvent.valueOf(items[3]); }
-        catch (IllegalArgumentException e) {
-            System.out.println("ERROR: Unknown drone event: " + items[3]);
-            return;
-        }
-
-        // if schedulerInstructions is acknowledgement
-        if( schedulerInstructions.equals("ACK") )
-        {
-            // proceed with drone request
-
-        }
-        else if( schedulerInstructions.equals("NEW") )
-        {
-            // new tasking for that drone
-
         }
 
         this.responseQueue.put(droneId, response);
