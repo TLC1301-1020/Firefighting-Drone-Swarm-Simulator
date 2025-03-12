@@ -42,6 +42,16 @@ public class DroneSubsystem implements Runnable {
     private final ConcurrentHashMap<Integer, String> responseQueue = new ConcurrentHashMap<>();
 
     /**
+     * Placeholder zone coordinates
+     */
+    public final static int zone2X = 100;
+    public final static int zone2Y = 150;
+    public final static int zone3X = 200;
+    public final static int zone3Y = 100;
+    public final static int zone7X = 350;
+    public final static int zone7Y = 50;
+
+    /**
      * creates a drone subsystem instance for routing messages to and from all drone threads and
      * the Scheduler
      */

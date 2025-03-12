@@ -14,7 +14,7 @@ public class Drone implements Runnable
     private final float maxVelocity = 20;
     /**
      * coordinates representing drone position */
-    private int xPos,yPos = 0;
+    private double xPos,yPos = 0;
     /**
      * number of fire extinguisher balls currently loaded on the drone */
     private int payloadCount;
@@ -104,21 +104,59 @@ public class Drone implements Runnable
      * simulates drone travel to the fire location
      */
     private void travel() {
-        // TODO: sleep for an amount of time equal to destination / maxVelocity
 
-        // For now, arbitrary amount of sleep to simulate travel time
-        System.out.println("Drone " + this.droneId + ": travelling to zone " + currTask.getZoneId() + "\n");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        // TODO: Read separate input file that has zone coordinate details. Maybe pass in these coordinates to the function instead, and move this logic elsewhere
+        int finalX, finalY;
+        switch (currTask.getZoneId()) {
+            case 2:
+                finalX = DroneSubsystem.zone2X;
+                finalY = DroneSubsystem.zone2Y;
+                break;
+            case 3:
+                finalX = DroneSubsystem.zone3X;
+                finalY = DroneSubsystem.zone3Y;
+                break;
+            case 7:
+                finalX = DroneSubsystem.zone7X;
+                finalY = DroneSubsystem.zone7Y;
+                break;
+            default:
+                finalX = 0;
+                finalY = 0;
         }
+
+        // Calculate distance from this Drone's current location to target location
+        double distance = Math.sqrt( Math.pow( (finalX - this.xPos), 2 ) + Math.pow( (finalY - this.yPos), 2 ) );
+
+        // Calculate change in Drone X and Y coordinates per meter travelled
+        double deltaY = (finalX - this.xPos)/distance;
+        double deltaX = (finalY - this.yPos)/distance;
+
+        while (distance > 0) {
+
+            // TODO: Change rate of update if too frequent and causing delay
+            // Sleep for the time it takes to travel one meter
+            try {
+                Thread.sleep((long) (1000/this.maxVelocity));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                // Interrupted: are we changing requests, or providing a status update?
+                // For now, return and start checking if we have a request again
+                return;
+            }
+
+            this.xPos += deltaX;
+            this.yPos += deltaY;
+            distance -= 1;
+
+        }
+
         System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
     }
 
     private String makeRequest()
     {
-        return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest();
+        return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest()+":"+(int) this.xPos+":"+(int) this.yPos;
     }
 
     /**
