@@ -128,26 +128,29 @@ public class Drone implements Runnable
         // Calculate distance from this Drone's current location to target location
         double distance = Math.sqrt( Math.pow( (finalX - this.xPos), 2 ) + Math.pow( (finalY - this.yPos), 2 ) );
 
-        // Calculate change in Drone X and Y coordinates per meter travelled
-        double deltaY = (finalX - this.xPos)/distance;
-        double deltaX = (finalY - this.yPos)/distance;
+        // Calculate duration of trip in milliseconds
+        double travelTime = (distance/this.maxVelocity)*1000;
 
-        while (distance > 0) {
+        // Calculate change in Drone X and Y coordinates per meter travelled
+        double deltaX = ( this.xPos ) - ( this.xPos + ( ( finalX - this.xPos )*( 1000/this.maxVelocity ) / travelTime ) );
+        double deltaY = ( this.yPos ) - ( this.yPos + ( ( finalY - this.yPos )*( 1000/this.maxVelocity ) / travelTime ) );
+
+        double spentTime = 0;
+        while (spentTime < travelTime) {
 
             // TODO: Change rate of update if too frequent and causing delay
             // Sleep for the time it takes to travel one meter
             try {
                 Thread.sleep((long) (1000/this.maxVelocity));
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
                 // Interrupted: are we changing requests, or providing a status update?
                 // For now, return and start checking if we have a request again
                 return;
             }
 
+            spentTime += (1000/this.maxVelocity);
             this.xPos += deltaX;
             this.yPos += deltaY;
-            distance -= 1;
 
         }
 

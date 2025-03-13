@@ -238,6 +238,9 @@ public class DroneSubsystem implements Runnable {
         // add response to the response queue for drones to get
         addResponse(droneId, response);
         System.out.println(" DRONE SUBSYSTEM added response to shared queue for drone: " + droneId);
+
+        // if scheduler sends status request / reroute
+        drones.get(droneId).interrupt();
     }
 
     /**
