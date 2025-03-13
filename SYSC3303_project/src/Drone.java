@@ -22,6 +22,17 @@ public class Drone implements Runnable
      * max payload the drone can carry of fire extinguisher balls */
     private final int MAX_PAYLOAD = 10;
 
+    /**
+     * used for when checking what request drone will send.
+     * if {@code true} drone will safely send request of location without
+     * disordering state context switching sequence.
+     * <p>
+     * will only change when is interrupted in the travel function in the DroneTravel state
+     * <p>
+     * see {@code Drone.setSendStatus()} & {@code Drone.checkSendStatus()}
+     */
+    private boolean sendStatus = false;
+
     // TODO: Add drone attributes such as battery, acceleration etc.
 
     /**
@@ -103,7 +114,7 @@ public class Drone implements Runnable
     /**
      * simulates drone travel to the fire location
      */
-    private void travel() {
+    public void travel() {
 
         // TODO: Read separate input file that has zone coordinate details. Maybe pass in these coordinates to the function instead, and move this logic elsewhere
         int finalX, finalY;
@@ -144,7 +155,8 @@ public class Drone implements Runnable
                 Thread.sleep((long) (1000/this.maxVelocity));
             } catch (InterruptedException e) {
                 // Interrupted: are we changing requests, or providing a status update?
-                // For now, return and start checking if we have a request again
+                // sets flag for sending location status to scheduler
+                setSendStatus();
                 return;
             }
 
@@ -157,24 +169,68 @@ public class Drone implements Runnable
         System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
     }
 
+    /**
+     checks {@code Drone.sendStatus} and resets it to false after - used for when drone sends request,
+     will safely send request of location without disordering state context switching
+     @return true if drone will send a request of location status update
+     */
+    private boolean checkSendStatus()
+    {
+        boolean output = this.sendStatus;
+        this.sendStatus = false;
+        return output;
+    }
+
+    /**
+        sets {@code Drone.sendStatus} to true - used for when drone sends request,
+        will safely send request of location without disordering state context switching
+     */
+    private void setSendStatus()
+    {
+        this.sendStatus = true;
+    }
+
+    /**
+     * request format is:<p>
+     *     DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS
+     @return String value of entire formatted request to send to scheduler based on current state
+     and location.
+     */
     private String makeRequest()
     {
         return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest()+":"+(int) this.xPos+":"+(int) this.yPos;
     }
 
     /**
+     * request format is:<p>
+     *     DRONE_ID:STATE:[STATUS]:X_POS:Y_POS
+     @return String value of entire formatted request to send to scheduler based on current state
+     and location.
+     */
+    private String makeStatusRequest()
+    {
+        return this.droneId+":"+this.currentState.display()+":[STATUS]:"+(int) this.xPos+":"+(int) this.yPos;
+    }
+
+    /**
      * thread function for Drone
-     *  1. adds the request to the router host based on the current state and next successful action
-     *  2. check the droneSubsystem for next instructions for this drone
-     *  3. handle instructions given
+     *  1. checks if drone should send its location status as a request, otherwise, sends normal request based on state <p>
+     *  2. adds the request to the router host based on the current state and next successful action<p>
+     *  3. check the droneSubsystem for next instructions for this drone<p>
+     *  4. handle instructions given<p>
      */
     @Override
     public void run()
     {
         while (true)
         {
-            // adds the request to the router host based on the current state and next successful action
-            this.droneSubsystem.addRequest( makeRequest() );
+            String request;
+            // check if drone should send its location status as a request, otherwise, sends normal request based on state
+            if( checkSendStatus() ) request = makeStatusRequest();
+            else                    request = makeRequest();
+
+            // adds the request to the router host
+            this.droneSubsystem.addRequest( request );
 
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);

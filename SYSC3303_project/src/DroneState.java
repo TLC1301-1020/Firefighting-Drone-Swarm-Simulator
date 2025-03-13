@@ -49,7 +49,7 @@ class DroneIdle implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
             System.out.println("DRONE " + drone.getDroneId() + " is now engaging fire in zone " + drone.getCurrTask().getZoneId());
-            drone.setState( new DroneActive(new DroneEngage()) );
+            drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
     }
 
@@ -69,7 +69,7 @@ class DroneActive implements DroneState {
     /**
      * Substate is the DroneState within the superstate DroneActive.
      * Substates for DroneActive include:
-     * <p>DroneEngage, DroneDeploy, and DroneReturn
+     * <p>DroneTravel, DroneDeploy, and DroneReturn
      * */
     private DroneState subState;
 
@@ -90,7 +90,7 @@ class DroneActive implements DroneState {
     /**
      * Substate is the DroneState within the superstate DroneActive.
      * Substates for DroneActive include:
-     * @return the substate of this Superstate:  DroneEngage, DroneDeploy, and DroneReturn
+     * @return the substate of this Superstate:  DroneTravel, DroneDeploy, and DroneReturn
      * */
     public DroneState getSubState() {
         return this.subState;
@@ -102,7 +102,26 @@ class DroneActive implements DroneState {
     }
 }
 
-class DroneEngage implements DroneState {
+class DroneTravel implements DroneState
+{
+
+    /**
+     constructor calls all entry and exit actions in sequence for this drone <
+     @param drone state belongs to this drone instance
+     */
+    public DroneTravel( Drone drone )
+    {
+        handleEntryAction( drone );
+    }
+
+    /**
+     handles the entry action logic for this drone, invokes all entry actions in sequence
+     @param drone state belongs to this drone instance
+     */
+    public void handleEntryAction( Drone drone )
+    {
+        drone.travel();
+    }
 
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
@@ -114,8 +133,8 @@ class DroneEngage implements DroneState {
         else if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) ) {
             // assigned new fire request mid engagement
             System.out.println("DRONE " + drone.getDroneId() + " is now engaging fire in zone " + drone.getCurrTask().getZoneId());
-            // sets the same state of engaging but to a new zone
-            drone.setState( new DroneActive(new DroneEngage()) );
+            // sets the same state of traveling but to a new zone
+            drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) ) {
             // drone became stuck during active flight engagement

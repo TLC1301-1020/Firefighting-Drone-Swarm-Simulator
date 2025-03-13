@@ -93,6 +93,13 @@ public class Scheduler {
         }
     }
 
+    /**
+     * response format is:<p>
+     *     RESPONSE_HEADER:REQUEST<p>
+     *     or<p>
+     *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS
+     @return String value of entire formatted respnse to send to Drone
+     */
     private String handleDroneRequest(String request)
     {
         // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y"
@@ -121,7 +128,7 @@ public class Scheduler {
         try {
             eventRequest = DroneEvent.valueOf(items[2]); // Convert string to enum
         } catch (IllegalArgumentException e) {
-            return "ERROR: Unknown drone event: " + items[2];
+            if (!items[2].equals("[STATUS]")) return "ERROR: Unknown drone event: " + items[2];
         }
 
         // get location of this drone
@@ -138,7 +145,7 @@ public class Scheduler {
         drone.setLocation(x, y);
 
         /* request types
-            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y  -> when there is a request
+            "STATUS"   DRONE_ID:<STATE>:[STATUS]:X:Y  -> when there is a request
             DRONE_ID:<STATE>:REQUEST:X:Y  -> when there is a request
          */
 
@@ -170,7 +177,14 @@ public class Scheduler {
             case STUCK_RESOLVED:
                 return handleIdleDrone(drone);
             default:
-                return "ERROR: UNKNOWN drone request: " + request; // should never hit
+                if ( items[2].equals("[STATUS]") )
+                {
+                    // drone is sending location update while traveling to fire zone
+                }
+                else
+                {
+                    return "ERROR: UNKNOWN drone request: " + request; // should never hit
+                }
         }
 
         // (If parsing with processResponse(), need to update that logic to include checking for which droneId, etc.)
