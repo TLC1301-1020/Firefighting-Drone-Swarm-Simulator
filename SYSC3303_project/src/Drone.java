@@ -273,9 +273,14 @@ public class Drone implements Runnable
         // if schedulerInstructions is acknowledgement
         if( schedulerInstructions.equals("ACK") )
         {
-            // proceed with drone request
-
-            // get request of this drone and convert it to DroneEvent
+            // check to see if this drone was interrupted when travelling
+            if( droneState.equals("[TRAVELING]") && items[2].equals("[STATUS]") )
+            {
+                // continue handling old fire request
+                this.currentState.handleEvent(this, DroneEvent.OLD_FIRE_REQUEST);
+                return;
+            }
+            // otherwise get request of this drone and convert it to DroneEvent
             DroneEvent eventRequest;
             try { eventRequest = DroneEvent.valueOf(items[3]); }
             catch (IllegalArgumentException e) {

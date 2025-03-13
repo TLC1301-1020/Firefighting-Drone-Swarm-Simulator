@@ -3,6 +3,7 @@
  * one state to another
  */
 enum DroneEvent {
+    OLD_FIRE_REQUEST,   // for when interrupted when traveling, will resume on old fireRequest
     NEW_FIRE_REQUEST,
     PERMISSION_TO_DROP,
     PAYLOAD_DROPPED,
@@ -48,7 +49,7 @@ class DroneIdle implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
         if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
-            System.out.println("DRONE " + drone.getDroneId() + " is now engaging fire in zone " + drone.getCurrTask().getZoneId());
+            System.out.println("DRONE " + drone.getDroneId() + " is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
     }
@@ -124,28 +125,38 @@ class DroneTravel implements DroneState
     }
 
     @Override
-    public void handleEvent(Drone drone, DroneEvent event) {
-        if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) ) {
+    public void handleEvent(Drone drone, DroneEvent event)
+    {
+        if ( event.equals( DroneEvent.OLD_FIRE_REQUEST ) )
+        {
+            // continuing to answer the fire request after interrupted
+            System.out.println("DRONE " + drone.getDroneId() + " is continuing to answer the fire request after interrupted: " + drone.getCurrTask().getZoneId());
+            drone.setState( new DroneActive(new DroneDeploy()) );
+        }
+        else if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) )
+        {
             // arrived at zone and is asking to open payload doors
             System.out.println("DRONE " + drone.getDroneId() + " is given permission to drop payload on fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneDeploy()) );
         }
-        else if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) ) {
-            // assigned new fire request mid engagement
-            System.out.println("DRONE " + drone.getDroneId() + " is now engaging fire in zone " + drone.getCurrTask().getZoneId());
+        else if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) )
+        {
+            // assigned new fire request mid travel
+            System.out.println("DRONE " + drone.getDroneId() + " is now traveling fire in zone " + drone.getCurrTask().getZoneId());
             // sets the same state of traveling but to a new zone
             drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
-        else if( event.equals( DroneEvent.DRONE_STUCK ) ) {
-            // drone became stuck during active flight engagement
-            System.out.println("DRONE " + drone.getDroneId() + " is stuck during engagement flight ");
+        else if( event.equals( DroneEvent.DRONE_STUCK ) )
+        {
+            // drone became stuck during active flight travel
+            System.out.println("DRONE " + drone.getDroneId() + " is stuck during travel flight ");
             // set state to fault of stuck
             drone.setState( new DroneFault(new DroneFaultStuck()) );
         }
     }
     @Override
     public String display() {
-        return "[ENGAGING]";
+        return "[TRAVELING]";
     }
 
     @Override

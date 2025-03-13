@@ -212,6 +212,21 @@ public class DroneSubsystem implements Runnable {
         }
     }
 
+    // for seperate thread of listening to scheduler requests ?
+    private void handleLocationStatusInterrupt()
+    {
+        /*  request types from Scheduler: "STATUS"
+         */
+
+        // check all drones for their state of DroneTravel
+        // from those call
+        this.drones.get(droneId).interrupt();
+        // they will stop traveling and send their location to the scheduler,
+        // and response will determine if they proceed with next
+        // "ACK" response header means they will continue to travel
+        // "NEW" response header means they will be reassigned new fire request
+    }
+
     /**
      * handle the response passed to the drone subsystem from the scheduler
      * <p>
@@ -235,12 +250,10 @@ public class DroneSubsystem implements Runnable {
             System.out.println("ERROR: Invalid int parsing handleDroneResponse");
             return;
         }
+
         // add response to the response queue for drones to get
         addResponse(droneId, response);
         System.out.println(" DRONE SUBSYSTEM added response to shared queue for drone: " + droneId);
-
-        // if scheduler sends status request / reroute
-        drones.get(droneId).interrupt();
     }
 
     /**
