@@ -157,7 +157,7 @@ public class DroneSubsystem implements Runnable {
         for( int i = 0 ; i < numberOfDrones ; ++i )
         {
             // request in expected format "DRONE_ID:STATE:REQUEST:X:Y"
-            String request = i+":[IDLE]:INIT:0:0";
+            String request = i+":[IDLE]:INIT:0:0:0";
             sendPacket(request);
 
             String response = receivePacket();
@@ -173,6 +173,18 @@ public class DroneSubsystem implements Runnable {
         this.dronesInitialized = true;
     }
 
+    private void startListeningToScheduler() {
+        Thread schedulerListener = new Thread(() -> {
+            while (true) {
+                String response = receivePacket();
+                System.out.println("[SCHEDULER->DRONE SUBSYSTEM] received response: " + response);
+                handleDroneResponse(response);
+            }
+        });
+        schedulerListener.setDaemon(true);
+        schedulerListener.start();
+    }
+
 
     /**
      * thread function for the drone subsystem. calls the thread function for all drones in
@@ -186,29 +198,22 @@ public class DroneSubsystem implements Runnable {
 
         // TODO: determine a proper condition for thread lifespan
 
-        // start thread functions for all drones
+        // Start listening to Scheduler messages in a separate thread
+        startListeningToScheduler();
+
+        // Start thread functions for all drones
         Collection<Thread> allDrones = this.drones.values();
-        for ( Thread drone : allDrones )
-        {
+        for (Thread drone : allDrones) {
             drone.start();
         }
 
-        while(true)
-        {
-            // check request queue - communication from drones
+        while (true) {
+            // Check request queue - communication from drones
             String request = getRequest();
-
             System.out.println("[DRONE SUBSYSTEM->SCHEDULER] handling drone request: " + request);
 
-            // send udp packet direct to scheduler with drone request
+            // Send UDP packet direct to scheduler with drone request
             sendPacket(request);
-
-            // receive response from scheduler
-            String response = receivePacket();
-            System.out.println("[SCHEDULER->DRONE SUBSYSTEM] received response: " + response);
-
-            // handle the response and the drone its intended for
-            handleDroneResponse(response);
         }
     }
 
@@ -238,12 +243,12 @@ public class DroneSubsystem implements Runnable {
     private void handleDroneResponse(String response)
     {
         /*  response types
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y      - for saying acknowledge
-            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
+            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
          */
         String[] items = response.split(":");
 
-        // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
+        // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         int droneId = -1;
         try {droneId = Integer.parseInt(items[1]);}
         catch (NumberFormatException e) {

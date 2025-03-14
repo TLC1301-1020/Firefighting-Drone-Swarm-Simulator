@@ -35,6 +35,13 @@ public class FireRequest {
         this.severity = severity;
     }
 
+    public FireRequest() {
+        this.time = "0";
+        this.zoneId = -1;
+        this.eventType = "0";
+        this.severity = "0";
+    }
+
     /**
      * Create a FireRequest instance using a String representation created by toString().
      * @param request the String representation.

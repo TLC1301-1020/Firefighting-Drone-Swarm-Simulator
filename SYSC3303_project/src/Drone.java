@@ -51,7 +51,7 @@ public class Drone implements Runnable
         this.droneSubsystem = droneSubsystem;
         this.droneId = id;
         this.currentState = new DroneIdle(); // initialized state as is idle (has payload loaded)
-        this.currTask = null;
+        this.currTask = new FireRequest();
         this.payloadCount = MAX_PAYLOAD; // initialed with full payload
     }
 
@@ -182,8 +182,8 @@ public class Drone implements Runnable
     }
 
     /**
-        sets {@code Drone.sendStatus} to true - used for when drone sends request,
-        will safely send request of location without disordering state context switching
+     sets {@code Drone.sendStatus} to true - used for when drone sends request,
+     will safely send request of location without disordering state context switching
      */
     private void setSendStatus()
     {
@@ -198,7 +198,7 @@ public class Drone implements Runnable
      */
     private String makeRequest()
     {
-        return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest()+":"+(int) this.xPos+":"+(int) this.yPos;
+        return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest()+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
     }
 
     /**
@@ -209,7 +209,7 @@ public class Drone implements Runnable
      */
     private String makeStatusRequest()
     {
-        return this.droneId+":"+this.currentState.display()+":[STATUS]:"+(int) this.xPos+":"+(int) this.yPos;
+        return this.droneId+":"+this.currentState.display()+":[STATUS]:"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
     }
 
     /**
@@ -250,8 +250,9 @@ public class Drone implements Runnable
      */
     private void handleResponse(String response) {
         /*  Response types
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y      - for saying acknowledge
-            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
+            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
+            "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for blocking after requesting a new fire request
          */
         String[] items = response.split(":");
 //        if (items.length != 6) return;
@@ -269,9 +270,19 @@ public class Drone implements Runnable
         // get current state of this drone     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
         String droneState = items[2];
 
+        if (schedulerInstructions.equals("WAIT")) {
+            System.out.println("Drone " + droneId + " is waiting for a new fire request...");
+
+            // Block the drone thread until it receives a new task
+            while (true) {
+                String newResponse = droneSubsystem.getResponse(droneId);
+                handleResponse(newResponse);
+            }
+        }
+
 
         // if schedulerInstructions is acknowledgement
-        if( schedulerInstructions.equals("ACK") )
+        else if( schedulerInstructions.equals("ACK") )
         {
             // check to see if this drone was interrupted when travelling
             if( droneState.equals("[TRAVELING]") && items[2].equals("[STATUS]") )
@@ -301,7 +312,7 @@ public class Drone implements Runnable
             String newFireRequest= items[3];
 
             // handles if currently has a fire request -> reassigning that
-                // sending to scheduler or to subsystem
+            // sending to scheduler or to subsystem
             setCurrTask( new FireRequest(newFireRequest) );
 
             this.currentState.handleEvent(this, DroneEvent.NEW_FIRE_REQUEST);
