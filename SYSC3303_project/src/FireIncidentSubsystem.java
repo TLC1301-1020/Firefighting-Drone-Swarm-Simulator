@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The FireIncidentSubsystem handles fire incident requests and communicates with the Scheduler.
@@ -16,7 +18,12 @@ public class FireIncidentSubsystem implements Runnable {
     /**
      * the file for fire events
      */
-    private String inputFile = "SYSC3303_project/src/fireincidents.txt";
+    private String inputFile = "fireincidents.txt";
+
+    /**
+     * The file for zone definitions.
+     */
+    private String zoneFile = "zone_file.csv";
 
     /**
      * scheduler instance for managing fire requests
@@ -29,6 +36,12 @@ public class FireIncidentSubsystem implements Runnable {
     private List<FireRequest> tasks;
 
     private DatagramSocket receiveSocket, sendSocket;
+
+    /**
+     * A static map that holds zone information parsed from the csv
+     * Key: Zone ID, Value: Zone object
+     */
+    public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
@@ -50,6 +63,13 @@ public class FireIncidentSubsystem implements Runnable {
      * reads fire incidents, sends requests, and processes responses
      */
     public void run(){
+        // Parse the zone file first.
+        readZoneFile(zoneFile);
+        // For debugging, print the parsed zones.
+        for (Zone zone : zoneMap.values()) {
+            System.out.println("Parsed zone: " + zone);
+            System.out.println(zoneMap.get(7));
+        }
 
         readInputFile(inputFile);
 
@@ -101,6 +121,48 @@ public class FireIncidentSubsystem implements Runnable {
         }
     }
 
+    /**
+     * Reads the zone information from the given CSV file and stores it in the static zoneMap.
+     * Expected CSV format:
+     * Zone ID,Zone Start,Zone End
+     * 1,(0;0),(700;600)
+     * 2,(0;600),(650;1500)
+     *
+     * @param zoneFile the file containing zone definitions.
+     */
+    public void readZoneFile(String zoneFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(zoneFile))) {
+            String header = reader.readLine(); // Skip header
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Expected line format: Zone ID,Zone Start,Zone End
+                String[] parts = line.split(",");
+                if (parts.length < 3) continue;
+                int zoneId = Integer.parseInt(parts[0].trim());
+
+                // Parse start coordinates
+                String startStr = parts[1].trim();
+                startStr = startStr.substring(1, startStr.length() - 1); // Remove parentheses
+                String[] startCoords = startStr.split(";");
+                int startX = Integer.parseInt(startCoords[0].trim());
+                int startY = Integer.parseInt(startCoords[1].trim());
+
+                // Parse end coordinates
+                String endStr = parts[2].trim();
+                endStr = endStr.substring(1, endStr.length() - 1); // Remove parentheses
+                String[] endCoords = endStr.split(";");
+                int endX = Integer.parseInt(endCoords[0].trim());
+                int endY = Integer.parseInt(endCoords[1].trim());
+
+                // Create and store the zone
+                Zone zone = new Zone(zoneId, startX, startY, endX, endY);
+                zoneMap.put(zoneId, zone);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Sends an incident request to the scheduler.
@@ -127,22 +189,21 @@ public class FireIncidentSubsystem implements Runnable {
      * Receives updates from the scheduler via a UDP packet.
      * Waits for an incoming message and prints the received update.
      */
-    private String receiveUpdate(){
-        byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
-        DatagramPacket receivePacket = new DatagramPacket(data, data.length);
-
+    private String receiveUpdate() {
         try {
-            // Block until a datagram is received via socket
+            // Set a timeout of 5000ms (5 seconds)
+            receiveSocket.setSoTimeout(5000);
+            byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
+            DatagramPacket receivePacket = new DatagramPacket(data, data.length);
             receiveSocket.receive(receivePacket);
-        } catch(IOException e) {
+            return new String(data, 0, receivePacket.getLength());
+        } catch (SocketTimeoutException e) {
+            return "No updates available";
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        int len = receivePacket.getLength();
-
-        // Return a String from the byte array
-        return new String(data,0,len);
     }
+
 
     public static void main(String[] args) {
         FireIncidentSubsystem fis = new FireIncidentSubsystem();

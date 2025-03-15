@@ -69,13 +69,13 @@ public class DroneSubsystem implements Runnable {
      * Method used by Drone instances to store a request for the Scheduler.
      * @param request the Drone's request.
      */
-    public void addRequest(String request)
-    {
+    public void addRequest(String request) {
         synchronized (requestQueue) {
             this.requestQueue.offer(request);
-            this.requestQueue.notifyAll();
+            requestQueue.notifyAll();
         }
     }
+
 
     /**
      * custom blocking take() method <p>
@@ -118,22 +118,20 @@ public class DroneSubsystem implements Runnable {
      * @param droneId the requesting Drones ID
      * @return the Scheduler response to the drone request
      */
-    public String getResponse(int droneId)
-    {
-        synchronized (this.responseQueue)
-        {
-            while (!this.responseQueue.containsKey(droneId))
-            {
+    public String getResponse(int droneId) {
+        synchronized (this.responseQueue) {
+            while (!this.responseQueue.containsKey(droneId)) {
                 try {
                     this.responseQueue.wait();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-            notifyAll();
+            responseQueue.notifyAll();
             return this.responseQueue.get(droneId);
         }
     }
+
 
     /**
      * Method for instantiating all drone threads with unique drone id's and a
@@ -147,31 +145,34 @@ public class DroneSubsystem implements Runnable {
      * @param numberOfDrones the number of drone threads to be initialized in the system
      *
      */
-    public void initializeAllDrones( DroneSubsystem droneSubsystem, int numberOfDrones )
-    {
-        // check if drones already initialized
-        if( this.dronesInitialized ) return;
+    public void initializeAllDrones(DroneSubsystem droneSubsystem, int numberOfDrones) {
+        // Check if drones are already initialized
+        if (this.dronesInitialized) return;
 
         int droneCounter = 0;
-
-        for( int i = 0 ; i < numberOfDrones ; ++i )
-        {
-            // request in expected format "DRONE_ID:STATE:REQUEST:X:Y"
-            String request = i+":[IDLE]:INIT:0:0:0";
+        for (int i = 0; i < numberOfDrones; ++i) {
+            // Build the registration request using the expected format:
+            // "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+            String request = i + ":[IDLE]:INIT:0:0:0";
             sendPacket(request);
 
+            // Wait for a response from the Scheduler
             String response = receivePacket();
-            if(response.contains("ACK"))
-            {
-                this.drones.put( i, new Thread(new Drone(droneSubsystem, i) ) );
-                ++droneCounter;
-                System.out.println( " DRONE " + i + " is online");
+
+            // Check if the response contains "ACK"
+            if (response != null && response.trim().contains("ACK")) {
+                // Registration is successful; add the drone thread to the collection.
+                this.drones.put(i, new Thread(new Drone(droneSubsystem, i)));
+                droneCounter++;
+                System.out.println("DRONE " + i + " is online");
+            } else {
+                System.out.println("DRONE " + i + " failed to come online. Response: " + response);
             }
-            else System.out.println( " DRONE " + i + " failed to come online");
         }
-        System.out.println( droneCounter + "/" + numberOfDrones + " are now online");
+        System.out.println(droneCounter + "/" + numberOfDrones + " are now online");
         this.dronesInitialized = true;
     }
+
 
     private void startListeningToScheduler() {
         Thread schedulerListener = new Thread(() -> {
@@ -212,6 +213,13 @@ public class DroneSubsystem implements Runnable {
             String request = getRequest();
             System.out.println("[DRONE SUBSYSTEM->SCHEDULER] handling drone request: " + request);
 
+            // Artificial delay added here to slow things down
+            try {
+                Thread.sleep(100); // Adjust the delay as needed
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
             // Send UDP packet direct to scheduler with drone request
             sendPacket(request);
         }
@@ -225,7 +233,7 @@ public class DroneSubsystem implements Runnable {
 
         // check all drones for their state of DroneTravel
         // from those call
-        this.drones.get(droneId).interrupt();
+        //this.drones.get(droneId).interrupt();
         // they will stop traveling and send their location to the scheduler,
         // and response will determine if they proceed with next
         // "ACK" response header means they will continue to travel

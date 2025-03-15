@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -8,6 +10,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Scheduler synchronizes request handling, ensuring proper thread-safe task distribution and response management
  */
 public class Scheduler {
+    public static Map<Integer, Zone> zoneMap = new HashMap<>();
+
+
     /**
      * current fire request being processed
      */
@@ -42,6 +47,8 @@ public class Scheduler {
     /**
      * Placeholder zone coordinates
      */
+
+    /*
     public final static int zone2Xstart = 50;
     public final static int zone2Xend = 150;
     public final static int zone2Ystart = 100;
@@ -56,6 +63,37 @@ public class Scheduler {
     public final static int zone7Xend = 400;
     public final static int zone7Ystart = 50;
     public final static int zone7Yend = 150;
+    */
+
+    private void parseZoneFile(String zoneFilePath) {
+        try (BufferedReader br = new BufferedReader(new FileReader(zoneFilePath))) {
+            String header = br.readLine(); // Skip header line
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length < 3) continue;
+                int zoneId = Integer.parseInt(parts[0].trim());
+                // Parse start coordinates
+                String startStr = parts[1].trim();
+                startStr = startStr.substring(1, startStr.length() - 1); // Remove parentheses
+                String[] startCoords = startStr.split(";");
+                int startX = Integer.parseInt(startCoords[0].trim());
+                int startY = Integer.parseInt(startCoords[1].trim());
+                // Parse end coordinates
+                String endStr = parts[2].trim();
+                endStr = endStr.substring(1, endStr.length() - 1); // Remove parentheses
+                String[] endCoords = endStr.split(";");
+                int endX = Integer.parseInt(endCoords[0].trim());
+                int endY = Integer.parseInt(endCoords[1].trim());
+                // Create a new Zone and add it to the map
+                Zone zone = new Zone(zoneId, startX, startY, endX, endY);
+                zoneMap.put(zoneId, zone);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Thread to listen to FireIncidentSubsystem.
@@ -117,6 +155,26 @@ public class Scheduler {
         }
     }
 
+    private class ProcessPendingRequests implements Runnable {
+        @Override
+        public void run() {
+            while (true) {
+                synchronized(requestQueue) {
+                    if (!requestQueue.isEmpty()) {
+                        FireRequest req = requestQueue.peek();
+                        assignFireRequest(req);
+                    }
+                }
+                try {
+                    Thread.sleep(100); // Check every 100ms; adjust as needed.
+                } catch (InterruptedException e) {
+                    System.out.println("ProcessPendingRequests thread interrupted.");
+                }
+            }
+        }
+    }
+
+
     /**
      * response format is:<p>
      *     RESPONSE_HEADER:REQUEST<p>
@@ -126,6 +184,13 @@ public class Scheduler {
      */
     private String handleDroneRequest(String request)
     {
+        if (request.startsWith("INIT")) {
+            // Extract the drone ID if needed; here we assume items[0] is the drone ID in the registration request.
+            int droneId = Integer.parseInt(request.split(":")[0]);
+            System.out.println("[SCHEDULER] Registering drone " + droneId);
+            return "ACK:" + droneId + ":REGISTERED";
+        }
+
         // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         String[] items = request.split(":");
         if (items.length != 6) return "ERROR: Invalid request format:" + request;
@@ -190,12 +255,21 @@ public class Scheduler {
             case PERMISSION_TO_DROP:
                 return "ACK:" + request;
             case PAYLOAD_DROPPED:
-                return "ACK:" + request;
+                // Send an ACK with a completed to allow to transition to next state
+                return "ACK:" + request + ":COMPLETED";
             case PAYLOAD_DEPLOY_FAILURE:
                 return "ACK:" + request;
             case DEPLOY_FAILURE_ACKNOWLEDGED:
                 return "ACK:" + request;
             case RETURNED_TO_BASE:
+                FireRequest completedTask = drone.getCurrentTask();
+                synchronized(this) {
+                    if (!completedTask.isDefault()) {
+                        currentResponse = new Response(completedTask, "COMPLETED");
+                        responseAvailable = true;
+                        notifyAll(); // Wake up any thread waiting for a response.
+                    }
+                }
                 return "ACK:" + request;
             case REFILL_COMPLETE:
                 return "ACK:" + request;
@@ -230,6 +304,7 @@ public class Scheduler {
      * Assigns a fire request to the most appropriate drone.
      */
     private void assignFireRequest(FireRequest fireRequest) {
+        /*
         int zone = fireRequest.getZoneId();
         int zoneX,zoneY;
         switch(zone)
@@ -251,7 +326,9 @@ public class Scheduler {
                 zoneY = 0;
                 break;
         }
-        int selectedDroneId = selectDrone(zoneX, zoneY, zone);
+        */
+
+        int selectedDroneId = selectDrone(fireRequest);
 
         if (selectedDroneId == -1) {
             System.out.println("No available drones to handle fire request");
@@ -269,6 +346,7 @@ public class Scheduler {
             // If drone had a previous task, droneRequest is constructed with "NEW" and uses the current x and y location values
             String droneRequest = "NEW:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
                     selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
+            System.out.println("[SCHEDULER] Sending to DroneSubsystem: " + droneRequest);
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
             System.out.println("Reassigning previous task: " + previousTask);
             addRequest(previousTask); // Put the old request back into the queue
@@ -296,6 +374,13 @@ public class Scheduler {
         this.requestQueue = new LinkedList<>();
         this.currentState = new Idle();
 
+        // Parse the zone file to populate zoneMap
+        parseZoneFile("zone_file.csv");
+        // Print out the zones for debugging
+        for (Zone zone : zoneMap.values()) {
+            System.out.println("Parsed zone: " + zone);
+        }
+
         try {
             sendSocket = new DatagramSocket();
             fireReceiveSocket = new DatagramSocket(FIRE_TO_SCHEDULER_PORT);
@@ -310,6 +395,9 @@ public class Scheduler {
 
         droneHandler.start();
         fireHandler.start();
+
+        // Start the background thread that processes pending fire requests
+        new Thread(new ProcessPendingRequests()).start();
 
         // alternative use thread methods
 //        new Thread(this::droneHandler).start();
@@ -370,74 +458,103 @@ public class Scheduler {
         else return "ERROR: drone initialization with id error " + droneId;
     }
 
-    private int selectDrone(int requestX, int requestY, int requestZone) {
-        DroneStatus bestCandidate = null;
-        int bestDroneId = -1;
-
+    private int selectDrone(FireRequest request) {
+        Zone targetZone = zoneMap.get(request.getZoneId());
+        if (targetZone == null) {
+            System.out.println("Error: No zone data found for zone ID " + request.getZoneId());
+            return -1;
+        }
+        // First, check for traveling drones that are on the path
         for (Map.Entry<Integer, DroneStatus> entry : drones.entrySet()) {
-            int droneId = entry.getKey();
             DroneStatus drone = entry.getValue();
-
-            if (drone.getState().equals("[TRAVELING]")) {
-                if (willPassThrough(drone, requestZone)) {
-                    return droneId; // Immediately return if a traveling drone will pass through the request zone
-                }
-            } else if (drone.getState().equals("[IDLE]")) {
-                if (bestCandidate == null) {
-                    bestCandidate = drone;
-                    bestDroneId = droneId;
+            if (drone.getState().contains("TRAVELING")) {
+                // Here you would implement your own logic to decide if the drone is on the path.
+                // For illustration, assume we have an isOnPath() method:
+                if (isOnPath(drone, targetZone)) {
+                    return entry.getKey();
                 }
             }
         }
-
-        return bestDroneId; // If no traveling drone is found, return an idle drone (or -1 if none are available)
+        // Otherwise, select the closest idle drone
+        return findClosestIdleDrone(targetZone);
     }
 
-    private boolean willPassThrough(DroneStatus drone, int requestZone) {
+    private boolean isOnPath(DroneStatus drone, Zone targetZone) {
+        // Retrieve the destination zone from the drone's current task.
+        Zone destZone = zoneMap.get(drone.getCurrentTask().getZoneId());
+        if (destZone == null) return false;
+        // Use a helper method to check for intersection.
+        return zonesIntersect(destZone, targetZone);
+    }
+
+    private boolean zonesIntersect(Zone a, Zone b) {
+        // Check if two zones (rectangles) intersect.
+        return !(a.getEndX() < b.getStartX() ||
+                a.getStartX() > b.getEndX() ||
+                a.getEndY() < b.getStartY() ||
+                a.getStartY() > b.getEndY());
+    }
+
+
+
+    /**
+     * Finds the closest idle drone to the center of the target zone.
+     *
+     * @param targetZone the target Zone object.
+     * @return the drone ID of the closest idle drone, or -1 if none are available.
+     */
+    private int findClosestIdleDrone(Zone targetZone) {
+        if (targetZone == null) {
+            System.out.println("Error: Target zone not found for the requested zone ID.");
+            return -1;
+        }
+        int bestDroneId = -1;
+        double bestDistance = Double.MAX_VALUE;
+        for (Map.Entry<Integer, DroneStatus> entry : drones.entrySet()) {
+            DroneStatus drone = entry.getValue();
+            if (drone.getState().contains("IDLE")) {
+                int centerX = (targetZone.getStartX() + targetZone.getEndX()) / 2;
+                int centerY = (targetZone.getStartY() + targetZone.getEndY()) / 2;
+                double distance = Math.sqrt(Math.pow(drone.getX() - centerX, 2) + Math.pow(drone.getY() - centerY, 2));
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestDroneId = entry.getKey();
+                }
+            }
+        }
+        return bestDroneId;
+    }
+
+
+
+    private boolean willPassThrough(DroneStatus drone, int requestZoneId) {
         int droneX = drone.getX();
         int droneY = drone.getY();
-        int destinationZone = drone.getCurrentTask().getZoneId();
 
-        // Get zone boundaries
-        int zoneXStart, zoneXEnd, zoneYStart, zoneYEnd;
-        switch (destinationZone) {
-            case 2:
-                zoneXStart = zone2Xstart; zoneXEnd = zone2Xend;
-                zoneYStart = zone2Ystart; zoneYEnd = zone2Yend;
-                break;
-            case 3:
-                zoneXStart = zone3Xstart; zoneXEnd = zone3Xend;
-                zoneYStart = zone3Ystart; zoneYEnd = zone3Yend;
-                break;
-            case 7:
-                zoneXStart = zone7Xstart; zoneXEnd = zone7Xend;
-                zoneYStart = zone7Ystart; zoneYEnd = zone7Yend;
-                break;
-            default:
-                return false; // Unknown zone
+        // Get the destination zone from the drone's current task
+        Zone destinationZone = zoneMap.get(drone.getCurrentTask().getZoneId());
+        // Get the request zone from the zoneMap
+        Zone requestZone = zoneMap.get(requestZoneId);
+
+        if (destinationZone == null || requestZone == null) {
+            return false; // Cannot determine without proper zone data
         }
 
-        // Check if the drone is already in the requested zone
-        if (droneX >= zoneXStart && droneX <= zoneXEnd &&
-                droneY >= zoneYStart && droneY <= zoneYEnd) {
+        // Check if the drone is already within the destination zone
+        if (droneX >= destinationZone.getStartX() && droneX <= destinationZone.getEndX() &&
+                droneY >= destinationZone.getStartY() && droneY <= destinationZone.getEndY()) {
             return true;
         }
 
-        // Check if the drone will pass through the request zone
-        switch (requestZone) {
-            case 2:
-                return (droneX <= zone2Xend && droneX >= zone2Xstart) &&
-                        (droneY <= zone2Yend && droneY >= zone2Ystart);
-            case 3:
-                return (droneX <= zone3Xend && droneX >= zone3Xstart) &&
-                        (droneY <= zone3Yend && droneY >= zone3Ystart);
-            case 7:
-                return (droneX <= zone7Xend && droneX >= zone7Xstart) &&
-                        (droneY <= zone7Yend && droneY >= zone7Ystart);
-            default:
-                return false;
+        // Check if the drone's current position is within the request zone boundaries
+        if (droneX >= requestZone.getStartX() && droneX <= requestZone.getEndX() &&
+                droneY >= requestZone.getStartY() && droneY <= requestZone.getEndY()) {
+            return true;
         }
+
+        return false;
     }
+
 
 
 

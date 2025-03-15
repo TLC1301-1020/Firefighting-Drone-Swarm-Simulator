@@ -115,59 +115,99 @@ public class Drone implements Runnable
      * simulates drone travel to the fire location
      */
     public void travel() {
-
-        // TODO: Read separate input file that has zone coordinate details. Maybe pass in these coordinates to the function instead, and move this logic elsewhere
         int finalX, finalY;
-        switch (currTask.getZoneId()) {
-            case 2:
-                finalX = DroneSubsystem.zone2X;
-                finalY = DroneSubsystem.zone2Y;
-                break;
-            case 3:
-                finalX = DroneSubsystem.zone3X;
-                finalY = DroneSubsystem.zone3Y;
-                break;
-            case 7:
-                finalX = DroneSubsystem.zone7X;
-                finalY = DroneSubsystem.zone7Y;
-                break;
-            default:
-                finalX = 0;
-                finalY = 0;
+        // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
+        Zone zone = FireIncidentSubsystem.zoneMap.get(currTask.getZoneId());
+        if (zone != null) {
+            // Calculate the center of the zone as the target destination.
+            finalX = (zone.getStartX() + zone.getEndX()) / 2;
+            finalY = (zone.getStartY() + zone.getEndY()) / 2;
+        } else {
+            finalX = 0;
+            finalY = 0;
         }
 
-        // Calculate distance from this Drone's current location to target location
-        double distance = Math.sqrt( Math.pow( (finalX - this.xPos), 2 ) + Math.pow( (finalY - this.yPos), 2 ) );
+        // Calculate distance from current position to target.
+        double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
+        // Calculate travel time in milliseconds.
+        double travelTime = (distance / this.maxVelocity) * 1000;
 
-        // Calculate duration of trip in milliseconds
-        double travelTime = (distance/this.maxVelocity)*1000;
-
-        // Calculate change in Drone X and Y coordinates per meter travelled
-        double deltaX = ( this.xPos ) - ( this.xPos + ( ( finalX - this.xPos )*( 1000/this.maxVelocity ) / travelTime ) );
-        double deltaY = ( this.yPos ) - ( this.yPos + ( ( finalY - this.yPos )*( 1000/this.maxVelocity ) / travelTime ) );
+        // Determine the time per step (simulate one "step" of travel)
+        double stepTime = 1000 / this.maxVelocity; // in milliseconds
+        // Calculate the number of steps to reach the destination.
+        double steps = travelTime / stepTime;
+        // Compute change in X and Y per step.
+        double deltaX = (finalX - this.xPos) / steps;
+        double deltaY = (finalY - this.yPos) / steps;
 
         double spentTime = 0;
         while (spentTime < travelTime) {
-
-            // TODO: Change rate of update if too frequent and causing delay
-            // Sleep for the time it takes to travel one meter
             try {
-                Thread.sleep((long) (1000/this.maxVelocity));
+                Thread.sleep((long) stepTime);
             } catch (InterruptedException e) {
-                // Interrupted: are we changing requests, or providing a status update?
-                // sets flag for sending location status to scheduler
+                System.out.println("Drone " + this.droneId + " interrupted during travel. Sending status update.");
+                // Immediately send a status update with the current location and task.
+                this.droneSubsystem.addRequest(makeStatusRequest());
                 setSendStatus();
                 return;
             }
-
-            spentTime += (1000/this.maxVelocity);
+            spentTime += stepTime;
             this.xPos += deltaX;
             this.yPos += deltaY;
-
         }
-
         System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
     }
+
+    /*
+    public void travel() {
+        int finalX, finalY;
+        // Retrieve the zone from the FireIncidentSubsystem's zoneMap.
+        Zone zone = FireIncidentSubsystem.zoneMap.get(currTask.getZoneId());
+        if (zone != null) {
+            // Use the center of the zone as the target.
+            finalX = (zone.getStartX() + zone.getEndX()) / 2;
+            finalY = (zone.getStartY() + zone.getEndY()) / 2;
+        } else {
+            finalX = 0;
+            finalY = 0;
+        }
+
+        // Calculate distance and travel time
+        double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
+        double travelTime = (distance / this.maxVelocity) * 1000; // in milliseconds
+
+        // Record starting positions
+        double startX = this.xPos;
+        double startY = this.yPos;
+        double startTime = System.currentTimeMillis();
+
+        // Update position until travel time is reached
+        while (System.currentTimeMillis() - startTime < travelTime) {
+            if (Thread.currentThread().isInterrupted()) {
+                System.out.println("Drone " + this.droneId + " interrupted during travel. Sending status update.");
+                this.droneSubsystem.addRequest(makeStatusRequest());
+                setSendStatus();
+                return;
+            }
+            try {
+                Thread.sleep(100); // Update every 100ms
+            } catch (InterruptedException e) {
+                System.out.println("Drone " + this.droneId + " interrupted during travel (sleep). Sending status update.");
+                this.droneSubsystem.addRequest(makeStatusRequest());
+                setSendStatus();
+                return;
+            }
+            double elapsed = System.currentTimeMillis() - startTime;
+            double fraction = Math.min(elapsed / travelTime, 1.0); // Ensure it does not exceed 1.0
+            this.xPos = startX + fraction * (finalX - startX);
+            this.yPos = startY + fraction * (finalY - startY);
+        }
+        // Ensure final position is exactly at the target.
+        this.xPos = finalX;
+        this.yPos = finalY;
+        System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
+    }*/
+
 
     /**
      checks {@code Drone.sendStatus} and resets it to false after - used for when drone sends request,
@@ -271,37 +311,34 @@ public class Drone implements Runnable
         String droneState = items[2];
 
         if (schedulerInstructions.equals("WAIT")) {
-            System.out.println("Drone " + droneId + " is waiting for a new fire request...");
-
-            // Block the drone thread until it receives a new task
-            while (true) {
-                String newResponse = droneSubsystem.getResponse(droneId);
-                handleResponse(newResponse);
-            }
+            System.out.println("Drone " + droneId + " waiting for new task...");
+            String newResponse;
+            do {
+                newResponse = droneSubsystem.getResponse(droneId);
+            } while (newResponse.startsWith("WAIT")); // Continue if response still indicates WAIT
+            handleResponse(newResponse);
         }
 
 
         // if schedulerInstructions is acknowledgement
-        else if( schedulerInstructions.equals("ACK") )
-        {
-            // check to see if this drone was interrupted when travelling
-            if( droneState.equals("[TRAVELING]") && items[2].equals("[STATUS]") )
-            {
-                // continue handling old fire request
-                this.currentState.handleEvent(this, DroneEvent.OLD_FIRE_REQUEST);
-                return;
+        else if (schedulerInstructions.equals("ACK")) {
+            // If the response has at least 7 fields and the 7th field is "COMPLETED", process as payload dropped.
+            if (items.length >= 7 && items[6].trim().equals("COMPLETED")) {
+                System.out.println("[DRONE] Received ACK with COMPLETED status.");
+                this.currentState.handleEvent(this, DroneEvent.PAYLOAD_DROPPED);
+            } else {
+                // Existing handling for other ACK types:
+                DroneEvent eventRequest;
+                try {
+                    eventRequest = DroneEvent.valueOf(items[3]);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("ERROR: Unknown drone event: " + items[3]);
+                    return;
+                }
+                this.currentState.handleEvent(this, eventRequest);
             }
-            // otherwise get request of this drone and convert it to DroneEvent
-            DroneEvent eventRequest;
-            try { eventRequest = DroneEvent.valueOf(items[3]); }
-            catch (IllegalArgumentException e) {
-                System.out.println("ERROR: Unknown drone event: " + items[3]);
-                return;
-            }
-
-            this.currentState.handleEvent(this, eventRequest);
-
         }
+
         else if( schedulerInstructions.equals("NEW") )
         {
             // new tasking for that drone
@@ -309,7 +346,7 @@ public class Drone implements Runnable
             // request = "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
 
             // get request of this drone and convert it to DroneEvent
-            String newFireRequest= items[3];
+            String newFireRequest= items[6]; //actually in item 6
 
             // handles if currently has a fire request -> reassigning that
             // sending to scheduler or to subsystem

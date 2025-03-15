@@ -108,6 +108,18 @@ public class FireRequest {
     }
 
     /**
+     * Determines if this FireRequest is the default (i.e. empty) request.
+     * @return true if this is the default FireRequest; false otherwise.
+     */
+    public boolean isDefault() {
+        return this.zoneId == -1 &&
+                this.time.equals("0") &&
+                this.eventType.equals("0") &&
+                this.severity.equals("0");
+    }
+
+
+    /**
      * creates a string representation of the fire request object
      * @return formatted string representing the fire request
      */

@@ -196,8 +196,20 @@ class DroneReturn implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.RETURNED_TO_BASE )) {
             // arrived at base and is now refilling
+
+            // If the current task is default, transition to idle.
+            if (drone.getCurrTask().isDefault()) {
+                System.out.println("No active task; transitioning to IDLE state.");
+                drone.setState(new DroneIdle());
+            } else {
+                System.out.println("Active task exists; transitioning to DroneRefill state.");
+                drone.setState(new DroneRefill());
+            }
+            /*
             System.out.println("DRONE " + drone.getDroneId() + " has returned to base and is now refilling payload");
             drone.setState( new DroneRefill() );
+
+            */
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) ) {
             // drone became stuck during active flight return
@@ -223,7 +235,12 @@ class DroneRefill implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.REFILL_COMPLETE )) {
             System.out.println("DRONE " + drone.getDroneId() + " has refilled its payload successfully and is now idle");
-            drone.setState( new DroneIdle() );
+            if (drone.getCurrTask().isDefault()) {
+                System.out.println("No active task; transitioning to IDLE state.");
+                drone.setState(new DroneIdle());
+            } else {
+                // For now, transition to idle.
+                drone.setState(new DroneIdle());}
         }
     }
     @Override
