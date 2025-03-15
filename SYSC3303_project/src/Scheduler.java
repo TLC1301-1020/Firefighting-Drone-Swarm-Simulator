@@ -101,10 +101,15 @@ public class Scheduler {
     private class listenToFire extends Thread {
         @Override
         public void run() {
+            System.out.println("\n[ SF  ]  -   SCHEDULER IS LISTENING TO FIRE  -   ");
+
             while (true) {
+                System.out.println("\n[ SF  ]  -   SCHEDULER IS WAITING FOR MESSAGE FROM FIRE  -   ");
 
                 // This request will be a new FireRequest to add, or just a data request for an available Drone response
                 String request = receivePacket(fireReceiveSocket);
+
+                System.out.print("\n[SF<-F]  -   SCHEDULER RECEIVED FROM FIRE: "+request+ "  -   ");
 
                 /* TODO: need to handle scheduler set state here with two threads
                  droneHandler and fireHandler threads
@@ -114,11 +119,14 @@ public class Scheduler {
 
                 // At this point currentResponse should be a list of responses since we will most likely be taking more than one at a time
                 if (request.contains("FIRE_DATA_REQUEST")) {
+                    System.out.println("request contains FIRE_DATA_REQUEST - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
                     sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, takeResponse().toString());
                 }
 
                 // Otherwise it's a new FireRequest. Add it, and send back an acknowledgement
                 else {
+                    System.out.println("request is new fire request - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
+
                     FireRequest fireRequest = new FireRequest(request);
                     addRequest(fireRequest);
                     sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
@@ -137,7 +145,9 @@ public class Scheduler {
     private class listenToDrone extends Thread {
         @Override
         public void run() {
+            System.out.println("\n[ SD  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
             while (true) {
+                System.out.println("\n[ SD  ]  -   SCHEDULER IS WAITING FOR MESSAGE FROM DRONE  -   ");
                 // Receive packet from the DroneSubsystem
                 String request = receivePacket(droneReceiveSocket);
 
@@ -146,9 +156,13 @@ public class Scheduler {
                  */
 
                 // get drone status -
+                System.out.println("\n[SD<-D]  -   SCHEDULER RECEIVED FROM DRONE: "+request+ "  -   ");
 
                 // Parse the packet (assuming we are not actually storing physical Drones anymore, and instead are only storing crucial data for each drone):
                 String response = handleDroneRequest(request);
+
+                System.out.println("\n[SD->D]  -   SCHEDULER RESPONSE TO DRONE: "+response+ "  -   ");
+
                 // send response
                 sendPacket( sendSocket, DRONE_SUBSYSTEM_PORT, response );
             }
@@ -184,6 +198,8 @@ public class Scheduler {
      */
     private String handleDroneRequest(String request)
     {
+        System.out.println("\n[SD   ]  -   SCHEDULER HANDLE DRONE REQUEST: "+request+ "  -   ");
+
         if (request.startsWith("INIT")) {
             // Extract the drone ID if needed; here we assume items[0] is the drone ID in the registration request.
             int droneId = Integer.parseInt(request.split(":")[0]);
@@ -216,9 +232,13 @@ public class Scheduler {
         // get request of this drone and convert it to DroneEvent
         DroneEvent eventRequest = null;
         try {
-            eventRequest = DroneEvent.valueOf(items[2]); // Convert string to enum
+            eventRequest = DroneEvent.valueOfEvent(items[2]); // Convert string to enum
         } catch (IllegalArgumentException e) {
-            if (!items[2].equals("[STATUS]")) return "ERROR: Unknown drone event: " + items[2];
+            if (!items[2].equals( DroneEvent.STATUS )) return "ERROR: Unknown drone event: " + items[2];
+            else
+            {
+                // Status request event flow here
+            }
         }
 
         // get location of this drone
@@ -236,7 +256,7 @@ public class Scheduler {
 
 
         /* request types
-            "STATUS"   DRONE_ID:<STATE>:[STATUS]:X:Y:CURR_TASK  -> when there is a request
+            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y:CURR_TASK  -> when there is a request
             DRONE_ID:<STATE>:REQUEST:X:Y:CURR_TASK  -> when there is a request
          */
 
@@ -277,16 +297,21 @@ public class Scheduler {
                 return "ACK:" + request;
             case STUCK_RESOLVED:
                 return "ACK:" + request;
+            case STATUS:
+                // drone is sending location update while traveling to fire zone
+                return "Temp:" + request;
             default:
-                if ( items[2].equals("[STATUS]") )
-                {
-                    // drone is sending location update while traveling to fire zone
-                    return "Temp:" + request;
-                }
-                else
-                {
-                    return "ERROR: UNKNOWN drone request: " + request; // should never hit
-                }
+//                if ( items[2].equals( DroneEvent.STATUS ) )
+//                {
+//                    // drone is sending location update while traveling to fire zone
+//                    return "Temp:" + request;
+//                }
+//                else
+//                {
+//                    return "ERROR: UNKNOWN drone request: " + request; // should never hit
+//                }
+                return "ERROR: UNKNOWN drone request: " + request; // should never hit
+
         }
 
         // (If parsing with processResponse(), need to update that logic to include checking for which droneId, etc.)
@@ -304,6 +329,7 @@ public class Scheduler {
      * Assigns a fire request to the most appropriate drone.
      */
     private void assignFireRequest(FireRequest fireRequest) {
+        System.out.println("\n[ SF  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
         /*
         int zone = fireRequest.getZoneId();
         int zoneX,zoneY;
@@ -330,12 +356,15 @@ public class Scheduler {
 
         int selectedDroneId = selectDrone(fireRequest);
 
+        System.out.println("\n[ SF  ]  -   selectedDroneId: " + selectedDroneId);
+
         if (selectedDroneId == -1) {
             System.out.println("No available drones to handle fire request");
             return;
         }
 
         DroneStatus selectedDrone = drones.get(selectedDroneId);
+        System.out.println("\n[ SF  ]  -   selectedDrone: " + selectedDrone.toString());
         FireRequest previousTask = selectedDrone.getCurrentTask();
         selectedDrone.setCurrentTask(fireRequest);
         removeRequest(fireRequest);
@@ -459,6 +488,9 @@ public class Scheduler {
     }
 
     private int selectDrone(FireRequest request) {
+
+        System.out.println("\n[ SF  ]  -   SELECT DRONE CALLED  -   " + request.toString());
+
         Zone targetZone = zoneMap.get(request.getZoneId());
         if (targetZone == null) {
             System.out.println("Error: No zone data found for zone ID " + request.getZoneId());
@@ -467,6 +499,8 @@ public class Scheduler {
         // First, check for traveling drones that are on the path
         for (Map.Entry<Integer, DroneStatus> entry : drones.entrySet()) {
             DroneStatus drone = entry.getValue();
+            System.out.println("\n[ SF  ]  -   SELECT DRONE check state ID: " +drone.getDroneId() + " : " + drone.getState());
+
             if (drone.getState().contains("TRAVELING")) {
                 // Here you would implement your own logic to decide if the drone is on the path.
                 // For illustration, assume we have an isOnPath() method:
@@ -504,6 +538,8 @@ public class Scheduler {
      * @return the drone ID of the closest idle drone, or -1 if none are available.
      */
     private int findClosestIdleDrone(Zone targetZone) {
+        System.out.println("\n[ SF  ]  -   FIND CLOSES IDLE DRONE CALLED  -   " + targetZone.toString());
+
         if (targetZone == null) {
             System.out.println("Error: Target zone not found for the requested zone ID.");
             return -1;
@@ -735,9 +771,9 @@ public class Scheduler {
      * @return the message received.
      */
     private String receivePacket(DatagramSocket socket) {
+
         byte data[] = new byte[DATA_BUFFER_SIZE];
         DatagramPacket receivePacket = new DatagramPacket(data, data.length);
-
         try {
             // Block until a datagram is received via socket
             socket.receive(receivePacket);
@@ -746,6 +782,7 @@ public class Scheduler {
         }
 
         int len = receivePacket.getLength();
+        System.out.println("\n x x x RECEIVE PACKET SCHEDULER x x x " + new String(data,0,len));
 
         // Return a String from the byte array
         return new String(data,0,len);
@@ -758,6 +795,8 @@ public class Scheduler {
      * @param response message to send.
      */
     private void sendPacket(DatagramSocket socket, int port, String response) {
+        System.out.println("\n x x x SEND PACKET SCHEDULER x x x " + response);
+
         byte msg[] = response.getBytes();
         DatagramPacket packet;
 

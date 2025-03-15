@@ -178,7 +178,7 @@ public class DroneSubsystem implements Runnable {
         Thread schedulerListener = new Thread(() -> {
             while (true) {
                 String response = receivePacket();
-                System.out.println("[SCHEDULER->DRONE SUBSYSTEM] received response: " + response);
+                System.out.println("\n[SCHEDULER->DRONE SUBSYSTEM] received response: " + response);
                 handleDroneResponse(response);
             }
         });
@@ -274,6 +274,8 @@ public class DroneSubsystem implements Runnable {
      * @param request message to be sent.
      */
     public void sendPacket(String request){
+        System.out.println("\n x x x SEND PACKET DRONES x x x " + request);
+
         byte msg[] = request.getBytes();
         DatagramPacket packet;
 
@@ -295,6 +297,7 @@ public class DroneSubsystem implements Runnable {
      * @return the message received.
      */
     private String receivePacket(){
+
         byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
         DatagramPacket receivePacket = new DatagramPacket(data, data.length);
 
@@ -304,8 +307,8 @@ public class DroneSubsystem implements Runnable {
         } catch(IOException e) {
             throw new RuntimeException(e);
         }
-
         int len = receivePacket.getLength();
+        System.out.print("\n x x x RECEIVE PACKET DRONES x x x " + new String(data,0,len));
 
         // Return a String from the byte array
         return new String(data,0,len);

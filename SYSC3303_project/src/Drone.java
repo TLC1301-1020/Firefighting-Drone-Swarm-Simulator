@@ -243,13 +243,13 @@ public class Drone implements Runnable
 
     /**
      * request format is:<p>
-     *     DRONE_ID:STATE:[STATUS]:X_POS:Y_POS
+     *     DRONE_ID:STATE:STATUS:X_POS:Y_POS
      @return String value of entire formatted request to send to scheduler based on current state
      and location.
      */
     private String makeStatusRequest()
     {
-        return this.droneId+":"+this.currentState.display()+":[STATUS]:"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
+        return this.droneId+":"+this.currentState.display()+":"+DroneEvent.STATUS+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
     }
 
     /**
@@ -330,7 +330,7 @@ public class Drone implements Runnable
                 // Existing handling for other ACK types:
                 DroneEvent eventRequest;
                 try {
-                    eventRequest = DroneEvent.valueOf(items[3]);
+                    eventRequest = DroneEvent.valueOfEvent(items[3]);
                 } catch (IllegalArgumentException e) {
                     System.out.println("ERROR: Unknown drone event: " + items[3]);
                     return;

@@ -1,21 +1,4 @@
 /**
- * StateMachine Event that causes the transitions for drones from
- * one state to another
- */
-enum DroneEvent {
-    OLD_FIRE_REQUEST,   // for when interrupted when traveling, will resume on old fireRequest
-    NEW_FIRE_REQUEST,
-    PERMISSION_TO_DROP,
-    PAYLOAD_DROPPED,
-    PAYLOAD_DEPLOY_FAILURE,
-    DEPLOY_FAILURE_ACKNOWLEDGED,
-    RETURNED_TO_BASE,
-    REFILL_COMPLETE,
-    DRONE_STUCK,
-    STUCK_RESOLVED
-}
-
-/**
  * Interface for Drone context switching state pattern machine
  */
 interface DroneState {
@@ -142,7 +125,7 @@ class DroneTravel implements DroneState
         else if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) )
         {
             // assigned new fire request mid travel
-            System.out.println("DRONE " + drone.getDroneId() + " is now traveling fire in zone " + drone.getCurrTask().getZoneId());
+            System.out.println("DRONE " + drone.getDroneId() + " is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             // sets the same state of traveling but to a new zone
             drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
