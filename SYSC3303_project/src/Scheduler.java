@@ -782,7 +782,7 @@ public class Scheduler {
         }
 
         int len = receivePacket.getLength();
-        System.out.println("\n x x x RECEIVE PACKET SCHEDULER x x x " + new String(data,0,len));
+//        System.out.println("\n x x x RECEIVE PACKET SCHEDULER x x x " + new String(data,0,len));
 
         // Return a String from the byte array
         return new String(data,0,len);
@@ -795,7 +795,7 @@ public class Scheduler {
      * @param response message to send.
      */
     private void sendPacket(DatagramSocket socket, int port, String response) {
-        System.out.println("\n x x x SEND PACKET SCHEDULER x x x " + response);
+//        System.out.println("\n x x x SEND PACKET SCHEDULER x x x " + response);
 
         byte msg[] = response.getBytes();
         DatagramPacket packet;

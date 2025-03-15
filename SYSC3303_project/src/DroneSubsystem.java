@@ -154,10 +154,14 @@ public class DroneSubsystem implements Runnable {
             // Build the registration request using the expected format:
             // "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
             String request = i + ":[IDLE]:INIT:0:0:0";
+            System.out.println("\n[ DSS->S ] INIT DRONE REQ:           " + request);
             sendPacket(request);
 
             // Wait for a response from the Scheduler
             String response = receivePacket();
+
+            System.out.println("\n[ S->DSSS ] INIT DRONE RES:           " + response);
+
 
             // Check if the response contains "ACK"
             if (response != null && response.trim().contains("ACK")) {
@@ -178,7 +182,7 @@ public class DroneSubsystem implements Runnable {
         Thread schedulerListener = new Thread(() -> {
             while (true) {
                 String response = receivePacket();
-                System.out.println("\n[SCHEDULER->DRONE SUBSYSTEM] received response: " + response);
+                System.out.println("\n[ S->DSS ] RESPONSE :           " + response);
                 handleDroneResponse(response);
             }
         });
@@ -211,7 +215,7 @@ public class DroneSubsystem implements Runnable {
         while (true) {
             // Check request queue - communication from drones
             String request = getRequest();
-            System.out.println("[DRONE SUBSYSTEM->SCHEDULER] handling drone request: " + request);
+            System.out.println("\n[ DSS->S ]  HANDLING DRONE REQ :           " + request);
 
             // Artificial delay added here to slow things down
             try {
@@ -274,7 +278,7 @@ public class DroneSubsystem implements Runnable {
      * @param request message to be sent.
      */
     public void sendPacket(String request){
-        System.out.println("\n x x x SEND PACKET DRONES x x x " + request);
+//        System.out.println("\n x x x SEND PACKET DRONES x x x " + request);
 
         byte msg[] = request.getBytes();
         DatagramPacket packet;
@@ -308,7 +312,7 @@ public class DroneSubsystem implements Runnable {
             throw new RuntimeException(e);
         }
         int len = receivePacket.getLength();
-        System.out.print("\n x x x RECEIVE PACKET DRONES x x x " + new String(data,0,len));
+//        System.out.print("\n x x x RECEIVE PACKET DRONES x x x " + new String(data,0,len));
 
         // Return a String from the byte array
         return new String(data,0,len);

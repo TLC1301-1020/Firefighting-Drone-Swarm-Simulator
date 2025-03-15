@@ -60,9 +60,9 @@ public class Drone implements Runnable
      * Invoked by the DroneState state machine when changing the state of the drone
      */
     public void setState(DroneState newState) {
-        System.out.print("* DRONE STATE CHANGE * " + this.currentState.display() + " -> ");
+        DroneState oldState = this.currentState;
         this.currentState = newState;
-        System.out.println(this.currentState.display());
+        System.out.println("* DRONE STATE CHANGE * " + oldState.display() + " -> " + this.currentState.display());
     }
 
     /**
@@ -251,6 +251,8 @@ public class Drone implements Runnable
     {
         return this.droneId+":"+this.currentState.display()+":"+DroneEvent.STATUS+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
     }
+
+    public String getLocation() {return "("+ this.xPos + "," + this.yPos+")";}
 
     /**
      * thread function for Drone

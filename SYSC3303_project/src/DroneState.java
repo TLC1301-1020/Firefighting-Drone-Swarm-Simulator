@@ -125,7 +125,7 @@ class DroneTravel implements DroneState
         else if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) )
         {
             // assigned new fire request mid travel
-            System.out.println("DRONE " + drone.getDroneId() + " is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
+            System.out.println("DRONE " + drone.getDroneId() + " at " + drone.getLocation()+ " has a new fire request and is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             // sets the same state of traveling but to a new zone
             drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
