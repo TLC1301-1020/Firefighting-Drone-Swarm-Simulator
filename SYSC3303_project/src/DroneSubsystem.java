@@ -1,9 +1,9 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -34,12 +34,21 @@ public class DroneSubsystem implements Runnable {
      * {@code DroneSubsystem}. <p>DroneSubsystem removes request from the queue and, without modifying it, sends
      * the request to the Scheduler within a datagram packet */
     private final ConcurrentLinkedQueue<String> requestQueue = new ConcurrentLinkedQueue<>();
+
     /**
      * thread safe hashmap for individual drone threads to remove responses from the {@code Scheduler} through the
      * {@code DroneSubsystem}. <p>DroneSubsystem receives responses from the Scheduler and, without modifying it,
      * puts the response (as the value) in this hashmap with the drone id (as the key) for a drone to check
      * if it has a response */
-    private final ConcurrentHashMap<Integer, String> responseQueue = new ConcurrentHashMap<>();
+//    private final ConcurrentHashMap<Integer, String> responseQueue = new ConcurrentHashMap<>();
+
+    private final ConcurrentHashMap< Integer, LinkedList<String> > responseQueue = new ConcurrentHashMap<>();
+
+    /**
+     * A static map that holds zone information parsed from the csv
+     * Key: Zone ID, Value: Zone object
+     */
+    public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
     /**
      * Placeholder zone coordinates
@@ -113,10 +122,19 @@ public class DroneSubsystem implements Runnable {
      */
     public void addResponse(int droneId, String response)
     {
-        System.out.println( "[ DSS ] adding response to queue drone:"+droneId+":       " + response );
+        System.out.println( "[ DSS ] adding response to queue drone:"+droneId+":         " + response );
         synchronized (this.responseQueue)
         {
-            this.responseQueue.put(droneId, response);
+            LinkedList<String> responses = this.responseQueue.get(droneId);
+            if ( responses == null )
+            {
+                responses = new LinkedList<>();
+                this.responseQueue.put(droneId, responses );
+            }
+
+            responses.add(response);
+
+            this.responseQueue.put(droneId, responses);
 //            System.out.println( "\n [ DSS ]  response added" );
             this.responseQueue.notifyAll();
         }
@@ -130,7 +148,7 @@ public class DroneSubsystem implements Runnable {
      */
     public String getResponse(int droneId) {
         synchronized (this.responseQueue) {
-            while (!this.responseQueue.containsKey(droneId)) {
+            while (!this.responseQueue.containsKey(droneId) || this.responseQueue.get(droneId).isEmpty() ) {
                 try {
                     this.responseQueue.wait();
                 } catch (InterruptedException e) {
@@ -138,7 +156,10 @@ public class DroneSubsystem implements Runnable {
                 }
             }
             responseQueue.notifyAll();
-            return this.responseQueue.get(droneId);
+
+            LinkedList<String> responses = this.responseQueue.get(droneId);
+
+            return responses.poll();
         }
     }
 
@@ -327,9 +348,47 @@ public class DroneSubsystem implements Runnable {
         return new String(data,0,len);
     }
 
+    public void readZoneFile(String zoneFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(zoneFile))) {
+            String header = reader.readLine(); // Skip header
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Expected line format: Zone ID,Zone Start,Zone End
+                String[] parts = line.split(",");
+                if (parts.length < 3) continue;
+                int zoneId = Integer.parseInt(parts[0].trim());
+
+                // Parse start coordinates
+                String startStr = parts[1].trim();
+                startStr = startStr.substring(1, startStr.length() - 1); // Remove parentheses
+                String[] startCoords = startStr.split(";");
+                int startX = Integer.parseInt(startCoords[0].trim());
+                int startY = Integer.parseInt(startCoords[1].trim());
+
+                // Parse end coordinates
+                String endStr = parts[2].trim();
+                endStr = endStr.substring(1, endStr.length() - 1); // Remove parentheses
+                String[] endCoords = endStr.split(";");
+                int endX = Integer.parseInt(endCoords[0].trim());
+                int endY = Integer.parseInt(endCoords[1].trim());
+
+                // Create and store the zone
+                Zone zone = new Zone(zoneId, startX, startY, endX, endY);
+                zoneMap.put(zoneId, zone);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Zone getZone(int zoneId) {
+        return zoneMap.get(zoneId);
+    }
+
     public static void main(String[] args)
     {
         DroneSubsystem dss = new DroneSubsystem();
+        dss.readZoneFile("SYSC3303_project/src/zone_file.csv");
         dss.initializeAllDrones(dss, 1);
 
         Thread droneSubsystem = new Thread( dss );

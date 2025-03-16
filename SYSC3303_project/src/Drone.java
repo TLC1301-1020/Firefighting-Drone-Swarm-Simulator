@@ -13,7 +13,7 @@ public class Drone implements Runnable
     private int droneId;
     /**
      * maximum velocity of the drone in meters per second */
-    private final float maxVelocity = 20;
+    private final float maxVelocity = 250;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;
@@ -124,7 +124,8 @@ public class Drone implements Runnable
     public void travel() {
         int finalX, finalY;
         // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
-        Zone zone = FireIncidentSubsystem.zoneMap.get(currTask.getZoneId());
+        Zone zone = droneSubsystem.getZone(currTask.getZoneId());
+        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
         if (zone != null) {
             // Calculate the center of the zone as the target destination.
             finalX = (zone.getStartX() + zone.getEndX()) / 2;
@@ -133,6 +134,7 @@ public class Drone implements Runnable
             finalX = 0;
             finalY = 0;
         }
+        System.out.println( " \nTRAVEL ZONE : "  + finalX + "," + finalY );
 
         // Calculate distance from current position to target.
         double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
@@ -147,14 +149,23 @@ public class Drone implements Runnable
         double deltaX = (finalX - this.xPos) / steps;
         double deltaY = (finalY - this.yPos) / steps;
 
-        System.out.println("\n[ DRONE TRAVEL ] travel : deltaX=" + deltaX + ", deltaY=" + deltaY);
+//        System.out.println("\n[ DRONE TRAVEL DEBUG ]");
+//        System.out.println(" - Drone ID: " + this.droneId);
+//        System.out.println(" - Current Position: (" + this.xPos + ", " + this.yPos + ")");
+//        System.out.println(" - Target Zone Position: (" + finalX + ", " + finalY + ")");
+//        System.out.println(" - Distance to Target: " + distance + " meters");
+//        System.out.println(" - Max Velocity: " + this.maxVelocity + " m/s");
+//        System.out.println(" - Estimated Travel Time: " + travelTime + " ms");
+//        System.out.println(" - Step Time (per update cycle): " + stepTime + " ms");
+//        System.out.println(" - Number of Steps: " + steps);
+//        System.out.println("\n[ DRONE TRAVEL ] travel : deltaX=" + deltaX + ", deltaY=" + deltaY);
 
         double spentTime = 0;
         while (spentTime < travelTime) {
             try {
                 Thread.sleep((long) stepTime);
             } catch (InterruptedException e) {
-                System.out.println("\n [ DRONE TRAVEL ] Drone " + this.droneId + " interrupted during travel. Sending status update.");
+                System.out.println("\n[ DRONE TRAVEL ] Drone " + this.droneId + " interrupted during travel. Sending status update.");
                 // Immediately send a status update with the current location and task.
                 this.droneSubsystem.addRequest(makeStatusRequest());
                 setSendStatus();
@@ -292,11 +303,11 @@ public class Drone implements Runnable
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
             // handle instructions given
             handleResponse(response);
-            try{
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // sleep interrupted
-            }
+//            try{
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                // sleep interrupted
+//            }
         }
     }
 
@@ -352,6 +363,7 @@ public class Drone implements Runnable
                     // sleep interrupted
                 }
                 newResponse = droneSubsystem.getResponse(droneId);
+
             } while (newResponse.startsWith("WAIT")); // Continue if response still indicates WAIT
             handleResponse(newResponse);
         }
@@ -422,4 +434,9 @@ public class Drone implements Runnable
         }
     }
 
+    public void setBasePosition()
+    {
+        this.xPos = 0;
+        this.yPos = 0;
+    }
 }

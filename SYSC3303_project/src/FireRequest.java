@@ -118,7 +118,6 @@ public class FireRequest {
                 this.severity.equals("0");
     }
 
-
     /**
      * creates a string representation of the fire request object
      * @return formatted string representing the fire request

@@ -33,7 +33,8 @@ class DroneIdle implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
             System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
-            drone.setState( new DroneActive(new DroneTravel(drone)) );
+            drone.setState( new DroneActive(new DroneTravel()) );
+            drone.travel();
         }
     }
 
@@ -89,23 +90,23 @@ class DroneActive implements DroneState {
 class DroneTravel implements DroneState
 {
 
-    /**
-     constructor calls all entry and exit actions in sequence for this drone <
-     @param drone state belongs to this drone instance
-     */
-    public DroneTravel( Drone drone )
-    {
-        handleEntryAction( drone );
-    }
+//    /**
+//     constructor calls all entry and exit actions in sequence for this drone <
+//     @param drone state belongs to this drone instance
+//     */
+//    public DroneTravel()
+//    {
+////        handleEntryAction( drone );
+//    }
 
-    /**
-     handles the entry action logic for this drone, invokes all entry actions in sequence
-     @param drone state belongs to this drone instance
-     */
-    public void handleEntryAction( Drone drone )
-    {
-        drone.travel();
-    }
+//    /**
+//     handles the entry action logic for this drone, invokes all entry actions in sequence
+//     @param drone state belongs to this drone instance
+//     */
+//    public void handleEntryAction( Drone drone )
+//    {
+//        drone.travel();
+//    }
 
     @Override
     public void handleEvent(Drone drone, DroneEvent event)
@@ -115,6 +116,7 @@ class DroneTravel implements DroneState
             // continuing to answer the fire request after interrupted
             System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is continuing to answer the fire request after interrupted: " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneDeploy()) );
+            drone.travel();
         }
         else if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) )
         {
@@ -127,7 +129,8 @@ class DroneTravel implements DroneState
             // assigned new fire request mid travel
             System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " at " + drone.getLocation()+ " has a new fire request and is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             // sets the same state of traveling but to a new zone
-            drone.setState( new DroneActive(new DroneTravel(drone)) );
+            drone.setState( new DroneActive(new DroneTravel()) );
+            drone.travel();
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) )
         {
@@ -179,7 +182,7 @@ class DroneReturn implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.RETURNED_TO_BASE )) {
             // arrived at base and is now refilling
-
+            drone.setBasePosition();
             // If the current task is default, transition to idle.
             if (drone.getCurrTask().isDefault()) {
                 System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
@@ -218,12 +221,17 @@ class DroneRefill implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.REFILL_COMPLETE )) {
             System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has refilled its payload successfully and is now idle");
-            if (drone.getCurrTask().isDefault()) {
-                System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
-                drone.setState(new DroneIdle());
-            } else {
-                // For now, transition to idle.
-                drone.setState(new DroneIdle());}
+
+            drone.setCurrTask(new FireRequest());
+//            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
+            drone.setState(new DroneIdle());
+
+//            if (drone.getCurrTask().isDefault()) {
+//                System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
+//                drone.setState(new DroneIdle());
+//            } else {
+//                // For now, transition to idle.
+//                drone.setState(new DroneIdle());}
         }
     }
     @Override

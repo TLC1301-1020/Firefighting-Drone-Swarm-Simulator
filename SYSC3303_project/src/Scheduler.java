@@ -42,6 +42,8 @@ public class Scheduler {
     public static final int FIRE_INCIDENT_SUBSYSTEM_PORT = 5002;
     public static final int DRONE_SUBSYSTEM_PORT = 5003;
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, sendSocket;
+
+    private boolean fireRequestAssigned = true;
     //private final ConcurrentLinkedQueue<Integer> waitingDronesQueue = new ConcurrentLinkedQueue<>();
 
     /**
@@ -65,7 +67,7 @@ public class Scheduler {
     public final static int zone7Yend = 150;
     */
 
-    public void parseZoneFile(String zoneFilePath) {
+    private void parseZoneFile(String zoneFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(zoneFilePath))) {
             String header = br.readLine(); // Skip header line
             String line;
@@ -131,9 +133,13 @@ public class Scheduler {
                     addRequest(fireRequest);
                     sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
 
-                    // After adding the fire request, attempt to assign it to a drone
-                    assignFireRequest(fireRequest);
+//                    // After adding the fire request, attempt to assign it to a drone
+//                    assignFireRequest(fireRequest);
+//
+//                    markFireRequestAssigned();
                 }
+
+
 
             }
         }
@@ -169,6 +175,7 @@ public class Scheduler {
         }
     }
 
+    // assigning fire requests
     private class ProcessPendingRequests implements Runnable {
         @Override
         public void run() {
@@ -177,6 +184,8 @@ public class Scheduler {
                     if (!requestQueue.isEmpty()) {
                         FireRequest req = requestQueue.peek();
                         assignFireRequest(req);
+
+                        markFireRequestAssigned();
                     }
                 }
                 try {
@@ -196,7 +205,7 @@ public class Scheduler {
      *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS
      @return String value of entire formatted respnse to send to Drone
      */
-    public String handleDroneRequest(String request)
+    private String handleDroneRequest(String request)
     {
         System.out.println("\n[SD   ]  -   SCHEDULER HANDLE DRONE REQUEST: "+request+ "  -   ");
 
@@ -273,25 +282,41 @@ public class Scheduler {
                 System.out.println("Drone " + droneId + " is now waiting for a fire request.");
                 return "WAIT:" + request;
             case PERMISSION_TO_DROP:
+                drone.setState("[DEPLOYING]");
                 return "ACK:" + request;
             case PAYLOAD_DROPPED:
                 // Send an ACK with a completed to allow to transition to next state
+                drone.setState("[RETURNING]");
                 return "ACK:" + request + ":COMPLETED";
             case PAYLOAD_DEPLOY_FAILURE:
+                drone.setState("[DEPLOY FAILURE]");
                 return "ACK:" + request;
             case DEPLOY_FAILURE_ACKNOWLEDGED:
+                // TODO :                 drone.setState("[DEPLOY FAILURE]");
                 return "ACK:" + request;
             case RETURNED_TO_BASE:
+                drone.setState("[REFILLING]");
+//                FireRequest completedTask = drone.getCurrentTask();
+//                synchronized(this) {
+//                    if (!completedTask.isDefault()) {
+//                        currentResponse = new Response(completedTask, "COMPLETED");
+//                        responseAvailable = true;
+//                        notifyAll(); // Wake up any thread waiting for a response.
+//                    }
+//                }
+                return "ACK:" + request;
+            case REFILL_COMPLETE:
+                drone.setState("[IDLE]");
                 FireRequest completedTask = drone.getCurrentTask();
                 synchronized(this) {
                     if (!completedTask.isDefault()) {
                         currentResponse = new Response(completedTask, "COMPLETED");
+                        // resetting the current task to match drone side
+                        drone.setCurrentTask(new FireRequest());
                         responseAvailable = true;
-                        notifyAll(); // Wake up any thread waiting for a response.
+                        this.notifyAll(); // Wake up any thread waiting for a response.
                     }
                 }
-                return "ACK:" + request;
-            case REFILL_COMPLETE:
                 return "ACK:" + request;
             case DRONE_STUCK:
                 return "ACK:" + request;
@@ -328,7 +353,23 @@ public class Scheduler {
     /**
      * Assigns a fire request to the most appropriate drone.
      */
-    public void assignFireRequest(FireRequest fireRequest) {
+    private synchronized void assignFireRequest(FireRequest fireRequest) {
+
+        while( !fireRequestAssigned )
+        {
+            try
+            {
+                wait();
+            }
+            catch ( Exception e )
+            {
+
+            }
+        }
+
+        fireRequestAssigned = false;
+        notifyAll();
+
         System.out.println("\n[ SF  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
         /*
         int zone = fireRequest.getZoneId();
@@ -367,13 +408,17 @@ public class Scheduler {
         System.out.println("\n[ SF  ]  -   selectedDrone: " + selectedDrone.toString());
         FireRequest previousTask = selectedDrone.getCurrentTask();
         selectedDrone.setCurrentTask(fireRequest);
+
+        // set drone object status to match
+        selectedDrone.setState("[TRAVELING]");
         removeRequest(fireRequest);
 
         // Build request string in expected format: "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
 
+        //
         if (previousTask.getZoneId() != -1) {
             // If drone had a previous task, droneRequest is constructed with "NEW" and uses the current x and y location values
-            String droneRequest = "NEW:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
+            String droneRequest = "NEW:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
                     selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
             System.out.println("[SCHEDULER] Sending to DroneSubsystem: " + droneRequest);
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
@@ -381,7 +426,7 @@ public class Scheduler {
             addRequest(previousTask); // Put the old request back into the queue
         } else {
             // This drone did not have a previous task, so droneRequest is constructed as a simple acknowledgment to begin the drone's activity
-            String droneRequest = "ACK:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
+            String droneRequest = "ACK:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
                     "0:0:" + fireRequest;
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
         }
@@ -392,9 +437,12 @@ public class Scheduler {
     /**
      * Removes a fire request from the queue after it has been assigned.
      */
-    public void removeRequest(FireRequest fireRequest) {
+    private void removeRequest(FireRequest fireRequest) {
         synchronized (requestQueue) {
             requestQueue.remove(fireRequest);
+            System.out.println( " [ S ] removeRequest removing: " + fireRequest.toString() );
+
+            System.out.println( " [ S ] removeRequest post removal: " + Arrays.toString(requestQueue.toArray()));
         }
     }
 
@@ -487,7 +535,7 @@ public class Scheduler {
         else return "ERROR: drone initialization with id error " + droneId;
     }
 
-    public int selectDrone(FireRequest request) {
+    private int selectDrone(FireRequest request) {
 
         System.out.println("\n[ SF  ]  -   SELECT DRONE CALLED  -   " + request.toString());
 
@@ -513,7 +561,7 @@ public class Scheduler {
         return findClosestIdleDrone(targetZone);
     }
 
-    public boolean isOnPath(DroneStatus drone, Zone targetZone) {
+    private boolean isOnPath(DroneStatus drone, Zone targetZone) {
         // Retrieve the destination zone from the drone's current task.
         Zone destZone = zoneMap.get(drone.getCurrentTask().getZoneId());
         if (destZone == null) return false;
@@ -521,7 +569,7 @@ public class Scheduler {
         return zonesIntersect(destZone, targetZone);
     }
 
-    public boolean zonesIntersect(Zone a, Zone b) {
+    private boolean zonesIntersect(Zone a, Zone b) {
         // Check if two zones (rectangles) intersect.
         return !(a.getEndX() < b.getStartX() ||
                 a.getStartX() > b.getEndX() ||
@@ -537,7 +585,7 @@ public class Scheduler {
      * @param targetZone the target Zone object.
      * @return the drone ID of the closest idle drone, or -1 if none are available.
      */
-    public int findClosestIdleDrone(Zone targetZone) {
+    private int findClosestIdleDrone(Zone targetZone) {
         System.out.println("\n[ SF  ]  -   FIND CLOSES IDLE DRONE CALLED  -   " + targetZone.toString());
 
         if (targetZone == null) {
@@ -563,7 +611,7 @@ public class Scheduler {
 
 
 
-    public boolean willPassThrough(DroneStatus drone, int requestZoneId) {
+    private boolean willPassThrough(DroneStatus drone, int requestZoneId) {
         int droneX = drone.getX();
         int droneY = drone.getY();
 
@@ -811,6 +859,12 @@ public class Scheduler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private synchronized void markFireRequestAssigned()
+    {
+        fireRequestAssigned = true;
+        notifyAll();
     }
 
     /**
