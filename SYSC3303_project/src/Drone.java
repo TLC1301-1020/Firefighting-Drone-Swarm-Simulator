@@ -13,7 +13,7 @@ public class Drone implements Runnable
     private int droneId;
     /**
      * maximum velocity of the drone in meters per second */
-    private final float maxVelocity = 20;
+    private final float maxVelocity = 500;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;
@@ -433,4 +433,9 @@ public class Drone implements Runnable
         }
     }
 
+    public void setBasePosition()
+    {
+        this.xPos = 0;
+        this.yPos = 0;
+    }
 }

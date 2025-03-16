@@ -42,6 +42,8 @@ public class Scheduler {
     public static final int FIRE_INCIDENT_SUBSYSTEM_PORT = 5002;
     public static final int DRONE_SUBSYSTEM_PORT = 5003;
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, sendSocket;
+
+    private boolean fireRequestAssigned = true;
     //private final ConcurrentLinkedQueue<Integer> waitingDronesQueue = new ConcurrentLinkedQueue<>();
 
     /**
@@ -133,7 +135,11 @@ public class Scheduler {
 
                     // After adding the fire request, attempt to assign it to a drone
                     assignFireRequest(fireRequest);
+
+                    markFireRequestAssigned();
                 }
+
+
 
             }
         }
@@ -177,6 +183,8 @@ public class Scheduler {
                     if (!requestQueue.isEmpty()) {
                         FireRequest req = requestQueue.peek();
                         assignFireRequest(req);
+
+                        markFireRequestAssigned();
                     }
                 }
                 try {
@@ -282,16 +290,25 @@ public class Scheduler {
             case DEPLOY_FAILURE_ACKNOWLEDGED:
                 return "ACK:" + request;
             case RETURNED_TO_BASE:
+//                FireRequest completedTask = drone.getCurrentTask();
+//                synchronized(this) {
+//                    if (!completedTask.isDefault()) {
+//                        currentResponse = new Response(completedTask, "COMPLETED");
+//                        responseAvailable = true;
+//                        notifyAll(); // Wake up any thread waiting for a response.
+//                    }
+//                }
+                return "ACK:" + request;
+            case REFILL_COMPLETE:
+                drone.setState("[IDLE]");
                 FireRequest completedTask = drone.getCurrentTask();
                 synchronized(this) {
                     if (!completedTask.isDefault()) {
                         currentResponse = new Response(completedTask, "COMPLETED");
                         responseAvailable = true;
-                        notifyAll(); // Wake up any thread waiting for a response.
+                        this.notifyAll(); // Wake up any thread waiting for a response.
                     }
                 }
-                return "ACK:" + request;
-            case REFILL_COMPLETE:
                 return "ACK:" + request;
             case DRONE_STUCK:
                 return "ACK:" + request;
@@ -328,7 +345,23 @@ public class Scheduler {
     /**
      * Assigns a fire request to the most appropriate drone.
      */
-    private void assignFireRequest(FireRequest fireRequest) {
+    private synchronized void assignFireRequest(FireRequest fireRequest) {
+
+        while( !fireRequestAssigned )
+        {
+            try
+            {
+                wait();
+            }
+            catch ( Exception e )
+            {
+
+            }
+        }
+
+        fireRequestAssigned = false;
+        notifyAll();
+
         System.out.println("\n[ SF  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
         /*
         int zone = fireRequest.getZoneId();
@@ -367,13 +400,16 @@ public class Scheduler {
         System.out.println("\n[ SF  ]  -   selectedDrone: " + selectedDrone.toString());
         FireRequest previousTask = selectedDrone.getCurrentTask();
         selectedDrone.setCurrentTask(fireRequest);
+
+        // set drone object status to match
+        selectedDrone.setState("[TRAVELING]");
         removeRequest(fireRequest);
 
         // Build request string in expected format: "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
 
         if (previousTask.getZoneId() != -1) {
             // If drone had a previous task, droneRequest is constructed with "NEW" and uses the current x and y location values
-            String droneRequest = "NEW:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
+            String droneRequest = "ACK:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
                     selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
             System.out.println("[SCHEDULER] Sending to DroneSubsystem: " + droneRequest);
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
@@ -811,6 +847,12 @@ public class Scheduler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private synchronized void markFireRequestAssigned()
+    {
+        fireRequestAssigned = true;
+        notifyAll();
     }
 
     /**
