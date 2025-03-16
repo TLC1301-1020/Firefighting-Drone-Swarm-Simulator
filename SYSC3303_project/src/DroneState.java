@@ -32,7 +32,7 @@ class DroneIdle implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
         if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
-            System.out.println("DRONE " + drone.getDroneId() + " is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
+            System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
     }
@@ -113,26 +113,26 @@ class DroneTravel implements DroneState
         if ( event.equals( DroneEvent.OLD_FIRE_REQUEST ) )
         {
             // continuing to answer the fire request after interrupted
-            System.out.println("DRONE " + drone.getDroneId() + " is continuing to answer the fire request after interrupted: " + drone.getCurrTask().getZoneId());
+            System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is continuing to answer the fire request after interrupted: " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneDeploy()) );
         }
         else if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) )
         {
             // arrived at zone and is asking to open payload doors
-            System.out.println("DRONE " + drone.getDroneId() + " is given permission to drop payload on fire in zone " + drone.getCurrTask().getZoneId());
+            System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is given permission to drop payload on fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneDeploy()) );
         }
         else if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) )
         {
             // assigned new fire request mid travel
-            System.out.println("DRONE " + drone.getDroneId() + " at " + drone.getLocation()+ " has a new fire request and is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
+            System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " at " + drone.getLocation()+ " has a new fire request and is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             // sets the same state of traveling but to a new zone
             drone.setState( new DroneActive(new DroneTravel(drone)) );
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) )
         {
             // drone became stuck during active flight travel
-            System.out.println("DRONE " + drone.getDroneId() + " is stuck during travel flight ");
+            System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is stuck during travel flight ");
             // set state to fault of stuck
             drone.setState( new DroneFault(new DroneFaultStuck()) );
         }
@@ -154,12 +154,12 @@ class DroneDeploy implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.PAYLOAD_DROPPED )) {
             // deployed payload successfully
-            System.out.println("DRONE " + drone.getDroneId() + " has deployed the payload and is returning to base");
+            System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " has deployed the payload and is returning to base");
             drone.setState( new DroneActive(new DroneReturn()) );
         }
         else if (event.equals( DroneEvent.PAYLOAD_DEPLOY_FAILURE )) {
             // failed to deploy payload
-            System.out.println("DRONE " + drone.getDroneId() + " has failed to deploy the payload");
+            System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " has failed to deploy the payload");
             drone.setState( new DroneFault(new DroneFaultDeploy()) );
         }
     }
@@ -182,10 +182,10 @@ class DroneReturn implements DroneState {
 
             // If the current task is default, transition to idle.
             if (drone.getCurrTask().isDefault()) {
-                System.out.println("No active task; transitioning to IDLE state.");
+                System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
                 drone.setState(new DroneIdle());
             } else {
-                System.out.println("Active task exists; transitioning to DroneRefill state.");
+                System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" active task exists; transitioning to DroneRefill state.");
                 drone.setState(new DroneRefill());
             }
             /*
@@ -196,7 +196,7 @@ class DroneReturn implements DroneState {
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) ) {
             // drone became stuck during active flight return
-            System.out.println("DRONE " + drone.getDroneId() + " is stuck during return flight");
+            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is stuck during return flight");
             // set state to fault of stuck
             drone.setState( new DroneFault(new DroneFaultStuck()) );
         }
@@ -217,9 +217,9 @@ class DroneRefill implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.REFILL_COMPLETE )) {
-            System.out.println("DRONE " + drone.getDroneId() + " has refilled its payload successfully and is now idle");
+            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has refilled its payload successfully and is now idle");
             if (drone.getCurrTask().isDefault()) {
-                System.out.println("No active task; transitioning to IDLE state.");
+                System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
                 drone.setState(new DroneIdle());
             } else {
                 // For now, transition to idle.
@@ -269,7 +269,7 @@ class DroneFaultStuck implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.STUCK_RESOLVED )) {
-            System.out.println("DRONE " + drone.getDroneId() + " is no longer stuck and is returning to base");
+            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is no longer stuck and is returning to base");
             drone.setState( new DroneActive(new DroneReturn()) );
         }
     }
@@ -289,12 +289,12 @@ class DroneFaultDeploy implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.DEPLOY_FAILURE_ACKNOWLEDGED )) {
-            System.out.println("DRONE " + drone.getDroneId() + " is returning to base following a deployment failure");
+            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is returning to base following a deployment failure");
             drone.setState( new DroneActive(new DroneReturn()) );
         }
         else if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) ) {
             // given instruction to drop payload again
-            System.out.println("DRONE " + drone.getDroneId() + " is requested again to drop payload on fire in zone " + drone.getCurrTask().getZoneId() + " following deployment failure");
+            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is requested again to drop payload on fire in zone " + drone.getCurrTask().getZoneId() + " following deployment failure");
             drone.setState( new DroneActive(new DroneDeploy()) );
         }
     }

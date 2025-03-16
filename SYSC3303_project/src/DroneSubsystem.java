@@ -106,11 +106,14 @@ public class DroneSubsystem implements Runnable {
      */
     public void addResponse(int droneId, String response)
     {
+        System.out.println( "\n [ DSS ]  adding response to queue drone:"+droneId+":       " + response );
         synchronized (this.responseQueue)
         {
             this.responseQueue.put(droneId, response);
+            System.out.println( "\n [ DSS ]  response added" );
             this.responseQueue.notifyAll();
         }
+
     }
 
     /**
@@ -183,7 +186,8 @@ public class DroneSubsystem implements Runnable {
             while (true) {
                 String response = receivePacket();
                 System.out.println("\n[ S->DSS ] RESPONSE :           " + response);
-                handleDroneResponse(response);
+
+                handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
             }
         });
         schedulerListener.setDaemon(true);
@@ -267,10 +271,8 @@ public class DroneSubsystem implements Runnable {
             System.out.println("ERROR: Invalid int parsing handleDroneResponse");
             return;
         }
-
         // add response to the response queue for drones to get
         addResponse(droneId, response);
-        System.out.println(" DRONE SUBSYSTEM added response to shared queue for drone: " + droneId);
     }
 
     /**

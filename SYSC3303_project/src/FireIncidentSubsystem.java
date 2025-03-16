@@ -73,15 +73,20 @@ public class FireIncidentSubsystem implements Runnable {
 
         readInputFile(inputFile);
 
-        // Send all of our requests read from file
-        while(!tasks.isEmpty()){
+//        // Send all of our requests read from file
+//        while(!tasks.isEmpty()){
+//
+//            sendIncident(tasks.remove(0).toString());
+//
+//            // This should just be an acknowledgement
+//            System.out.println(receiveUpdate());
+//
+//        }
 
-            sendIncident(tasks.remove(0).toString());
+        sendIncident(tasks.remove(0).toString());
 
             // This should just be an acknowledgement
-            System.out.println(receiveUpdate());
-
-        }
+        System.out.println(receiveUpdate());
 
         // Now we request and wait for future Scheduler updates
         while(true) {
@@ -106,7 +111,8 @@ public class FireIncidentSubsystem implements Runnable {
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                String time = parts[0].trim();
+//                String time = parts[0].trim();
+                String time = parts[0].trim().replace(":", "-");
                 int zoneId = Integer.parseInt(parts[1].trim());
                 String eventType = parts[2].trim();
                 String severity = parts[3].trim();
