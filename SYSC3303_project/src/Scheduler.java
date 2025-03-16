@@ -67,7 +67,7 @@ public class Scheduler {
     public final static int zone7Yend = 150;
     */
 
-    private void parseZoneFile(String zoneFilePath) {
+    public void parseZoneFile(String zoneFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(zoneFilePath))) {
             String header = br.readLine(); // Skip header line
             String line;
@@ -535,7 +535,7 @@ public class Scheduler {
         else return "ERROR: drone initialization with id error " + droneId;
     }
 
-    private int selectDrone(FireRequest request) {
+    public int selectDrone(FireRequest request) {
 
         System.out.println("\n[ SF  ]  -   SELECT DRONE CALLED  -   " + request.toString());
 
@@ -585,7 +585,7 @@ public class Scheduler {
      * @param targetZone the target Zone object.
      * @return the drone ID of the closest idle drone, or -1 if none are available.
      */
-    private int findClosestIdleDrone(Zone targetZone) {
+    public int findClosestIdleDrone(Zone targetZone) {
         System.out.println("\n[ SF  ]  -   FIND CLOSES IDLE DRONE CALLED  -   " + targetZone.toString());
 
         if (targetZone == null) {
@@ -611,7 +611,7 @@ public class Scheduler {
 
 
 
-    private boolean willPassThrough(DroneStatus drone, int requestZoneId) {
+    public boolean willPassThrough(DroneStatus drone, int requestZoneId) {
         int droneX = drone.getX();
         int droneY = drone.getY();
 
