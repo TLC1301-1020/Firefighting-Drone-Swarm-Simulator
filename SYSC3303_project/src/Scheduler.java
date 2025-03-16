@@ -404,7 +404,7 @@ public class Scheduler {
         this.currentState = new Idle();
 
         // Parse the zone file to populate zoneMap
-        parseZoneFile("zone_file.csv");
+        parseZoneFile("SYSC3303_project/src/zone_file.csv");
         // Print out the zones for debugging
         for (Zone zone : zoneMap.values()) {
             System.out.println("Parsed zone: " + zone);

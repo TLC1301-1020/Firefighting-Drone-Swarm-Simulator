@@ -124,8 +124,8 @@ public class Drone implements Runnable
     public void travel() {
         int finalX, finalY;
         // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
-        Zone zone = FireIncidentSubsystem.zoneMap.get(currTask.getZoneId());
-//        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
+        Zone zone = droneSubsystem.getZone(currTask.getZoneId());
+        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
         if (zone != null) {
             // Calculate the center of the zone as the target destination.
             finalX = (zone.getStartX() + zone.getEndX()) / 2;

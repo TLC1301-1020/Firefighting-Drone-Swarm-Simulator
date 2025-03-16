@@ -1,9 +1,12 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -40,6 +43,12 @@ public class DroneSubsystem implements Runnable {
      * puts the response (as the value) in this hashmap with the drone id (as the key) for a drone to check
      * if it has a response */
     private final ConcurrentHashMap<Integer, String> responseQueue = new ConcurrentHashMap<>();
+
+    /**
+     * A static map that holds zone information parsed from the csv
+     * Key: Zone ID, Value: Zone object
+     */
+    public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
     /**
      * Placeholder zone coordinates
@@ -320,9 +329,47 @@ public class DroneSubsystem implements Runnable {
         return new String(data,0,len);
     }
 
+    public void readZoneFile(String zoneFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(zoneFile))) {
+            String header = reader.readLine(); // Skip header
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Expected line format: Zone ID,Zone Start,Zone End
+                String[] parts = line.split(",");
+                if (parts.length < 3) continue;
+                int zoneId = Integer.parseInt(parts[0].trim());
+
+                // Parse start coordinates
+                String startStr = parts[1].trim();
+                startStr = startStr.substring(1, startStr.length() - 1); // Remove parentheses
+                String[] startCoords = startStr.split(";");
+                int startX = Integer.parseInt(startCoords[0].trim());
+                int startY = Integer.parseInt(startCoords[1].trim());
+
+                // Parse end coordinates
+                String endStr = parts[2].trim();
+                endStr = endStr.substring(1, endStr.length() - 1); // Remove parentheses
+                String[] endCoords = endStr.split(";");
+                int endX = Integer.parseInt(endCoords[0].trim());
+                int endY = Integer.parseInt(endCoords[1].trim());
+
+                // Create and store the zone
+                Zone zone = new Zone(zoneId, startX, startY, endX, endY);
+                zoneMap.put(zoneId, zone);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Zone getZone(int zoneId) {
+        return zoneMap.get(zoneId);
+    }
+
     public static void main(String[] args)
     {
         DroneSubsystem dss = new DroneSubsystem();
+        dss.readZoneFile("SYSC3303_project/src/zone_file.csv");
         dss.initializeAllDrones(dss, 1);
 
         Thread droneSubsystem = new Thread( dss );
