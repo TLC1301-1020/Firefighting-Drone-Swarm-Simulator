@@ -113,7 +113,7 @@ public class DroneSubsystem implements Runnable {
      */
     public void addResponse(int droneId, String response)
     {
-        System.out.println( "[ DSS ] adding response to queue drone:"+droneId+":       " + response );
+        System.out.println( "[ DSS ] adding response to queue drone:"+droneId+":         " + response );
         synchronized (this.responseQueue)
         {
             this.responseQueue.put(droneId, response);
