@@ -13,7 +13,7 @@ public class Drone implements Runnable
     private int droneId;
     /**
      * maximum velocity of the drone in meters per second */
-    private final float maxVelocity = 500;
+    private final float maxVelocity = 250;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;
@@ -303,11 +303,11 @@ public class Drone implements Runnable
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
             // handle instructions given
             handleResponse(response);
-            try{
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // sleep interrupted
-            }
+//            try{
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                // sleep interrupted
+//            }
         }
     }
 
@@ -363,6 +363,7 @@ public class Drone implements Runnable
                     // sleep interrupted
                 }
                 newResponse = droneSubsystem.getResponse(droneId);
+
             } while (newResponse.startsWith("WAIT")); // Continue if response still indicates WAIT
             handleResponse(newResponse);
         }
