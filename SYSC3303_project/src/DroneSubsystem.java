@@ -106,11 +106,11 @@ public class DroneSubsystem implements Runnable {
      */
     public void addResponse(int droneId, String response)
     {
-        System.out.println( "\n [ DSS ]  adding response to queue drone:"+droneId+":       " + response );
+        System.out.println( "[ DSS ] adding response to queue drone:"+droneId+":       " + response );
         synchronized (this.responseQueue)
         {
             this.responseQueue.put(droneId, response);
-            System.out.println( "\n [ DSS ]  response added" );
+//            System.out.println( "\n [ DSS ]  response added" );
             this.responseQueue.notifyAll();
         }
 
@@ -163,7 +163,7 @@ public class DroneSubsystem implements Runnable {
             // Wait for a response from the Scheduler
             String response = receivePacket();
 
-            System.out.println("\n[ S->DSSS ] INIT DRONE RES:           " + response);
+            System.out.println("\n[ S->DSS ] INIT DRONE RES:           " + response);
 
 
             // Check if the response contains "ACK"
@@ -185,7 +185,7 @@ public class DroneSubsystem implements Runnable {
         Thread schedulerListener = new Thread(() -> {
             while (true) {
                 String response = receivePacket();
-                System.out.println("\n[ S->DSS ] RESPONSE :           " + response);
+                System.out.println("[ S->DSS ] RESPONSE :                             " + response);
 
                 handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
             }
@@ -219,7 +219,7 @@ public class DroneSubsystem implements Runnable {
         while (true) {
             // Check request queue - communication from drones
             String request = getRequest();
-            System.out.println("\n[ DSS->S ]  HANDLING DRONE REQ :           " + request);
+            System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                  " + request);
 
             // Artificial delay added here to slow things down
             try {

@@ -102,11 +102,11 @@ public class Drone implements Runnable
     {
         if( this.currTask == null ) System.out.println(" OLD TASK IS NULL ");
         else {
-            System.out.println("\n[ DRONE ] OLD TASK ASSIGNED :           "+ this.currTask.toString());
+//            System.out.println("\n[ DRONE ] OLD TASK ASSIGNED :           "+ this.currTask.toString());
         }
         FireRequest temp = this.currTask;
         this.currTask = newTask;
-        System.out.println("[ DRONE ] NEW TASK ASSIGNED :           "+ this.currTask.toString() + "\n");
+//        System.out.println("[ DRONE ] NEW TASK ASSIGNED :           "+ this.currTask.toString() + "\n");
         return temp;
     }
 
@@ -146,6 +146,8 @@ public class Drone implements Runnable
         // Compute change in X and Y per step.
         double deltaX = (finalX - this.xPos) / steps;
         double deltaY = (finalY - this.yPos) / steps;
+
+        System.out.println("\n[ DRONE TRAVEL ] travel : deltaX=" + deltaX + ", deltaY=" + deltaY);
 
         double spentTime = 0;
         while (spentTime < travelTime) {
@@ -274,20 +276,20 @@ public class Drone implements Runnable
     {
         while (true)
         {
-            System.out.println("\n[ DRONE RUN ] starting DRONE RUN id key: " + this.droneId );
+//            System.out.println("\n[ DRONE RUN ] starting DRONE RUN id key: " + this.droneId );
             String request;
             // check if drone should send its location status as a request, otherwise, sends normal request based on state
             if( checkSendStatus() ) request = makeStatusRequest();
             else                    request = makeRequest();
 
-            System.out.println("\n[ DRONE RUN ] making request DRONE RUN id key: " + this.droneId + " :         " + request);
+//            System.out.println("\n[ DRONE RUN ] making request DRONE RUN id key: " + this.droneId + " :         " + request);
 
             // adds the request to the router host
             this.droneSubsystem.addRequest( request );
 
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
-            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
+//            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
             // handle instructions given
             handleResponse(response);
             try{
@@ -312,14 +314,14 @@ public class Drone implements Runnable
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
             "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for blocking after requesting a new fire request
          */
-        System.out.println("\n[ DRONE ] handleResponse called for :         " + response);
+//        System.out.println("\n[ DRONE ] handleResponse called for :         " + response);
         String[] items = response.split(":");
         System.out.println("\n[ DRONE ] Items of fire request as an array: \n     " + Arrays.toString(items));
-        byte counter = 0;
-        for ( String item : items )
-        {
-            System.out.println( ++counter + ".    "+item);
-        }
+//        byte counter = 0;
+//        for ( String item : items )
+//        {
+//            System.out.println( ++counter + ".    "+item);
+//        }
 
 //        if (items.length != 6) return;
         String schedulerInstructions = items[0];
