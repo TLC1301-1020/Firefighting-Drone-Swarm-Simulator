@@ -65,7 +65,7 @@ public class Scheduler {
     public final static int zone7Yend = 150;
     */
 
-    private void parseZoneFile(String zoneFilePath) {
+    public void parseZoneFile(String zoneFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(zoneFilePath))) {
             String header = br.readLine(); // Skip header line
             String line;
@@ -196,7 +196,7 @@ public class Scheduler {
      *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS
      @return String value of entire formatted respnse to send to Drone
      */
-    private String handleDroneRequest(String request)
+    public String handleDroneRequest(String request)
     {
         System.out.println("\n[SD   ]  -   SCHEDULER HANDLE DRONE REQUEST: "+request+ "  -   ");
 
@@ -328,7 +328,7 @@ public class Scheduler {
     /**
      * Assigns a fire request to the most appropriate drone.
      */
-    private void assignFireRequest(FireRequest fireRequest) {
+    public void assignFireRequest(FireRequest fireRequest) {
         System.out.println("\n[ SF  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
         /*
         int zone = fireRequest.getZoneId();
@@ -392,7 +392,7 @@ public class Scheduler {
     /**
      * Removes a fire request from the queue after it has been assigned.
      */
-    private void removeRequest(FireRequest fireRequest) {
+    public void removeRequest(FireRequest fireRequest) {
         synchronized (requestQueue) {
             requestQueue.remove(fireRequest);
         }
@@ -404,7 +404,7 @@ public class Scheduler {
         this.currentState = new Idle();
 
         // Parse the zone file to populate zoneMap
-        parseZoneFile("zone_file.csv");
+        parseZoneFile("SYSC3303_project/src/zone_file.csv");
         // Print out the zones for debugging
         for (Zone zone : zoneMap.values()) {
             System.out.println("Parsed zone: " + zone);
@@ -487,7 +487,7 @@ public class Scheduler {
         else return "ERROR: drone initialization with id error " + droneId;
     }
 
-    private int selectDrone(FireRequest request) {
+    public int selectDrone(FireRequest request) {
 
         System.out.println("\n[ SF  ]  -   SELECT DRONE CALLED  -   " + request.toString());
 
@@ -513,7 +513,7 @@ public class Scheduler {
         return findClosestIdleDrone(targetZone);
     }
 
-    private boolean isOnPath(DroneStatus drone, Zone targetZone) {
+    public boolean isOnPath(DroneStatus drone, Zone targetZone) {
         // Retrieve the destination zone from the drone's current task.
         Zone destZone = zoneMap.get(drone.getCurrentTask().getZoneId());
         if (destZone == null) return false;
@@ -521,7 +521,7 @@ public class Scheduler {
         return zonesIntersect(destZone, targetZone);
     }
 
-    private boolean zonesIntersect(Zone a, Zone b) {
+    public boolean zonesIntersect(Zone a, Zone b) {
         // Check if two zones (rectangles) intersect.
         return !(a.getEndX() < b.getStartX() ||
                 a.getStartX() > b.getEndX() ||
@@ -537,7 +537,7 @@ public class Scheduler {
      * @param targetZone the target Zone object.
      * @return the drone ID of the closest idle drone, or -1 if none are available.
      */
-    private int findClosestIdleDrone(Zone targetZone) {
+    public int findClosestIdleDrone(Zone targetZone) {
         System.out.println("\n[ SF  ]  -   FIND CLOSES IDLE DRONE CALLED  -   " + targetZone.toString());
 
         if (targetZone == null) {
@@ -563,7 +563,7 @@ public class Scheduler {
 
 
 
-    private boolean willPassThrough(DroneStatus drone, int requestZoneId) {
+    public boolean willPassThrough(DroneStatus drone, int requestZoneId) {
         int droneX = drone.getX();
         int droneY = drone.getY();
 

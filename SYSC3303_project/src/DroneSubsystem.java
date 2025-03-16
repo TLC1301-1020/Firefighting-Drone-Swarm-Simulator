@@ -65,6 +65,13 @@ public class DroneSubsystem implements Runnable {
         }
     }
 
+    DatagramSocket getSendSocket() {
+        return sendSocket;
+    }
+    DatagramSocket getReceiveSocket() {
+        return receiveSocket;
+    }
+
     /**
      * Method used by Drone instances to store a request for the Scheduler.
      * @param request the Drone's request.
@@ -256,7 +263,7 @@ public class DroneSubsystem implements Runnable {
      * @param response String passed from Scheduler to DroneSubsystem to be
      *                  passed directely to drone
      */
-    private void handleDroneResponse(String response)
+    public void handleDroneResponse(String response)
     {
         /*  response types
             "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
@@ -302,7 +309,7 @@ public class DroneSubsystem implements Runnable {
      * Receive a UDP packet from the Scheduler.
      * @return the message received.
      */
-    private String receivePacket(){
+    public String receivePacket(){
 
         byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
         DatagramPacket receivePacket = new DatagramPacket(data, data.length);
@@ -328,5 +335,4 @@ public class DroneSubsystem implements Runnable {
         Thread droneSubsystem = new Thread( dss );
         droneSubsystem.start();
     }
-
 }

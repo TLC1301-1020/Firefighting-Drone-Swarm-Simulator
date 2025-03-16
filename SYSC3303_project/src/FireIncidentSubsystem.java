@@ -18,12 +18,12 @@ public class FireIncidentSubsystem implements Runnable {
     /**
      * the file for fire events
      */
-    private String inputFile = "fireincidents.txt";
+    private String inputFile = "SYSC3303_project/src/fireincidents.txt";
 
     /**
      * The file for zone definitions.
      */
-    private String zoneFile = "zone_file.csv";
+    private String zoneFile = "SYSC3303_project/src/zone_file.csv";
 
     /**
      * scheduler instance for managing fire requests
@@ -195,7 +195,7 @@ public class FireIncidentSubsystem implements Runnable {
      * Receives updates from the scheduler via a UDP packet.
      * Waits for an incoming message and prints the received update.
      */
-    private String receiveUpdate() {
+    public String receiveUpdate() {
         try {
             // Set a timeout of 5000ms (5 seconds)
             receiveSocket.setSoTimeout(5000);
