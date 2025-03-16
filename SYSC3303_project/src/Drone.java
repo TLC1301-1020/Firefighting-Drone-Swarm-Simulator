@@ -125,7 +125,7 @@ public class Drone implements Runnable
         int finalX, finalY;
         // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
         Zone zone = FireIncidentSubsystem.zoneMap.get(currTask.getZoneId());
-        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
+//        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
         if (zone != null) {
             // Calculate the center of the zone as the target destination.
             finalX = (zone.getStartX() + zone.getEndX()) / 2;
@@ -149,16 +149,16 @@ public class Drone implements Runnable
         double deltaX = (finalX - this.xPos) / steps;
         double deltaY = (finalY - this.yPos) / steps;
 
-        System.out.println("\n[ DRONE TRAVEL DEBUG ]");
-        System.out.println(" - Drone ID: " + this.droneId);
-        System.out.println(" - Current Position: (" + this.xPos + ", " + this.yPos + ")");
-        System.out.println(" - Target Zone Position: (" + finalX + ", " + finalY + ")");
-        System.out.println(" - Distance to Target: " + distance + " meters");
-        System.out.println(" - Max Velocity: " + this.maxVelocity + " m/s");
-        System.out.println(" - Estimated Travel Time: " + travelTime + " ms");
-        System.out.println(" - Step Time (per update cycle): " + stepTime + " ms");
-        System.out.println(" - Number of Steps: " + steps);
-        System.out.println("\n[ DRONE TRAVEL ] travel : deltaX=" + deltaX + ", deltaY=" + deltaY);
+//        System.out.println("\n[ DRONE TRAVEL DEBUG ]");
+//        System.out.println(" - Drone ID: " + this.droneId);
+//        System.out.println(" - Current Position: (" + this.xPos + ", " + this.yPos + ")");
+//        System.out.println(" - Target Zone Position: (" + finalX + ", " + finalY + ")");
+//        System.out.println(" - Distance to Target: " + distance + " meters");
+//        System.out.println(" - Max Velocity: " + this.maxVelocity + " m/s");
+//        System.out.println(" - Estimated Travel Time: " + travelTime + " ms");
+//        System.out.println(" - Step Time (per update cycle): " + stepTime + " ms");
+//        System.out.println(" - Number of Steps: " + steps);
+//        System.out.println("\n[ DRONE TRAVEL ] travel : deltaX=" + deltaX + ", deltaY=" + deltaY);
 
         double spentTime = 0;
         while (spentTime < travelTime) {
