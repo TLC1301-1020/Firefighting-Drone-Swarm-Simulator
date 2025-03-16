@@ -179,7 +179,7 @@ class DroneReturn implements DroneState {
     public void handleEvent(Drone drone, DroneEvent event) {
         if (event.equals( DroneEvent.RETURNED_TO_BASE )) {
             // arrived at base and is now refilling
-
+            drone.setBasePosition();
             // If the current task is default, transition to idle.
             if (drone.getCurrTask().isDefault()) {
                 System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");

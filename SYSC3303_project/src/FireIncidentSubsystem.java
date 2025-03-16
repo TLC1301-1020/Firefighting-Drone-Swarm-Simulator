@@ -73,20 +73,20 @@ public class FireIncidentSubsystem implements Runnable {
 
         readInputFile(inputFile);
 
-//        // Send all of our requests read from file
-//        while(!tasks.isEmpty()){
-//
-//            sendIncident(tasks.remove(0).toString());
-//
-//            // This should just be an acknowledgement
-//            System.out.println(receiveUpdate());
-//
-//        }
+        // Send all of our requests read from file
+        while(!tasks.isEmpty()){
 
-        sendIncident(tasks.remove(0).toString());
+            sendIncident(tasks.remove(0).toString());
 
             // This should just be an acknowledgement
-        System.out.println(receiveUpdate());
+            System.out.println(receiveUpdate());
+
+        }
+
+//        sendIncident(tasks.remove(0).toString());
+//
+//            // This should just be an acknowledgement
+//        System.out.println(receiveUpdate());
 
         // Now we request and wait for future Scheduler updates
         while(true) {
