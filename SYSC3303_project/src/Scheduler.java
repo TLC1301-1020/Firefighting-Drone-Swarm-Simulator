@@ -133,10 +133,10 @@ public class Scheduler {
                     addRequest(fireRequest);
                     sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
 
-                    // After adding the fire request, attempt to assign it to a drone
-                    assignFireRequest(fireRequest);
-
-                    markFireRequestAssigned();
+//                    // After adding the fire request, attempt to assign it to a drone
+//                    assignFireRequest(fireRequest);
+//
+//                    markFireRequestAssigned();
                 }
 
 
@@ -175,6 +175,7 @@ public class Scheduler {
         }
     }
 
+    // assigning fire requests
     private class ProcessPendingRequests implements Runnable {
         @Override
         public void run() {
@@ -281,15 +282,20 @@ public class Scheduler {
                 System.out.println("Drone " + droneId + " is now waiting for a fire request.");
                 return "WAIT:" + request;
             case PERMISSION_TO_DROP:
+                drone.setState("[DEPLOYING]");
                 return "ACK:" + request;
             case PAYLOAD_DROPPED:
                 // Send an ACK with a completed to allow to transition to next state
+                drone.setState("[RETURNING]");
                 return "ACK:" + request + ":COMPLETED";
             case PAYLOAD_DEPLOY_FAILURE:
+                drone.setState("[DEPLOY FAILURE]");
                 return "ACK:" + request;
             case DEPLOY_FAILURE_ACKNOWLEDGED:
+                // TODO :                 drone.setState("[DEPLOY FAILURE]");
                 return "ACK:" + request;
             case RETURNED_TO_BASE:
+                drone.setState("[REFILLING]");
 //                FireRequest completedTask = drone.getCurrentTask();
 //                synchronized(this) {
 //                    if (!completedTask.isDefault()) {
@@ -305,6 +311,8 @@ public class Scheduler {
                 synchronized(this) {
                     if (!completedTask.isDefault()) {
                         currentResponse = new Response(completedTask, "COMPLETED");
+                        // resetting the current task to match drone side
+                        drone.setCurrentTask(new FireRequest());
                         responseAvailable = true;
                         this.notifyAll(); // Wake up any thread waiting for a response.
                     }
@@ -407,9 +415,10 @@ public class Scheduler {
 
         // Build request string in expected format: "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
 
+        //
         if (previousTask.getZoneId() != -1) {
             // If drone had a previous task, droneRequest is constructed with "NEW" and uses the current x and y location values
-            String droneRequest = "ACK:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
+            String droneRequest = "NEW:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
                     selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
             System.out.println("[SCHEDULER] Sending to DroneSubsystem: " + droneRequest);
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
@@ -417,7 +426,7 @@ public class Scheduler {
             addRequest(previousTask); // Put the old request back into the queue
         } else {
             // This drone did not have a previous task, so droneRequest is constructed as a simple acknowledgment to begin the drone's activity
-            String droneRequest = "ACK:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
+            String droneRequest = "ACK:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
                     "0:0:" + fireRequest;
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
         }
@@ -431,6 +440,9 @@ public class Scheduler {
     private void removeRequest(FireRequest fireRequest) {
         synchronized (requestQueue) {
             requestQueue.remove(fireRequest);
+            System.out.println( " [ S ] removeRequest removing: " + fireRequest.toString() );
+
+            System.out.println( " [ S ] removeRequest post removal: " + Arrays.toString(requestQueue.toArray()));
         }
     }
 

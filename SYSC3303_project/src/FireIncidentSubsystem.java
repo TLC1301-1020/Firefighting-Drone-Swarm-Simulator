@@ -73,30 +73,44 @@ public class FireIncidentSubsystem implements Runnable {
 
         readInputFile(inputFile);
 
-        // Send all of our requests read from file
-        while(!tasks.isEmpty()){
-
-            sendIncident(tasks.remove(0).toString());
-
-            // This should just be an acknowledgement
-            System.out.println(receiveUpdate());
-
-        }
+//        // Send all of our requests read from file
+//        while(!tasks.isEmpty()){
+//
+//            sendIncident(tasks.remove(0).toString());
+//
+//            // This should just be an acknowledgement
+//            System.out.println(receiveUpdate());
+//
+//        }
 
 //        sendIncident(tasks.remove(0).toString());
 //
 //            // This should just be an acknowledgement
 //        System.out.println(receiveUpdate());
 
+        sendIncident(tasks.remove(0).toString());
+
         // Now we request and wait for future Scheduler updates
+//        while(!tasks.isEmpty())
         while(true) {
 
+            String update = receiveUpdate();
+            System.out.println(" UPDATE 1 IS: " + update);
             // Request the scheduler for updates
+
             sendIncident("FIRE_DATA_REQUEST");
+            String update2 = receiveUpdate();
+            System.out.println(" UPDATE 2 IS: " + update2);
 
             // This should be an update that a drone has completed a FireRequest
-            System.out.println(receiveUpdate());
+//            System.out.println(receiveUpdate());
+            if( update2.contains("COMPLETED") )
+            {
+                sendIncident(tasks.remove(0).toString());
+            }
         }
+
+
 
     }
 
