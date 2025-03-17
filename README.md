@@ -141,7 +141,7 @@ Update diagrams and readme file - Tina
 - *run.bat*: command to run the program
 
 ### Setup instruction
-Make sure the directory of the input file is correct
+Make sure the directory of the Zone file and FireIncident input file is correct
 
 ### Test instruction
 Project uses Junit5.8.1, JDK22
