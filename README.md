@@ -97,7 +97,15 @@ Project uses Junit5.8.1, JDK22
 # Work Breakdown - Iteration 3
 
 ### Work Breakdown
+Set up remote procedure call - Jake
 
+Done - Mike
+
+Scheduler - Dylan, Damon
+
+Update testing (unit and system) - Andrew
+
+Update diagrams and readme file - Tina
 
 ### Files - Source code
 - *DroneState.java*: Stores the states to be used for the drones
