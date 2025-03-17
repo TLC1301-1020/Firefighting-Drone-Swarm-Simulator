@@ -94,14 +94,45 @@ Project uses Junit5.8.1, JDK22
 
 
 
-# Work Breakdown - Iteration 2
+# Work Breakdown - Iteration 3
+
+### Work Breakdown
+
 
 ### Files - Source code
+- *DroneState.java*: Stores the states to be used for the drones
+- *DroneSubsystem.java* Manages drones, interacts with Scheduler class
+- *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
+- *FireRequest.java*: Data model, manages the variables for each incident
+- *Main.java*: Set up scheduler and starts the threads
+- *Response.java*: Data model, contains the status of a fire incident request
+- *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
+- *SchedulerState.java*: Stores the states to be used for the scheduler
+- *Zone.java*:Contains the zone information
+- *Drone.java*: Contains information of the drone
+- *DroneEvent.java*: Event information of the drone
+- *DroneStatus.java*: Current status of the drone
 
 ### Files - Test code
+- *SchedulerTest.java*: Contains the test methods for the scheduler source code, focusing on the state transitions
+- *FireIncidentSubsystemTest.java*: Contains the test methods for the fire incident subsystem class
+- *DroneSubsystemTest.java*: Contains the test methods for the drone subsystem, focusing on the state transitions
 
 ### Files - Diagrams and others
+- *README.md*: Contains the explanation of the project for this iteration (2), including names of the files, team members, work breakdown, and instruction to set and run the program
+- *Fireincidents.txt*: Contains the incidents information, used in FireIncidentSubsystem class
+- *UMLClassDiagram-iteration1*: Shows the relationships and structure of the classes for iteration 1
+- *DroneSequenceDiagram-iteration1*: Shows interactions between the components for iteration 1
+- *UMLClassDiagram-iteration2*: Shows the relationships and structure of the classes for iteration 2
+- *UMLSequenceDiagram-iteration2*: Shows the interactions between the components for iteration 2
+- *SchedulerStateDiagram-iteration2*: The behavioural diagram for the Scheduler that represents the transitions between the states on events/conditions
+- *DroneStateDiagram-iteration2*: The behavioural diagram for the DroneSubsystem that represents the transitions between the states on events/conditions
+- *UMLClassDiagram-iteration3*: The overall structure of the project in iteration 3
+- *zone_file.csv*: Zone id, Zone range (x and y)
+- *run.bat*: command to run the program
 
 ### Setup instruction
+Make sure the directory of the input file is correct
 
 ### Test instruction
+Project uses Junit5.8.1, JDK22
