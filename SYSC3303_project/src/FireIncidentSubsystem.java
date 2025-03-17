@@ -92,23 +92,34 @@ public class FireIncidentSubsystem implements Runnable {
 
         // Now we request and wait for future Scheduler updates
 //        while(!tasks.isEmpty())
-        while(true) {
-
+        while (true) {
             String update = receiveUpdate();
             System.out.println(" UPDATE 1 IS: " + update);
-            // Request the scheduler for updates
 
+            // Request updates from the scheduler
             sendIncident("FIRE_DATA_REQUEST");
-            String update2 = receiveUpdate();
+
+            String update2;
+            do {
+                update2 = receiveUpdate();
+                if (update2.equals("No updates available")) {
+                    try {
+                        Thread.sleep(500); // Wait a little before retrying
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return; // Exit on interrupt
+                    }
+                }
+            } while (update2.equals("No updates available")); // Keep waiting until a valid update
+
             System.out.println(" UPDATE 2 IS: " + update2);
 
             // This should be an update that a drone has completed a FireRequest
-//            System.out.println(receiveUpdate());
-            if( update2.contains("COMPLETED") )
-            {
+            if (update2.contains("COMPLETED")) {
                 sendIncident(tasks.remove(0).toString());
             }
         }
+
 
 
 

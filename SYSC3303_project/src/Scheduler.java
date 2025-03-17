@@ -11,59 +11,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Scheduler {
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
-
-
-    /**
-     * current fire request being processed
-     */
     private FireRequest currentRequest = null;
-    /**
-     * latest response received from the drone subsystem
-     */
     private Response currentResponse = null;
-    /**
-     * flag indicating whether a fire request is available
-     */
     private boolean requestAvailable = false;
-    /**
-     * flag indicating whether a response is available
-     */
     private boolean responseAvailable = false;
-
     private HashMap<Integer, DroneStatus> drones;
-
-    //    private List<DroneSubsystem> drones;    // old
-    private Queue<FireRequest> requestQueue;
+    private Deque<FireRequest> requestQueue;
     private SchedulerState currentState;
-
     public static final int DATA_BUFFER_SIZE = 256;
     public static final int FIRE_TO_SCHEDULER_PORT = 5000;
     public static final int DRONE_TO_SCHEDULER_PORT = 5001;
     public static final int FIRE_INCIDENT_SUBSYSTEM_PORT = 5002;
     public static final int DRONE_SUBSYSTEM_PORT = 5003;
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, sendSocket;
-    //private final ConcurrentLinkedQueue<Integer> waitingDronesQueue = new ConcurrentLinkedQueue<>();
-
-    /**
-     * Placeholder zone coordinates
-     */
-
-    /*
-    public final static int zone2Xstart = 50;
-    public final static int zone2Xend = 150;
-    public final static int zone2Ystart = 100;
-    public final static int zone2Yend = 200;
-
-    public final static int zone3Xstart = 150;
-    public final static int zone3Xend = 250;
-    public final static int zone3Ystart = 50;
-    public final static int zone3Yend = 150;
-
-    public final static int zone7Xstart = 300;
-    public final static int zone7Xend = 400;
-    public final static int zone7Ystart = 50;
-    public final static int zone7Yend = 150;
-    */
+    private boolean fireRequestAssigned = true;
 
     public void parseZoneFile(String zoneFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(zoneFilePath))) {
@@ -94,10 +55,29 @@ public class Scheduler {
         }
     }
 
+    public Scheduler() {
+        this.drones = new HashMap<>();
+        this.requestQueue = new LinkedList<>();
+        this.currentState = new Idle();
+        parseZoneFile("SYSC3303_project/src/zone_file.csv");
+        for (Zone zone : zoneMap.values()) {
+            System.out.println("Parsed zone: " + zone);
+        }
+        try {
+            sendSocket = new DatagramSocket();
+            fireReceiveSocket = new DatagramSocket(FIRE_TO_SCHEDULER_PORT);
+            droneReceiveSocket = new DatagramSocket(DRONE_TO_SCHEDULER_PORT);
+        } catch (SocketException e) {
+            System.err.println(e);
+        }
+        Thread droneHandler = new listenToDrone();
+        Thread fireHandler = new listenToFire();
+        Thread processPendingRequests = new ProcessPendingRequests();
+        droneHandler.start();
+        fireHandler.start();
+        processPendingRequests.start();
+    }
 
-    /**
-     * Thread to listen to FireIncidentSubsystem.
-     */
     private class listenToFire extends Thread {
         @Override
         public void run() {
@@ -105,78 +85,47 @@ public class Scheduler {
 
             while (true) {
                 System.out.println("\n[ SF  ]  -   SCHEDULER IS WAITING FOR MESSAGE FROM FIRE  -   ");
-
-                // This request will be a new FireRequest to add, or just a data request for an available Drone response
                 String request = receivePacket(fireReceiveSocket);
-
                 System.out.print("\n[SF<-F]  -   SCHEDULER RECEIVED FROM FIRE: "+request+ "  -   ");
-
-                /* TODO: need to handle scheduler set state here with two threads
-                 droneHandler and fireHandler threads
-                * */
-
-                // This is a data request, and we will wait via takeResponse() until an available Drone response is ready to send back
-
-                // At this point currentResponse should be a list of responses since we will most likely be taking more than one at a time
                 if (request.contains("FIRE_DATA_REQUEST")) {
                     System.out.println("request contains FIRE_DATA_REQUEST - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
                     sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, takeResponse().toString());
                 }
-
-                // Otherwise it's a new FireRequest. Add it, and send back an acknowledgement
                 else {
                     System.out.println("request is new fire request - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
-
                     FireRequest fireRequest = new FireRequest(request);
-                    addRequest(fireRequest);
+                    addRequest(fireRequest, 0);
                     sendPacket(sendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
-
-                    // After adding the fire request, attempt to assign it to a drone
-                    assignFireRequest(fireRequest);
                 }
-
             }
         }
     }
 
-    /**
-     * Thread to listen to DroneSubsystem.
-     */
     private class listenToDrone extends Thread {
         @Override
         public void run() {
             System.out.println("\n[ SD  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
             while (true) {
                 System.out.println("\n[ SD  ]  -   SCHEDULER IS WAITING FOR MESSAGE FROM DRONE  -   ");
-                // Receive packet from the DroneSubsystem
                 String request = receivePacket(droneReceiveSocket);
-
-                /* TODO: need to handle scheduler set state here with two threads
-                    droneHandler and fireHandler threads
-                 */
-
-                // get drone status -
                 System.out.println("\n[SD<-D]  -   SCHEDULER RECEIVED FROM DRONE: "+request+ "  -   ");
-
-                // Parse the packet (assuming we are not actually storing physical Drones anymore, and instead are only storing crucial data for each drone):
                 String response = handleDroneRequest(request);
-
                 System.out.println("\n[SD->D]  -   SCHEDULER RESPONSE TO DRONE: "+response+ "  -   ");
-
-                // send response
                 sendPacket( sendSocket, DRONE_SUBSYSTEM_PORT, response );
             }
         }
     }
 
-    private class ProcessPendingRequests implements Runnable {
+    // assigning fire requests
+    private class ProcessPendingRequests extends Thread {
         @Override
         public void run() {
             while (true) {
                 synchronized(requestQueue) {
                     if (!requestQueue.isEmpty()) {
-                        FireRequest req = requestQueue.peek();
-                        assignFireRequest(req);
+                        //FireRequest req = requestQueue.peek();
+                        assignFireRequest();
+                        //markFireRequestAssigned();
                     }
                 }
                 try {
@@ -188,7 +137,6 @@ public class Scheduler {
         }
     }
 
-
     /**
      * response format is:<p>
      *     RESPONSE_HEADER:REQUEST<p>
@@ -196,40 +144,28 @@ public class Scheduler {
      *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS
      @return String value of entire formatted respnse to send to Drone
      */
-    public String handleDroneRequest(String request)
+    private String handleDroneRequest(String request)
     {
         System.out.println("\n[SD   ]  -   SCHEDULER HANDLE DRONE REQUEST: "+request+ "  -   ");
-
         if (request.startsWith("INIT")) {
-            // Extract the drone ID if needed; here we assume items[0] is the drone ID in the registration request.
             int droneId = Integer.parseInt(request.split(":")[0]);
             System.out.println("[SCHEDULER] Registering drone " + droneId);
             return "ACK:" + droneId + ":REGISTERED";
         }
-
         // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         String[] items = request.split(":");
         if (items.length != 6) return "ERROR: Invalid request format:" + request;
         FireRequest currTask = new FireRequest(items[5]);
-
-        // get drone id     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         int droneId = -1;
         try {
             droneId = Integer.parseInt(items[0]);
         } catch (NumberFormatException e) {
             return "ERROR: Invalid drone ID";
         }
-        // check drone collection for this drone id
         DroneStatus drone = this.drones.get(droneId);
         // if drone does not exist with scheduler, register drone and return register event
         if (drone == null) return registerDrone(droneId) + ":" + request;
-
-        // otherwise parse & handle request...
-
-        // get current state of this drone     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         String droneState = items[1];
-
-        // get request of this drone and convert it to DroneEvent
         DroneEvent eventRequest = null;
         try {
             eventRequest = DroneEvent.valueOfEvent(items[2]); // Convert string to enum
@@ -240,197 +176,167 @@ public class Scheduler {
                 // Status request event flow here
             }
         }
-
-        // get location of this drone
         int x,y,zone = -1;
         try {
             x = Integer.parseInt(items[3]);
             y = Integer.parseInt(items[4]);
-            zone = currTask.getZoneId();
         } catch (NumberFormatException e) {
             return "ERROR: Invalid location value: " + items[3] + "," + items[4];
         }
-        // update state/location of drone
-        drone.setState(droneState);
+        //drone.setState(droneState);
         drone.setLocation(x, y);
-
-
-        /* request types
-            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y:CURR_TASK  -> when there is a request
-            DRONE_ID:<STATE>:REQUEST:X:Y:CURR_TASK  -> when there is a request
-         */
-
-        /*  response types
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for saying acknowledge
-            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
-         */
-
-
         // TODO: handle request to proceed with the state corresponding to when this event occurs
         switch(eventRequest)
         {
             case NEW_FIRE_REQUEST:
                 System.out.println("Drone " + droneId + " is now waiting for a fire request.");
+                drone.setState("[IDLE]");
                 return "WAIT:" + request;
             case PERMISSION_TO_DROP:
+                drone.setState("[DEPLOYING]");
                 return "ACK:" + request;
             case PAYLOAD_DROPPED:
-                // Send an ACK with a completed to allow to transition to next state
+                drone.setState("[RETURNING]");
                 return "ACK:" + request + ":COMPLETED";
             case PAYLOAD_DEPLOY_FAILURE:
+                drone.setState("[DEPLOY FAILURE]");
                 return "ACK:" + request;
             case DEPLOY_FAILURE_ACKNOWLEDGED:
+                // TODO :                 drone.setState("[DEPLOY FAILURE]");
                 return "ACK:" + request;
             case RETURNED_TO_BASE:
-                FireRequest completedTask = drone.getCurrentTask();
-                synchronized(this) {
-                    if (!completedTask.isDefault()) {
-                        currentResponse = new Response(completedTask, "COMPLETED");
-                        responseAvailable = true;
-                        notifyAll(); // Wake up any thread waiting for a response.
-                    }
-                }
+                drone.setState("[REFILLING]");
                 return "ACK:" + request;
             case REFILL_COMPLETE:
+                //drone.setState("[IDLE]");
+                FireRequest completedTask = drone.getCurrentTask();
+                synchronized (this) {  // Ensuring proper synchronization
+                    currentResponse = new Response(completedTask, "COMPLETED");
+                    drone.setCurrentTask(new FireRequest());
+                    responseAvailable = true;
+                    notifyAll();
+                }
                 return "ACK:" + request;
             case DRONE_STUCK:
                 return "ACK:" + request;
             case STUCK_RESOLVED:
                 return "ACK:" + request;
             case STATUS:
-                // drone is sending location update while traveling to fire zone
                 return "Temp:" + request;
             default:
-//                if ( items[2].equals( DroneEvent.STATUS ) )
-//                {
-//                    // drone is sending location update while traveling to fire zone
-//                    return "Temp:" + request;
-//                }
-//                else
-//                {
-//                    return "ERROR: UNKNOWN drone request: " + request; // should never hit
-//                }
                 return "ERROR: UNKNOWN drone request: " + request; // should never hit
 
         }
-
-        // (If parsing with processResponse(), need to update that logic to include checking for which droneId, etc.)
-        // If it's a request for a FireRequest, provide a request from takeRequest()
-        // If it's a status update for a certain drone, store that information, reply with a proper acknowledgement/response
-        // etc.
-        // Example: sending DroneSubsystem a new request after it has asked for one
-        // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, takeRequest().toString())
-        // Example: sending a general acknowledgement after a drone sends us its updated location
-        // sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED")
-
     }
 
     /**
      * Assigns a fire request to the most appropriate drone.
      */
-    public void assignFireRequest(FireRequest fireRequest) {
-        System.out.println("\n[ SF  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
-        /*
-        int zone = fireRequest.getZoneId();
-        int zoneX,zoneY;
-        switch(zone)
-        {
-            case 2:
-                zoneX = 100;
-                zoneY = 150;
-                break;
-            case 3:
-                zoneX = 200;
-                zoneY = 100;
-                break;
-            case 7:
-                zoneX = 350;
-                zoneY = 50;
-                break;
-            default:
-                zoneX = 0;
-                zoneY = 0;
-                break;
-        }
-        */
+    private void assignFireRequest() {
+        FireRequest fireRequest = getNextFireRequest();
+        if (fireRequest == null) return; // Handle interruption case
 
+        System.out.println("\n[ SF  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest);
         int selectedDroneId = selectDrone(fireRequest);
 
-        System.out.println("\n[ SF  ]  -   selectedDroneId: " + selectedDroneId);
-
         if (selectedDroneId == -1) {
-            System.out.println("No available drones to handle fire request");
+            System.out.println("No available drones to handle fire request. Re-adding request.");
+            addRequest(fireRequest, 1);
             return;
         }
 
         DroneStatus selectedDrone = drones.get(selectedDroneId);
-        System.out.println("\n[ SF  ]  -   selectedDrone: " + selectedDrone.toString());
+        System.out.println("\n[ SF  ]  -   selectedDrone: " + selectedDrone);
+
         FireRequest previousTask = selectedDrone.getCurrentTask();
         selectedDrone.setCurrentTask(fireRequest);
-        removeRequest(fireRequest);
+        selectedDrone.setState("[TRAVELING]");
 
-        // Build request string in expected format: "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+        //removeRequest(fireRequest);
 
+        String droneRequest;
         if (previousTask.getZoneId() != -1) {
-            // If drone had a previous task, droneRequest is constructed with "NEW" and uses the current x and y location values
-            String droneRequest = "NEW:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
+            droneRequest = "NEW:" + selectedDroneId + ":" + selectedDrone.getState() + ":NEW_FIRE_REQUEST:" +
                     selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
             System.out.println("[SCHEDULER] Sending to DroneSubsystem: " + droneRequest);
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
             System.out.println("Reassigning previous task: " + previousTask);
-            addRequest(previousTask); // Put the old request back into the queue
+            addRequest(previousTask, 1); // Put the old request back into the queue
         } else {
-            // This drone did not have a previous task, so droneRequest is constructed as a simple acknowledgment to begin the drone's activity
-            String droneRequest = "ACK:" + selectedDroneId + ":[IDLE]:NEW_FIRE_REQUEST:" +
+            droneRequest = "ACK:" + selectedDroneId + ":" + selectedDrone.getState() + ":NEW_FIRE_REQUEST:" +
                     "0:0:" + fireRequest;
             sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
         }
-        System.out.println("[SCHEDULER->DRONE SUBSYSTEM] Sent fire request to drone " + selectedDroneId);
 
+        System.out.println("[SCHEDULER->DRONE SUBSYSTEM] Sent fire request to drone " + selectedDroneId);
+    }
+
+
+//    private void assignFireRequest(FireRequest fireRequest) {
+//        System.out.println("\n[ SF  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
+//        int selectedDroneId = selectDrone(fireRequest);
+//        System.out.println("\n[ SF  ]  -   selectedDroneId: " + selectedDroneId);
+//        if (selectedDroneId == -1) {
+//            System.out.println("No available drones to handle fire request");
+//            return;
+//        }
+//        DroneStatus selectedDrone = drones.get(selectedDroneId);
+//        System.out.println("\n[ SF  ]  -   selectedDrone: " + selectedDrone.toString());
+//        FireRequest previousTask = selectedDrone.getCurrentTask();
+//        selectedDrone.setCurrentTask(fireRequest);
+//        selectedDrone.setState("[TRAVELING]");
+//        removeRequest(fireRequest);
+//
+//        // Build request string in expected format: "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+//
+//        //
+//        if (previousTask.getZoneId() != -1) {
+//            // If drone had a previous task, droneRequest is constructed with "NEW" and uses the current x and y location values
+//            String droneRequest = "NEW:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
+//                    selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
+//            System.out.println("[SCHEDULER] Sending to DroneSubsystem: " + droneRequest);
+//            sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
+//            System.out.println("Reassigning previous task: " + previousTask);
+//            addRequest(previousTask); // Put the old request back into the queue
+//        } else {
+//            // This drone did not have a previous task, so droneRequest is constructed as a simple acknowledgment to begin the drone's activity
+//            String droneRequest = "ACK:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
+//                    "0:0:" + fireRequest;
+//            sendPacket(sendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
+//        }
+//        System.out.println("[SCHEDULER->DRONE SUBSYSTEM] Sent fire request to drone " + selectedDroneId);
+//    }
+
+    private synchronized FireRequest getNextFireRequest() {
+        while (requestQueue.isEmpty()) {
+            try {
+                System.out.println("[INFO] Waiting for fire requests...");
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("[ERROR] Interrupted while waiting for fire requests.");
+                return null;
+            }
+        }
+        return requestQueue.poll();
     }
 
     /**
      * Removes a fire request from the queue after it has been assigned.
      */
-    public void removeRequest(FireRequest fireRequest) {
-        synchronized (requestQueue) {
-            requestQueue.remove(fireRequest);
-        }
-    }
-
-    public Scheduler() {
-        this.drones = new HashMap<>();
-        this.requestQueue = new LinkedList<>();
-        this.currentState = new Idle();
-
-        // Parse the zone file to populate zoneMap
-        parseZoneFile("SYSC3303_project/src/zone_file.csv");
-        // Print out the zones for debugging
-        for (Zone zone : zoneMap.values()) {
-            System.out.println("Parsed zone: " + zone);
+    private synchronized void removeRequest(FireRequest fireRequest) {
+        if (requestQueue.isEmpty()) {
+            System.out.println("[WARN] removeRequest called, but queue is empty!");
+            return;
         }
 
-        try {
-            sendSocket = new DatagramSocket();
-            fireReceiveSocket = new DatagramSocket(FIRE_TO_SCHEDULER_PORT);
-            droneReceiveSocket = new DatagramSocket(DRONE_TO_SCHEDULER_PORT);
-        } catch (SocketException e) {
-            System.err.println(e);
+        if (requestQueue.remove(fireRequest)) { // Ensure request was actually in the queue
+            System.out.println("[ S ] removeRequest removing: " + fireRequest);
+            System.out.println("[ S ] removeRequest post removal: " + Arrays.toString(requestQueue.toArray()));
+            notifyAll(); // Notify any waiting threads
+        } else {
+            System.out.println("[WARN] Attempted to remove a request that was not in the queue: " + fireRequest);
         }
-
-        // Create and start threads to listen to other subsystems
-        Thread droneHandler = new listenToDrone();
-        Thread fireHandler = new listenToFire();
-
-        droneHandler.start();
-        fireHandler.start();
-
-        // Start the background thread that processes pending fire requests
-        new Thread(new ProcessPendingRequests()).start();
-
-        // alternative use thread methods
-//        new Thread(this::droneHandler).start();
-//        new Thread(this::fireHandler).start();
     }
 
     // todo : setState needs to be synchronized
@@ -513,7 +419,7 @@ public class Scheduler {
         return findClosestIdleDrone(targetZone);
     }
 
-    public boolean isOnPath(DroneStatus drone, Zone targetZone) {
+    private boolean isOnPath(DroneStatus drone, Zone targetZone) {
         // Retrieve the destination zone from the drone's current task.
         Zone destZone = zoneMap.get(drone.getCurrentTask().getZoneId());
         if (destZone == null) return false;
@@ -521,7 +427,7 @@ public class Scheduler {
         return zonesIntersect(destZone, targetZone);
     }
 
-    public boolean zonesIntersect(Zone a, Zone b) {
+    private boolean zonesIntersect(Zone a, Zone b) {
         // Check if two zones (rectangles) intersect.
         return !(a.getEndX() < b.getStartX() ||
                 a.getStartX() > b.getEndX() ||
@@ -635,13 +541,23 @@ public class Scheduler {
      * To be used by Fire Incident Subsystem
      * @param request the FireRequest to be added
      */
-    public synchronized void addRequest(FireRequest request) {
-        requestQueue.offer(request);
+    public synchronized void addRequest(FireRequest request, int first) {
+        boolean wasEmpty = requestQueue.isEmpty();
+        if (first == 1){
+            requestQueue.addFirst(request);
+        } else {
+            requestQueue.offer(request);
+        }
         System.out.println("From Scheduler - receiving request from fire incident: \n" + request + "\n");
+
         setState(new ProcessData(new ReceiveData()));
         currentState.handleEvent(this, SchedulerEvent.REQUEST_RECEIVED);
-        notifyAll();
+
+        if (wasEmpty) {
+            notifyAll(); // Only notify if threads might have been waiting
+        }
     }
+
 
     // TODO: Damon & Dylan update this logic to pick a suitable drone from the DroneStatus objects available in this.drones
 //    public synchronized void assignRequests(){
@@ -811,6 +727,12 @@ public class Scheduler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private synchronized void markFireRequestAssigned()
+    {
+        fireRequestAssigned = true;
+        notifyAll();
     }
 
     /**
