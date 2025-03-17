@@ -68,7 +68,7 @@ public class FireIncidentSubsystem implements Runnable {
         // For debugging, print the parsed zones.
         for (Zone zone : zoneMap.values()) {
             System.out.println("Parsed zone: " + zone);
-            System.out.println(zoneMap.get(7));
+            System.out.println(zoneMap.get(7) + "\n");
         }
 
         readInputFile(inputFile);
@@ -95,17 +95,22 @@ public class FireIncidentSubsystem implements Runnable {
         while(true) {
 
             String update = receiveUpdate();
-            System.out.println(" UPDATE 1 IS: " + update);
+            System.out.println("\n[ FIRE ]  UPDATE 1 IS: " + update);
             // Request the scheduler for updates
 
             sendIncident("FIRE_DATA_REQUEST");
             String update2 = receiveUpdate();
-            System.out.println(" UPDATE 2 IS: " + update2);
+            System.out.println("[ FIRE ]  UPDATE 2 IS: " + update2);
 
             // This should be an update that a drone has completed a FireRequest
 //            System.out.println(receiveUpdate());
             if( update2.contains("COMPLETED") )
             {
+                if(tasks.isEmpty())
+                {
+                    System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS HANDLED BY SYSTEM .... ");
+                    break;
+                }
                 sendIncident(tasks.remove(0).toString());
             }
         }
@@ -136,6 +141,7 @@ public class FireIncidentSubsystem implements Runnable {
 
                 System.out.println("Adding task: " + task);
             }
+            System.out.println("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -212,7 +218,7 @@ public class FireIncidentSubsystem implements Runnable {
     public String receiveUpdate() {
         try {
             // Set a timeout of 5000ms (5 seconds)
-            receiveSocket.setSoTimeout(5000);
+//            receiveSocket.setSoTimeout(5000);
             byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
             DatagramPacket receivePacket = new DatagramPacket(data, data.length);
             receiveSocket.receive(receivePacket);
