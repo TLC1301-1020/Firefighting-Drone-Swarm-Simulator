@@ -18,7 +18,6 @@ Scheduler Code - Damon
 
 Testing Code - Andrew
 
-Debug code - Dylan, Jake, Mike
 ### Files
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
@@ -30,7 +29,6 @@ Debug code - Dylan, Jake, Mike
 - *Fireincidents.txt*: Contains the incidents information, used in FireIncidentSubsystem class
 - *UML Class diagram*: Shows the relationships and structure of the classes
 - *UML Sequence diagram*: Shows the interactions between the components
-
 
 
 ### Setup instruction
@@ -107,6 +105,8 @@ Scheduler - Dylan, Damon
 Update testing (unit and system) - Andrew
 
 Update diagrams and readme file - Tina
+
+Debug code - Dylan, Jake, Mike
 
 ### Files - Source code
 - *DroneState.java*: Stores the states to be used for the drones
