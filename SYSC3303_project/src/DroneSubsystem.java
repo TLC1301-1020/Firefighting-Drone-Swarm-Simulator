@@ -122,7 +122,7 @@ public class DroneSubsystem implements Runnable {
      */
     public void addResponse(int droneId, String response)
     {
-        System.out.println( "[ DSS ] adding response to queue drone:"+droneId+":         " + response );
+        System.out.println( "[  DSS  ]                 adding response to queue drone:"+droneId+":         " + response );
         synchronized (this.responseQueue)
         {
             LinkedList<String> responses = this.responseQueue.get(droneId);
@@ -213,7 +213,7 @@ public class DroneSubsystem implements Runnable {
         Thread schedulerListener = new Thread(() -> {
             while (true) {
                 String response = receivePacket();
-                System.out.println("[ S->DSS ] RESPONSE :                             " + response);
+                System.out.println("[ S->DSS ] startListeningToScheduler thread received RESPONSE :     " + response);
 
                 handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
             }
@@ -247,7 +247,7 @@ public class DroneSubsystem implements Runnable {
         while (true) {
             // Check request queue - communication from drones
             String request = getRequest();
-            System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                  " + request);
+            System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                       " + request);
 
             // Artificial delay added here to slow things down
             try {
@@ -286,12 +286,13 @@ public class DroneSubsystem implements Runnable {
      */
     public void handleDroneResponse(String response)
     {
-
         /*  response types
             "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
          */
         String[] items = response.split(":");
+
+        System.out.println("\n[  DSS  ] parsing scheduler response and sending to drone:        " + Arrays.toString(items) );
 
         // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         int droneId = -1;
@@ -308,7 +309,9 @@ public class DroneSubsystem implements Runnable {
         // check if the scheduler is requesting location status for interrupt during travel
         if( items[0].contains("STATUS") )
         {
-            System.out.println("\n[  DSS  ]  -   addResponse          " + response);
+            System.out.println("\n[  DSS  ]     items[0] contains STATUS -> interrupt called :        " + items[0] );
+
+//            System.out.println("\n[  DSS  ]  -   addResponse          " + response);
             // thread safe to interrupt travel
             drones.get(droneId).interrupt();
         }

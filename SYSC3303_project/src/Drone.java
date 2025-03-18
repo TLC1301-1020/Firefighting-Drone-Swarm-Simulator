@@ -89,7 +89,7 @@ public class Drone implements Runnable
      * returns the drone id
      * @return drone id
      */
-    public float getDroneId() {
+    public int getDroneId() {
         return droneId;
     }
 
@@ -169,7 +169,6 @@ public class Drone implements Runnable
                 System.out.println("\n[ DRONE TRAVEL ] Drone " + this.droneId + " interrupted during travel. Sending status update.");
                 // Immediately send a status update with the current location and task.
                 setSendStatus();
-//                this.droneSubsystem.addRequest(makeStatusRequest());
                 return true;
             }
             spentTime += stepTime;
@@ -180,57 +179,6 @@ public class Drone implements Runnable
         System.out.println("\n [ DRONE TRAVEL ] Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
         return false;
     }
-
-    /*
-    public void travel() {
-        int finalX, finalY;
-        // Retrieve the zone from the FireIncidentSubsystem's zoneMap.
-        Zone zone = FireIncidentSubsystem.zoneMap.get(currTask.getZoneId());
-        if (zone != null) {
-            // Use the center of the zone as the target.
-            finalX = (zone.getStartX() + zone.getEndX()) / 2;
-            finalY = (zone.getStartY() + zone.getEndY()) / 2;
-        } else {
-            finalX = 0;
-            finalY = 0;
-        }
-
-        // Calculate distance and travel time
-        double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
-        double travelTime = (distance / this.maxVelocity) * 1000; // in milliseconds
-
-        // Record starting positions
-        double startX = this.xPos;
-        double startY = this.yPos;
-        double startTime = System.currentTimeMillis();
-
-        // Update position until travel time is reached
-        while (System.currentTimeMillis() - startTime < travelTime) {
-            if (Thread.currentThread().isInterrupted()) {
-                System.out.println("Drone " + this.droneId + " interrupted during travel. Sending status update.");
-                this.droneSubsystem.addRequest(makeStatusRequest());
-                setSendStatus();
-                return;
-            }
-            try {
-                Thread.sleep(100); // Update every 100ms
-            } catch (InterruptedException e) {
-                System.out.println("Drone " + this.droneId + " interrupted during travel (sleep). Sending status update.");
-                this.droneSubsystem.addRequest(makeStatusRequest());
-                setSendStatus();
-                return;
-            }
-            double elapsed = System.currentTimeMillis() - startTime;
-            double fraction = Math.min(elapsed / travelTime, 1.0); // Ensure it does not exceed 1.0
-            this.xPos = startX + fraction * (finalX - startX);
-            this.yPos = startY + fraction * (finalY - startY);
-        }
-        // Ensure final position is exactly at the target.
-        this.xPos = finalX;
-        this.yPos = finalY;
-        System.out.println("Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
-    }*/
-
 
     /**
      checks {@code Drone.sendStatus} and resets it to false after - used for when drone sends request,
@@ -300,8 +248,11 @@ public class Drone implements Runnable
             // adds the request to the router host
             this.droneSubsystem.addRequest( request );
 
-            //clear
-            System.out.println("[ DRONE ]       is interrupted 1 =    " + Thread.currentThread().isInterrupted());
+            try
+            {
+                Thread.sleep(1);
+                System.out.println("[ DRONE ]       is interrupted 1 =    " + Thread.currentThread().isInterrupted());
+            } catch (InterruptedException e) { System.out.println("Travel interrupt Exception Caught"); }
 
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
@@ -328,17 +279,10 @@ public class Drone implements Runnable
      * @param response the incoming response.
      */
     private void handleResponse(String response) {
-        /*  Response types
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
-            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
-            "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for blocking after requesting a new fire request
-         */
 
-//        System.out.println("\n[ DRONE ] handleResponse called for :         " + response);
         String[] items = response.split(":");
         System.out.println("\n[ DRONE ] Items of fire request as an array: \n     " + Arrays.toString(items));
 
-//        if (items.length != 6) return;
         String schedulerInstructions = items[0];
 
         // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y"
@@ -351,12 +295,11 @@ public class Drone implements Runnable
 
         if (schedulerInstructions.contains("STATUS"))
         {
-            System.out.println("\n[ DRONE ] scheduler keyword is STATUS, returning from handleResponse:     \n     ");
+            System.out.println("\n[ DRONE ] scheduler keyword is STATUS, returning from handleResponse:         " + Arrays.toString(items)+ "\n     ");
             return;
         }
 
-        // get current state of this drone     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y:CURRTASK"
-        String droneState = items[2];
+        String droneState = items[2]; // get current state of this drone
 
         if (schedulerInstructions.equals("WAIT")) {
             System.out.println("\n[ DRONE ]   WAIT order -> drone " + droneId + " waiting for new task...");
@@ -380,8 +323,6 @@ public class Drone implements Runnable
 
         // if schedulerInstructions is acknowledgement
         else if (schedulerInstructions.equals("ACK")) {
-            // If the response has at least 7 fields and the 7th field is "COMPLETED", process as payload dropped.
-            //  "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y:CURRTASK"
 
             // get the event request
             DroneEvent eventRequest;
@@ -391,56 +332,38 @@ public class Drone implements Runnable
                 System.out.println("ERROR: Unknown drone event: " + items[3]);
                 return;
             }
-
-            if (items.length >= 7 && items[6].trim().equals("COMPLETED")) {
-//                System.out.println("[ DRONE ] Received ACK with COMPLETED status.");
-                System.out.println("\n[ DRONE ]   ACK COMPLETED order -> drone " + droneId + " drone returning from fire after ...    " +eventRequest.toString() );
-
-                this.currentState.handleEvent(this, DroneEvent.PAYLOAD_DROPPED);
-            } else {
-                // Existing handling for other ACK types:
-//                DroneEvent eventRequest;
-//                try {
-//                    eventRequest = DroneEvent.valueOfEvent(items[3]);
-//                } catch (IllegalArgumentException e) {
-//                    System.out.println("ERROR: Unknown drone event: " + items[3]);
-//                    return;
-//                }
+            if ( eventRequest.equals(DroneEvent.STATUS) )
+            {
+                // hit if Scheduler responds with ACK when it receives and processes the drones location. drone waits for next instruction
+                System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state ...    " +eventRequest.toString() );
+                this.currentState.handleEvent(this, DroneEvent.STATUS);
+            }
+            else
+            {
                 System.out.println("\n[ DRONE ]   ACK  order -> drone " + droneId + " fulfilling event request ...    " +eventRequest.toString() );
-
-//                System.out.println("[ DRONE ] received event req ACK in handleResponse :         "+ eventRequest.toString());
-
                 if( eventRequest.equals(DroneEvent.NEW_FIRE_REQUEST) )
                 {
-                    String newFireRequest= items[6]; //actually in item 6
-                    // handles if currently has a fire request -> reassigning that
-                    // sending to scheduler or to subsystem
+                    System.out.println("\n\n\n\n******************** SHOULD NEVER HIT as NEW_FIRE_REQUEST assignment moved **************   " + toString() + "\n\n\n\n");
+                    String newFireRequest= items[6];
+                    // handles if currently has a fire request
                     FireRequest newTask = new FireRequest(newFireRequest);
-
                     setCurrTask( newTask );
                 }
                 this.currentState.handleEvent(this, eventRequest);
             }
         }
-
         else if( schedulerInstructions.equals("NEW") )
         {
-            // new tasking for that drone
-            // idle || doing something == rerouted
             // request = "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
-
-            // get request of this drone and convert it to DroneEvent
-            String newFireRequest = items[6]; //actually in item 6
-
+            String newFireRequest = items[6];
             System.out.println("\n[ DRONE ]   NEW  order -> drone " + droneId + " fulfilling new fire request ...    " +newFireRequest );
-
-            // handles if currently has a fire request -> reassigning that
-            // sending to scheduler or to subsystem
             FireRequest newTask = new FireRequest(newFireRequest);
             setCurrTask( newTask );
 
+            // send an indication that this drone is now traveling expecting no response
             this.currentState.handleEvent(this, DroneEvent.NEW_FIRE_REQUEST);
-
+            // set drone to travel
+//            boolean travelIsInterrupted = travel();
         }
     }
 

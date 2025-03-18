@@ -87,7 +87,7 @@ public class FireIncidentSubsystem implements Runnable {
                 // testing only 2 fire incidents
                 if( ++counter>2 )
                 {
-                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT TO SYSTEM .... ");
                     break;
                 }
 
@@ -101,6 +101,11 @@ public class FireIncidentSubsystem implements Runnable {
 
                 System.out.println("\n[ FIRE->S ]  sending task: " + (++i) + "    " + task);
                 sendIncident(task);
+                try{
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
             counter = 0;
             while(true)
@@ -108,16 +113,16 @@ public class FireIncidentSubsystem implements Runnable {
 //                // testing only 2 fire incidents
                 if( ++counter>2 )
                 {
-                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENT FOLLOWUPS SENT TO SYSTEM .... ");
                     break;
                 }
 
-                // testing all fire incidents
-                if( ++counter>i )
-                {
-                    System.out.println("\n[ FIRE->S ]  ALL FIRE_DATA_REQUEST SENT TO SCHEDULER .... ");
-                    break;
-                }
+//                // testing all fire incidents
+//                if( ++counter>i )
+//                {
+//                    System.out.println("\n[ FIRE->S ]  ALL FIRE_DATA_REQUEST SENT TO SCHEDULER .... ");
+//                    break;
+//                }
 
                 System.out.println("\n[ FIRE->S ]  sending:    FIRE_DATA_REQUEST");
                 sendIncident("FIRE_DATA_REQUEST");
