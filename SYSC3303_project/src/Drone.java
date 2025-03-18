@@ -120,8 +120,9 @@ public class Drone implements Runnable
 
     /**
      * simulates drone travel to the fire location
+     * @return true if travel is interrupted
      */
-    public void travel() {
+    public boolean travel() {
         int finalX, finalY;
         // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
         Zone zone = droneSubsystem.getZone(currTask.getZoneId());
@@ -167,9 +168,9 @@ public class Drone implements Runnable
             } catch (InterruptedException e) {
                 System.out.println("\n[ DRONE TRAVEL ] Drone " + this.droneId + " interrupted during travel. Sending status update.");
                 // Immediately send a status update with the current location and task.
-                this.droneSubsystem.addRequest(makeStatusRequest());
                 setSendStatus();
-                return;
+//                this.droneSubsystem.addRequest(makeStatusRequest());
+                return true;
             }
             spentTime += stepTime;
             this.xPos += deltaX;
@@ -177,6 +178,7 @@ public class Drone implements Runnable
             System.out.println(" [ DRONE TRAVEL ] Drone " + this.droneId + " is at         (" + this.xPos + "," +this.yPos + ") ");
         }
         System.out.println("\n [ DRONE TRAVEL ] Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
+        return false;
     }
 
     /*
@@ -253,7 +255,7 @@ public class Drone implements Runnable
 
     /**
      * request format is:<p>
-     *     DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS
+     *     DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS:CURRTASK
      @return String value of entire formatted request to send to scheduler based on current state
      and location.
      */
@@ -264,7 +266,7 @@ public class Drone implements Runnable
 
     /**
      * request format is:<p>
-     *     DRONE_ID:STATE:STATUS:X_POS:Y_POS
+     *     DRONE_ID:STATE:STATUS:X_POS:Y_POS:CURRTASK
      @return String value of entire formatted request to send to scheduler based on current state
      and location.
      */
@@ -301,7 +303,7 @@ public class Drone implements Runnable
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
-            // handle instructions given
+            // handle instructions given, will trigger travel()
             handleResponse(response);
 //            try{
 //                Thread.sleep(1000);
@@ -325,14 +327,10 @@ public class Drone implements Runnable
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
             "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for blocking after requesting a new fire request
          */
+
 //        System.out.println("\n[ DRONE ] handleResponse called for :         " + response);
         String[] items = response.split(":");
         System.out.println("\n[ DRONE ] Items of fire request as an array: \n     " + Arrays.toString(items));
-//        byte counter = 0;
-//        for ( String item : items )
-//        {
-//            System.out.println( ++counter + ".    "+item);
-//        }
 
 //        if (items.length != 6) return;
         String schedulerInstructions = items[0];
@@ -342,6 +340,12 @@ public class Drone implements Runnable
         try {droneId = Integer.parseInt(items[1]);}
         catch (NumberFormatException e) {
             System.out.println("ERROR: Invalid int parsing handleDroneResponse");
+            return;
+        }
+
+        if (schedulerInstructions.contains("STATUS"))
+        {
+            System.out.println("\n[ DRONE ] scheduler keyword is STATUS, returning from handleResponse:     \n     ");
             return;
         }
 

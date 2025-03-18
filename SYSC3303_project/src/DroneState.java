@@ -34,7 +34,9 @@ class DroneIdle implements DroneState {
         if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) && drone.getCurrTask() != null ) {
             System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneTravel()) );
-            drone.travel();
+
+            // if travel is interrupted, has to handle state transition (return to previous state)
+            boolean travelInterrupted = drone.travel();
         }
     }
 
@@ -99,15 +101,6 @@ class DroneTravel implements DroneState
 ////        handleEntryAction( drone );
 //    }
 
-//    /**
-//     handles the entry action logic for this drone, invokes all entry actions in sequence
-//     @param drone state belongs to this drone instance
-//     */
-//    public void handleEntryAction( Drone drone )
-//    {
-//        drone.travel();
-//    }
-
     @Override
     public void handleEvent(Drone drone, DroneEvent event)
     {
@@ -116,7 +109,10 @@ class DroneTravel implements DroneState
             // continuing to answer the fire request after interrupted
             System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " is continuing to answer the fire request after interrupted: " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneDeploy()) );
-            drone.travel();
+
+            // if travel is interrupted, has to handle state transition (return to previous state)
+            boolean travelInterrupted = drone.travel();
+
         }
         else if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) )
         {
@@ -130,7 +126,9 @@ class DroneTravel implements DroneState
             System.out.println("[ DRONE STATE ] drone" + drone.getDroneId() + " at " + drone.getLocation()+ " has a new fire request and is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             // sets the same state of traveling but to a new zone
             drone.setState( new DroneActive(new DroneTravel()) );
-            drone.travel();
+
+            // if travel is interrupted, has to handle state transition (return to previous state)
+            boolean travelInterrupted = drone.travel();
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) )
         {

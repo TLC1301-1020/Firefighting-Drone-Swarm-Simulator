@@ -286,6 +286,7 @@ public class DroneSubsystem implements Runnable {
      */
     public void handleDroneResponse(String response)
     {
+
         /*  response types
             "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
@@ -299,8 +300,18 @@ public class DroneSubsystem implements Runnable {
             System.out.println("ERROR: Invalid int parsing handleDroneResponse");
             return;
         }
+
         // add response to the response queue for drones to get
         addResponse(droneId, response);
+
+        // handle interrupt
+        // check if the scheduler is requesting location status for interrupt during travel
+        if( items[0].contains("STATUS") )
+        {
+            System.out.println("\n[  DSS  ]  -   addResponse          " + response);
+            // thread safe to interrupt travel
+            drones.get(droneId).interrupt();
+        }
     }
 
     /**

@@ -85,11 +85,11 @@ public class FireIncidentSubsystem implements Runnable {
             while(true) {
 
                 // testing only 2 fire incidents
-//                if( ++counter>2 )
-//                {
-//                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
-//                    break;
-//                }
+                if( ++counter>2 )
+                {
+                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+                    break;
+                }
 
                 if(tasks.isEmpty() )
                 {
@@ -106,11 +106,11 @@ public class FireIncidentSubsystem implements Runnable {
             while(true)
             {
 //                // testing only 2 fire incidents
-//                if( ++counter>2 )
-//                {
-//                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
-//                    break;
-//                }
+                if( ++counter>2 )
+                {
+                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+                    break;
+                }
 
                 // testing all fire incidents
                 if( ++counter>i )

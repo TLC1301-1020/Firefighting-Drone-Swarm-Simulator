@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Scheduler {
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
-
     /**
      * current fire request being processed
      */
@@ -30,7 +29,7 @@ public class Scheduler {
     private boolean responseAvailable = false;
     /**
      * Thread safe Queue to store multiple responses from FireIncidentSubsystem */
-    private final Queue<Response> responseQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<String> responseQueue = new ConcurrentLinkedQueue<>();
 
     private HashMap<Integer, DroneStatus> drones;
 
@@ -48,6 +47,9 @@ public class Scheduler {
 
     private boolean fireRequestAssigned = false;
     //private final ConcurrentLinkedQueue<Integer> waitingDronesQueue = new ConcurrentLinkedQueue<>();
+
+    // number of status requests sent to drones waiting on repsonses
+    private Integer statusExpected = 0;
 
     /**
      * Placeholder zone coordinates
@@ -125,7 +127,8 @@ public class Scheduler {
                 // At this point currentResponse should be a list of responses since we will most likely be taking more than one at a time
                 if (request.contains("FIRE_DATA_REQUEST")) {
 //                    System.out.println("request contains FIRE_DATA_REQUEST - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
-                    String update = takeResponse().toString();
+//                    String update = takeResponse().toString();
+                    String update = takeResponse();
                     System.out.println("\n[ SF->F ]  -   SCHEDULER WILL NOW SEND TO FIRE  -   " + update);
                     sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, update);
                     System.out.println("\n[ SF->F ]  -   * SENT TO FIRE  -   " + update);
@@ -337,7 +340,10 @@ public class Scheduler {
                 FireRequest completedTask = drone.getCurrentTask();
                 if (!completedTask.isDefault())
                 {
-                    addResponse(new Response(completedTask, "COMPLETED"));
+                    System.out.println(" \n\n\n\n[SD   ]***************** SHOULD NEVER HIT ******************* \n handleDroneRequest \n\n");
+                    System.out.println(request);
+                    System.out.println(" \n\n\n\n[SD   ]***************** SHOULD NEVER HIT ******************* \n handleDroneRequest \n\n");
+                    addResponse(completedTask + ":COMPLETED");
 //                    currentResponse = new Response(completedTask, "COMPLETED");
                     drone.setCurrentTask(new FireRequest());
                 }
@@ -346,7 +352,7 @@ public class Scheduler {
                     System.out.println(" \n\n\n\n[SD   ]***************** SHOULD NEVER HIT ******************* \n handleDroneRequest \n\n");
                     System.out.println(request);
                     System.out.println(" \n\n\n\n[SD   ]***************** SHOULD NEVER HIT ******************* \n handleDroneRequest \n\n");
-                    addResponse(new Response(completedTask, "COMPLETED"));
+                    addResponse(completedTask + ":COMPLETED");
 //                    currentResponse = new Response(completedTask, "COMPLETED");
                     drone.setCurrentTask(new FireRequest());
                 }
@@ -366,6 +372,13 @@ public class Scheduler {
                 return "ACK:" + request;
             case STATUS:
                 // drone is sending location update while traveling to fire zone
+                synchronized (statusExpected)
+                {
+                    // decrement the value to 0
+                    statusExpected-=1;
+                    System.out.println("\n[SD   ] statusExpected counted and is now:         " + statusExpected + " \n");
+                    statusExpected.notifyAll();
+                }
                 return "Temp:" + request;
             default:
 //                if ( items[2].equals( DroneEvent.STATUS ) )
@@ -398,16 +411,16 @@ public class Scheduler {
     private synchronized boolean assignFireRequest(FireRequest fireRequest) {
 
         System.out.println("\n[  SP  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
-
-        while( fireRequestAssigned )
-        {
-            try
-            {
-                System.out.println("\n[  SP  ]  -   THREAD WAITING ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
-                wait();
-            }
-            catch ( Exception e ) {}
-        }
+//
+//        while( fireRequestAssigned )
+//        {
+//            try
+//            {
+//                System.out.println("\n[  SP  ]  -   THREAD WAITING ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
+//                wait();
+//            }
+//            catch ( Exception e ) {}
+//        }
 
 //        fireRequestAssigned = false;
 //        notifyAll();
@@ -436,6 +449,38 @@ public class Scheduler {
                 break;
         }
         */
+        // interrupt
+        // check for droneStatus objects in TRAVELING state in drones
+        int numberOfDronesTraveling = interruptTravelingDrones( fireRequest );
+
+        // set the number of status requests sent to drones
+        synchronized (statusExpected)
+        {
+            System.out.println("\n[  SP  ] statusExpected entered assignFireRequest :          \n");
+
+            statusExpected = numberOfDronesTraveling;
+            while(statusExpected>0)
+            {
+                try
+                {
+                    statusExpected.wait();
+                } catch(Exception e) {}
+            }
+            // decrement the value to 0
+            System.out.println("\n[  SP  ] statusExpected SET TO :         " + statusExpected + " \n");
+            statusExpected.notifyAll();
+        }
+
+
+        while( fireRequestAssigned )
+        {
+            try
+            {
+                System.out.println("\n[  SP  ]  -   THREAD WAITING ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
+                wait();
+            }
+            catch ( Exception e ) {}
+        }
 
         // selectDrone is critical to system finding a drone that can or cant service this request
         int selectedDroneId = selectDrone(fireRequest);
@@ -481,6 +526,37 @@ public class Scheduler {
         System.out.println("\n[ SP->DSS ] Sent fire request to drone " + selectedDroneId);
         releaseFireRequestAssigned();
         return true;
+    }
+
+
+    /**
+     *function to inturrupt traveling drones and send immediate location update
+     *
+     * @param fireRequest
+     * @return int of how many drone status location requests were sent out
+     */
+    private int interruptTravelingDrones( FireRequest fireRequest )
+    {
+        System.out.println("\n[  SP  ] interruptTravelingDrones hit for request:         " +  fireRequest.toString()+ " \n");
+
+        int numberOfDronesTraveling = 0;
+        // check for traveling drones
+        for (Map.Entry<Integer, DroneStatus> entry : drones.entrySet()) {
+            DroneStatus drone = entry.getValue();
+            System.out.println("\n[  SP  ]  -   interruptTravelingDrones drone ID: " +drone.getDroneId() + " : " + drone.getState());
+
+            if (drone.getState().contains("TRAVELING"))
+            {
+                numberOfDronesTraveling++;
+                // send for each drone to be caught in DroneSubsystem.handleDroneResponse
+//
+//                addResponse( "STATUS:" + drone.getDroneId() );
+                sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, "STATUS:" + drone.getDroneId());
+
+            }
+        }
+        System.out.println("\n[  SP  ]  -   numberOfDronesTraveling exit value :        " +numberOfDronesTraveling);
+        return numberOfDronesTraveling;
     }
 
     /**
@@ -580,6 +656,7 @@ public class Scheduler {
             System.out.println("Error: No zone data found for zone ID " + request.getZoneId());
             return -1;
         }
+
         // First, check for traveling drones that are on the path
         for (Map.Entry<Integer, DroneStatus> entry : drones.entrySet()) {
             DroneStatus drone = entry.getValue();
@@ -980,7 +1057,7 @@ public class Scheduler {
 //        notifyAll();
 //        return res;
 //    }
-    public synchronized Response takeResponse()
+    public synchronized String takeResponse()
     {
         while (!responseAvailable) {
             try {
@@ -992,7 +1069,7 @@ public class Scheduler {
             }
         }
 
-        Response response = responseQueue.poll();
+        String response = responseQueue.poll();
         if (response == null) {
             System.out.println("[   SF]  -   No response found in queue but responseAvailable flag was true ");
             releaseResponseAvailable();
@@ -1009,8 +1086,12 @@ public class Scheduler {
      *
      * @param response the response indicating completion of a fire request
      */
-    public synchronized void addResponse(Response response) {
+    public synchronized void addResponse(String response) {
 //        System.out.println("                    addResponse");
+        if(response.contains("STATUS"))
+        {
+            System.out.println("\n[  SP  ]  -   addResponse          " + response);
+        }
         responseQueue.offer(response);
         setResponseAvailable();
         notifyAll();  // wakes up threads waiting in takeResponse()
