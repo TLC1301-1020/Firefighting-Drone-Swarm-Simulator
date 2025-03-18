@@ -174,7 +174,7 @@ public class Drone implements Runnable
             spentTime += stepTime;
             this.xPos += deltaX;
             this.yPos += deltaY;
-            System.out.println("\n [ DRONE TRAVEL ] Drone " + this.droneId + " is at         (" + this.xPos + "," +this.yPos + ") \n");
+            System.out.println(" [ DRONE TRAVEL ] Drone " + this.droneId + " is at         (" + this.xPos + "," +this.yPos + ") ");
         }
         System.out.println("\n [ DRONE TRAVEL ] Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
     }
