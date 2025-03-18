@@ -50,6 +50,7 @@ public class Scheduler {
 
     // number of status requests sent to drones waiting on repsonses
     private Integer statusExpected = 0;
+    private final Object statusLock = new Object();
 
     /**
      * Placeholder zone coordinates
@@ -372,12 +373,12 @@ public class Scheduler {
                 return "ACK:" + request;
             case STATUS:
                 // drone is sending location update while traveling to fire zone
-                synchronized (statusExpected)
+                synchronized (statusLock)
                 {
                     // decrement the value to 0
                     statusExpected-=1;
                     System.out.println("\n[SD   ] statusExpected counted and is now:         " + statusExpected + " \n");
-                    statusExpected.notifyAll();
+                    statusLock.notifyAll();
                 }
                 return "Temp:" + request;
             default:
@@ -454,7 +455,7 @@ public class Scheduler {
         int numberOfDronesTraveling = interruptTravelingDrones( fireRequest );
 
         // set the number of status requests sent to drones
-        synchronized (statusExpected)
+        synchronized (statusLock)
         {
             System.out.println("\n[  SP  ] statusExpected entered assignFireRequest :          \n");
 
@@ -463,12 +464,12 @@ public class Scheduler {
             {
                 try
                 {
-                    statusExpected.wait();
+                    statusLock.wait();
                 } catch(Exception e) {}
             }
             // decrement the value to 0
             System.out.println("\n[  SP  ] statusExpected SET TO :         " + statusExpected + " \n");
-            statusExpected.notifyAll();
+            statusLock.notifyAll();
         }
 
 

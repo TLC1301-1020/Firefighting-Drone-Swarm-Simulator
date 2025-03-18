@@ -300,11 +300,17 @@ public class Drone implements Runnable
             // adds the request to the router host
             this.droneSubsystem.addRequest( request );
 
+            //clear
+            System.out.println("[ DRONE ]       is interrupted 1 =    " + Thread.currentThread().isInterrupted());
+
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
             // handle instructions given, will trigger travel()
             handleResponse(response);
+
+            System.out.println("[ DRONE ]       is interrupted 2 =    " + Thread.currentThread().isInterrupted());
+
 //            try{
 //                Thread.sleep(1000);
 //            } catch (InterruptedException e) {
