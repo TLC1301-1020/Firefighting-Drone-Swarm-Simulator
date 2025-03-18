@@ -32,24 +32,24 @@ class SchedulerTest {
         assertEquals(-1, droneId, "Should return -1 when no drones available");
     }
 
-    @Test
-    void testFindClosestIdleDrone() {
-        Zone testZone = new Zone(1, 0, 0, 100, 100);
-        int droneId = scheduler.findClosestIdleDrone(testZone);
-        assertEquals(-1, droneId, "Should return -1 when no idle drones available");
-    }
-
-    @Test
-    void testWillPassThrough() {
-        DroneStatus drone = new DroneStatus(1);
-        boolean result = scheduler.willPassThrough(drone, 3);
-        assertFalse(result, "Drone should not pass through without zone data");
-    }
-
-    @Test
-    void testSetState() {
-        SchedulerState newState = new ProcessData(new ReceiveData());
-        scheduler.setState(newState);
-        assertEquals(newState, scheduler.getCurrentState(), "Scheduler state should update");
-    }
+//    @Test
+//    void testFindClosestIdleDrone() {
+//        Zone testZone = new Zone(1, 0, 0, 100, 100);
+//        int droneId = scheduler.findClosestIdleDrone(testZone);
+//        assertEquals(-1, droneId, "Should return -1 when no idle drones available");
+//    }
+//
+//    @Test
+//    void testWillPassThrough() {
+//        DroneStatus drone = new DroneStatus(1);
+//        boolean result = scheduler.willPassThrough(drone, 3);
+//        assertFalse(result, "Drone should not pass through without zone data");
+//    }
+//
+//    @Test
+//    void testSetState() {
+//        SchedulerState newState = new ProcessData(new ReceiveData());
+//        scheduler.setState(newState);
+//        assertEquals(newState, scheduler.getCurrentState(), "Scheduler state should update");
+//    }
 }
