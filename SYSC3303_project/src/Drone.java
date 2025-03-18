@@ -13,7 +13,7 @@ public class Drone implements Runnable
     private int droneId;
     /**
      * maximum velocity of the drone in meters per second */
-    private final float maxVelocity = 250;
+    private final float maxVelocity = 200;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;

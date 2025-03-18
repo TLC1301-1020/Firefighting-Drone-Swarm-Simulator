@@ -65,10 +65,10 @@ public class FireIncidentSubsystem implements Runnable {
     private class ListenToScheduler extends Thread {
         @Override
         public void run() {
-            System.out.println("\n[ SD  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
+            System.out.println("\n[ FIRE<-S  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
             while (true) {
                 String update = receiveUpdate();
-                System.out.println("\n[ FIRE ]  UPDATE 1 IS: " + update);
+                System.out.println("\n[ FIRE<-S ]  UPDATE IS:       " + update);
             }
         }
     }
@@ -81,52 +81,50 @@ public class FireIncidentSubsystem implements Runnable {
         public void run() {
 
             int counter = 0;
+            int i = 0;
             while(true) {
 
-                if( ++counter>2 )
-                {
-                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
-                    break;
-                }
+                // testing only 2 fire incidents
+//                if( ++counter>2 )
+//                {
+//                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+//                    break;
+//                }
 
                 if(tasks.isEmpty() )
                 {
-                    System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+                    System.out.println("\n[ FIRE->S ]  ALL FIRE INCIDENTS SENT TO SCHEDULER .... ");
                     break;
                 }
                 System.out.println();
                 String task = tasks.remove(0).toString();
-                System.out.println("\n[ FIRE ]  sending1:    " + task);
-                sendIncident(task);
 
-//                System.out.println("\n[ FIRE ]  sending2:    FIRE_DATA_REQUEST");
-//                sendIncident("FIRE_DATA_REQUEST");
+                System.out.println("\n[ FIRE->S ]  sending task: " + (++i) + "    " + task);
+                sendIncident(task);
             }
             counter = 0;
-            while(true) {
+            while(true)
+            {
+//                // testing only 2 fire incidents
+//                if( ++counter>2 )
+//                {
+//                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+//                    break;
+//                }
 
-                if( ++counter>2 )
+                // testing all fire incidents
+                if( ++counter>i )
                 {
-                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+                    System.out.println("\n[ FIRE->S ]  ALL FIRE_DATA_REQUEST SENT TO SCHEDULER .... ");
                     break;
                 }
 
-//                if(tasks.isEmpty() )
-//                {
-//                    System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS SENT BY TO SYSTEM .... ");
-//                    break;
-//                }
-//                System.out.println();
-//                String task = tasks.remove(0).toString();
-//                System.out.println("\n[ FIRE ]  sending1:    " + task);
-//                sendIncident(task);
-
-                System.out.println("\n[ FIRE ]  sending2:    FIRE_DATA_REQUEST");
+                System.out.println("\n[ FIRE->S ]  sending:    FIRE_DATA_REQUEST");
                 sendIncident("FIRE_DATA_REQUEST");
             }
 
 
-            System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS HANDLED BY TO SYSTEM .... ");
+            System.out.println("\n[ FIRE->S ]  SendToScheduler thread finished .... ");
         }
     }
 
