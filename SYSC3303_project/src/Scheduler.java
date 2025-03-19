@@ -208,7 +208,7 @@ public class Scheduler {
                         {
                             System.out.println("\n[  SP  ]  -   SCHEDULER FOUND NO DRONES TO ANSWER REQUEST              -       " + req.toString());
                             try {
-                                Thread.sleep(1000); // Check every 1000ms; adjust as needed.
+                                Thread.sleep(100); // Check every 1000ms; adjust as needed.
                             } catch (InterruptedException e) {
                                 System.out.println("ProcessPendingRequests thread interrupted.");
                             }
@@ -397,20 +397,20 @@ public class Scheduler {
         System.out.println("\n[  SP  ]  -   ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
 
         // FOLLOWING LOGIC IS for stopping repeated assignFireRequest calls
-        synchronized (assignFireRequestLock)
-        {
-            System.out.println("\n[  SP  ] fireRequestAssigned entered assignFireRequest :        " + fireRequestAssigned + "  \n");
-            while(fireRequestAssigned)
-            {
-                try
-                {
-                    System.out.println("\n[  SP  ]  -   THREAD WAITING ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
-                    assignFireRequestLock.wait();
-                } catch(Exception e) {}
-            }
-            fireRequestAssigned = true;
-            System.out.println("\n[  SP  ] fireRequestAssigned SET TO :         " + fireRequestAssigned + " \n");
-        }
+//        synchronized (assignFireRequestLock)
+//        {
+//            System.out.println("\n[  SP  ] fireRequestAssigned entered assignFireRequest :        " + fireRequestAssigned + "  \n");
+//            while(fireRequestAssigned)
+//            {
+//                try
+//                {
+//                    System.out.println("\n[  SP  ]  -   THREAD WAITING ASSIGN FIRE REQUEST CALLED  -   " + fireRequest.toString());
+//                    assignFireRequestLock.wait();
+//                } catch(Exception e) {}
+//            }
+//            fireRequestAssigned = true;
+//            System.out.println("\n[  SP  ] fireRequestAssigned SET TO :         " + fireRequestAssigned + " \n");
+//        }
 
         // interrupt
         // check for droneStatus objects in TRAVELING state in drones
@@ -442,7 +442,7 @@ public class Scheduler {
         // FOLLOWING LOGIC IS FOR no drones available, exiting function gracefully from this assignment attempt
         if (selectedDroneId == -1) {
             System.out.println("\n[  SP  ]    No available travel drones or idle drones to handle fire request:   -       " + fireRequest.toString());
-            releaseFireRequestAssigned();
+//            releaseFireRequestAssigned();
             return false;
         }
 
@@ -480,7 +480,7 @@ public class Scheduler {
             sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
         }
 
-        releaseFireRequestAssigned();
+//        releaseFireRequestAssigned();
         return true;
     }
 
@@ -1019,44 +1019,76 @@ public class Scheduler {
 //        notifyAll();
 //        return res;
 //    }
-    public synchronized String takeResponse()
-    {
-        while (!responseAvailable) {
-            try {
-                System.out.println("\n[   SF]  -   WAITING FOR RESPONSE -   ");
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return null;
+    public String takeResponse() {
+        synchronized (responseQueue) {
+            while (responseQueue.isEmpty()) {
+                try {
+                    System.out.println("\n[   SF]  -   WAITING FOR RESPONSE -   ");
+                    responseQueue.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return null;
+                }
             }
-        }
 
-        String response = responseQueue.poll();
-        if (response == null) {
-            System.out.println("[   SF]  -   No response found in queue but responseAvailable flag was true ");
-            releaseResponseAvailable();
-            return null;
+            String response = responseQueue.poll();
+            System.out.println("[   SF]  -   RESPONSE TAKEN FROM QUEUE: " + response);
+
+            return response;
         }
-        if (responseQueue.isEmpty()) {
-            releaseResponseAvailable();
-        }
-        return response;
     }
+//    public synchronized String takeResponse()
+//    {
+//        while (!responseAvailable) {
+//            try {
+//                System.out.println("\n[   SF]  -   WAITING FOR RESPONSE -   ");
+//                wait();
+//            } catch (InterruptedException e) {
+//                Thread.currentThread().interrupt();
+//                return null;
+//            }
+//        }
+//
+//        String response = responseQueue.poll();
+//        if (response == null) {
+//            System.out.println("[   SF]  -   No response found in queue but responseAvailable flag was true ");
+//            releaseResponseAvailable();
+//            return null;
+//        }
+//        if (responseQueue.isEmpty()) {
+//            releaseResponseAvailable();
+//        }
+//        return response;
+//    }
 
     /**
      * Drone Subsystem calls this function after completing a fire request
      *
      * @param response the response indicating completion of a fire request
      */
-    public synchronized void addResponse(String response) {
-//        System.out.println("                    addResponse");
-        if(response.contains("STATUS"))
-        {
-            System.out.println("\n[  SP  ]  -   STATUS addResponse          " + response);
+//    public synchronized void addResponse(String response) {
+////        System.out.println("                    addResponse");
+//        if(response.contains("STATUS"))
+//        {
+//            System.out.println("\n[  SP  ]  -   STATUS addResponse          " + response);
+//        }
+//        responseQueue.offer(response);
+//        setResponseAvailable();
+//        notifyAll();  // wakes up threads waiting in takeResponse()
+//    }
+
+    public void addResponse(String response) {
+        if (response == null || response.isEmpty()) {
+            System.out.println("[  SP  ] - WARNING: Attempted to add an empty response!");
+            return;
         }
-        responseQueue.offer(response);
-        setResponseAvailable();
-        notifyAll();  // wakes up threads waiting in takeResponse()
+
+        synchronized (responseQueue) {
+            responseQueue.offer(response);
+            System.out.println("\n[  SP  ]  -   RESPONSE ADDED TO QUEUE: " + response);
+
+            responseQueue.notifyAll();
+        }
     }
 
     /**
@@ -1131,17 +1163,17 @@ public class Scheduler {
         }
     }
 
-    private void releaseFireRequestAssigned()
-    {
-        System.out.println("\n[   SF]  -   RELEASING FIRE REQ ASSIGNED  -   ");
-
-        // set the number of status requests sent to drones
-        synchronized (assignFireRequestLock)
-        {
-            fireRequestAssigned = false;
-            assignFireRequestLock.notifyAll();
-        }
-    }
+//    private void releaseFireRequestAssigned()
+//    {
+//        System.out.println("\n[   SF]  -   RELEASING FIRE REQ ASSIGNED  -   ");
+//
+//        // set the number of status requests sent to drones
+//        synchronized (assignFireRequestLock)
+//        {
+//            fireRequestAssigned = false;
+//            assignFireRequestLock.notifyAll();
+//        }
+//    }
 
 
     /**

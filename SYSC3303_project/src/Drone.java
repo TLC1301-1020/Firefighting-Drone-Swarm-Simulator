@@ -304,14 +304,14 @@ public class Drone implements Runnable
         if (schedulerInstructions.equals("WAIT")) {
             System.out.println("\n[ DRONE ]   WAIT order -> drone " + droneId + " waiting for new task...");
             try{
-                Thread.sleep(4000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 // sleep interrupted
             }
             String newResponse;
             do {
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     // sleep interrupted
                 }
