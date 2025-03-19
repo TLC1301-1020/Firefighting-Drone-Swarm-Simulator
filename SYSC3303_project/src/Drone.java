@@ -35,6 +35,11 @@ public class Drone implements Runnable
      */
     private boolean sendStatus = false;
 
+    /**
+     * Used by the DroneTravel getRequest() to send back the appropriate DroneEvent
+     */
+    private boolean continueTravel = true;
+
     // TODO: Add drone attributes such as battery, acceleration etc.
 
     /**
@@ -118,6 +123,12 @@ public class Drone implements Runnable
         return currTask;
     }
 
+    /**
+     * Getter for continueTravel
+     * @return value of continueTravel
+     */
+    public boolean getContinueTravel() { return continueTravel; }
+
 
     /**
      * simulates drone travel to the fire location
@@ -163,7 +174,8 @@ public class Drone implements Runnable
 //        System.out.println("\n[ DRONE TRAVEL ] travel : deltaX=" + deltaX + ", deltaY=" + deltaY);
 
         double spentTime = 0;
-        for ( int i = 0 ; (i < 10) || (spentTime < travelTime) ; ++i )
+        // for ( int i = 0 ; (i < 10) || (spentTime < travelTime) ; ++i )
+        for ( int i = 0 ; (i < 10) ; ++i )
         {
             try {
                 Thread.sleep((long) stepTime);
@@ -197,6 +209,9 @@ public class Drone implements Runnable
             this.xPos=finalX;
             this.yPos=finalY;
             System.out.println("\n [ DRONE TRAVEL ]     Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
+
+            // Set boolean to determine that we actually arrived in the zone
+            continueTravel = false;
         }
         else
         {
@@ -297,7 +312,7 @@ public class Drone implements Runnable
      */
     private String makeRequest()
     {
-        return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest()+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
+        return this.droneId+":"+this.currentState.display()+":"+this.currentState.getRequest(this)+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
     }
 
     /**
@@ -328,7 +343,7 @@ public class Drone implements Runnable
 //            System.out.println("\n[ DRONE RUN ] starting DRONE RUN id key: " + this.droneId );
             String request;
             // check if drone should send its location status as a request, otherwise, sends normal request based on state
-            if( checkSendStatus() ) request = makeStatusRequest();
+            if( checkSendStatus()) request = makeStatusRequest();
             else                    request = makeRequest();
 
 //            System.out.println("\n[ DRONE RUN ] making request DRONE RUN id key: " + this.droneId + " :         " + request);
@@ -423,7 +438,7 @@ public class Drone implements Runnable
             if ( eventRequest.equals(DroneEvent.STATUS) )
             {
                 // hit if Scheduler responds with ACK when it receives and processes the drones location. drone waits for next instruction
-                System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state ...    " +eventRequest.toString() );
+                System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.toString() + ")  ...    " +eventRequest.toString() );
                 this.currentState.handleEvent(this, DroneEvent.STATUS);
             }
             else
@@ -447,6 +462,9 @@ public class Drone implements Runnable
             System.out.println("\n[ DRONE ]   NEW  order -> drone " + droneId + " fulfilling new fire request ...    " +newFireRequest );
             FireRequest newTask = new FireRequest(newFireRequest);
             setCurrTask( newTask );
+
+            // Set boolean to continue travelling
+            continueTravel = true;
 
             // send an indication that this drone is now traveling expecting no response
             this.currentState.handleEvent(this, DroneEvent.NEW_FIRE_REQUEST);

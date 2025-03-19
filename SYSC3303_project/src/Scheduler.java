@@ -32,6 +32,7 @@ public class Scheduler {
     private final Queue<String> responseQueue = new ConcurrentLinkedQueue<>();
 
     private HashMap<Integer, DroneStatus> drones;
+    private List<Integer> reassignedDrones;
 
     //    private List<DroneSubsystem> drones;    // old
     private Queue<FireRequest> requestQueue;
@@ -364,9 +365,15 @@ public class Scheduler {
                 // drone is sending location update while traveling to fire zone
 
                 // check reassignedDrones if this drone that sent status update is a drone to be reassigned
-                reassignedDrones.
+                // if so, send it a NEW prefixed message with the new request
+                synchronized (reassignedDrones) {
+                    if (reassignedDrones.contains(droneId)) {
+                        reassignedDrones.remove(droneId);
+                        notifyAll();
+                        return "NEW:" + request;
+                    }
+                }
                 // otherwise send ACK:.....:STATUS
-
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
                 // FOLLOWING LOGIC IS to count the number of drones that reply with STATUS updates
 //                synchronized (statusLock)
@@ -377,6 +384,9 @@ public class Scheduler {
 //                    statusLock.notifyAll();
 //                }
                 // sending back ack on status request
+                return "ACK:" + request;
+            case CONTINUING:
+                // Send an ack -- this drone is continuing on its old mission
                 return "ACK:" + request;
             default:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == UNKNOWN:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
@@ -536,6 +546,7 @@ public class Scheduler {
     public Scheduler() {
         this.drones = new HashMap<>();
         this.requestQueue = new LinkedList<>();
+        this.reassignedDrones = new ArrayList<>();
 //        this.currentState = new Idle();
 
         // Parse the zone file to populate zoneMap
@@ -633,7 +644,10 @@ public class Scheduler {
                 {
                     // add to a thread safe collect object -> SD checks in handleDroneRequest checking the status request and responding
                     // new task assignment or continue with current fire request
-                    reassignedDrones.add(droneID);  // made thread safe
+                    synchronized (reassignedDrones) {
+                        reassignedDrones.add(droneID);
+                        reassignedDrones.notifyAll();
+                    }
                     return droneID;
                 }
                 else

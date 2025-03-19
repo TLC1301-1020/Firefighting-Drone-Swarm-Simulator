@@ -24,7 +24,7 @@ interface DroneState {
      * transition from. <p> see {@code enum DroneEvent} for the request body options
      * @return String value of the request body corresponding to the {@code enum DroneEvent}
      * */
-    public String getRequest();
+    public String getRequest(Drone drone);
 }
 
 
@@ -63,7 +63,7 @@ class DroneIdle implements DroneState {
     }
 
     @Override
-    public String getRequest() {
+    public String getRequest(Drone drone) {
         return String.valueOf(DroneEvent.NEW_FIRE_REQUEST);
     }
 }
@@ -101,8 +101,8 @@ class DroneActive implements DroneState {
     }
 
     @Override
-    public String getRequest() {
-        return this.subState.getRequest();
+    public String getRequest(Drone drone) {
+        return this.subState.getRequest(drone);
     }
 }
 
@@ -121,7 +121,7 @@ class DroneTravel implements DroneState
     @Override
     public void handleEvent(Drone drone, DroneEvent event)
     {
-        if ( event.equals( DroneEvent.OLD_FIRE_REQUEST ) )
+        if ( event.equals( DroneEvent.CONTINUING ) )
         {
             // continuing to answer the fire request after interrupted
             System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " is continuing to answer the fire request after interrupted: " + drone.getCurrTask().getZoneId());
@@ -161,7 +161,10 @@ class DroneTravel implements DroneState
     }
 
     @Override
-    public String getRequest() {
+    public String getRequest(Drone drone) {
+        if (drone.getContinueTravel()) {
+            return String.valueOf(DroneEvent.CONTINUING);
+        }
         return String.valueOf(DroneEvent.PERMISSION_TO_DROP);
     }
 }
@@ -187,7 +190,7 @@ class DroneDeploy implements DroneState {
     }
 
     @Override
-    public String getRequest() {
+    public String getRequest(Drone drone) {
         return String.valueOf(DroneEvent.PAYLOAD_DROPPED);
     }
 }
@@ -225,7 +228,7 @@ class DroneReturn implements DroneState {
     }
 
     @Override
-    public String getRequest() {
+    public String getRequest(Drone drone) {
         return String.valueOf(DroneEvent.RETURNED_TO_BASE);
     }
 }
@@ -256,7 +259,7 @@ class DroneRefill implements DroneState {
     }
 
     @Override
-    public String getRequest() {
+    public String getRequest(Drone drone) {
         return String.valueOf(DroneEvent.REFILL_COMPLETE);
     }
 }
@@ -284,8 +287,8 @@ class DroneFault implements DroneState {
     }
 
     @Override
-    public String getRequest() {
-        return this.subState.getRequest();
+    public String getRequest(Drone drone) {
+        return this.subState.getRequest(drone);
     }
 }
 
@@ -304,7 +307,7 @@ class DroneFaultStuck implements DroneState {
     }
 
     @Override
-    public String getRequest() {
+    public String getRequest(Drone drone) {
         return String.valueOf(DroneEvent.STUCK_RESOLVED);
     }
 }
@@ -329,7 +332,7 @@ class DroneFaultDeploy implements DroneState {
     }
 
     @Override
-    public String getRequest() {
+    public String getRequest(Drone drone) {
         return String.valueOf(DroneEvent.DEPLOY_FAILURE_ACKNOWLEDGED);
     }
 }
