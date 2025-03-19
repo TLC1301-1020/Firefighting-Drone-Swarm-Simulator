@@ -362,15 +362,20 @@ public class Scheduler {
                 return "ACK:" + request;
             case STATUS:
                 // drone is sending location update while traveling to fire zone
+
+                // check reassignedDrones if this drone that sent status update is a drone to be reassigned
+                reassignedDrones.
+                // otherwise send ACK:.....:STATUS
+
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
                 // FOLLOWING LOGIC IS to count the number of drones that reply with STATUS updates
-                synchronized (statusLock)
-                {
-                    // decrement the value to 0
-                    statusExpected-=1;
-                    System.out.println("\n[SD   ] statusExpected counted and is now:         " + statusExpected + " \n");
-                    statusLock.notifyAll();
-                }
+//                synchronized (statusLock)
+//                {
+//                    // decrement the value to 0
+//                    statusExpected-=1;
+//                    System.out.println("\n[SD   ] statusExpected counted and is now:         " + statusExpected + " \n");
+//                    statusLock.notifyAll();
+//                }
                 // sending back ack on status request
                 return "ACK:" + request;
             default:
@@ -414,24 +419,24 @@ public class Scheduler {
 
         // interrupt
         // check for droneStatus objects in TRAVELING state in drones
-        int numberOfDronesTraveling = interruptTravelingDrones( fireRequest );
+//        int numberOfDronesTraveling = interruptTravelingDrones( fireRequest );
 
         // set the number of status requests sent to drones
-        synchronized (statusLock)
-        {
-            System.out.println("\n[  SP  ] statusExpected entered assignFireRequest :          \n");
-            statusExpected = numberOfDronesTraveling;
-            while(statusExpected>0)
-            {
-                try
-                {
-                    statusLock.wait();
-                } catch(Exception e) {}
-            }
-            // decrement the value to 0
-            System.out.println("\n[  SP  ] statusExpected SET TO :         " + statusExpected + " \n");
-            statusLock.notifyAll();
-        }
+//        synchronized (statusLock)
+//        {
+//            System.out.println("\n[  SP  ] statusExpected entered assignFireRequest :          \n");
+//            statusExpected = numberOfDronesTraveling;
+//            while(statusExpected>0)
+//            {
+//                try
+//                {
+//                    statusLock.wait();
+//                } catch(Exception e) {}
+//            }
+//            // decrement the value to 0
+//            System.out.println("\n[  SP  ] statusExpected SET TO :         " + statusExpected + " \n");
+//            statusLock.notifyAll();
+//        }
 
         // FOLLOWING LOGIC IS FOR finding a drone that can or cant service this request
         int selectedDroneId = selectDrone(fireRequest);
@@ -626,6 +631,9 @@ public class Scheduler {
                 int droneID = findClosestDrone(targetZone);
                 if( droneID != -1 )
                 {
+                    // add to a thread safe collect object -> SD checks in handleDroneRequest checking the status request and responding
+                    // new task assignment or continue with current fire request
+                    reassignedDrones.add(droneID);  // made thread safe
                     return droneID;
                 }
                 else

@@ -307,14 +307,14 @@ public class DroneSubsystem implements Runnable {
 
         // handle interrupt
         // check if the scheduler is requesting location status for interrupt during travel
-        if( items[0].contains("STATUS") )
-        {
-            System.out.println("\n[  DSS  ]     items[0] contains STATUS -> interrupt called :        " + items[0] );
-
-//            System.out.println("\n[  DSS  ]  -   addResponse          " + response);
-            // thread safe to interrupt travel
-            drones.get(droneId).interrupt();
-        }
+//        if( items[0].contains("STATUS") )
+//        {
+//            System.out.println("\n[  DSS  ]     items[0] contains STATUS -> interrupt called :        " + items[0] );
+//
+////            System.out.println("\n[  DSS  ]  -   addResponse          " + response);
+//            // thread safe to interrupt travel
+//            drones.get(droneId).interrupt();
+//        }
     }
 
     /**
