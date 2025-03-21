@@ -363,14 +363,14 @@ public class Scheduler {
                 return "ACK:" + request;
             case STATUS:
                 // drone is sending location update while traveling to fire zone
-
+                if (!drone.getState().equals("[TRAVELING]")) { drone.setState("[TRAVELING]"); }
                 // check reassignedDrones if this drone that sent status update is a drone to be reassigned
                 // if so, send it a NEW prefixed message with the new request
                 synchronized (reassignedDrones) {
                     if (reassignedDrones.contains(droneId)) {
                         reassignedDrones.remove(droneId);
-                        notifyAll();
-                        return "NEW:" + request;
+                        reassignedDrones.notifyAll();
+                        return "ACK:" + request;
                     }
                 }
                 // otherwise send ACK:.....:STATUS
@@ -387,6 +387,7 @@ public class Scheduler {
                 return "ACK:" + request;
             case CONTINUING:
                 // Send an ack -- this drone is continuing on its old mission
+                if (!drone.getState().equals("[TRAVELING]")) { drone.setState("[TRAVELING]"); }
                 return "ACK:" + request;
             default:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == UNKNOWN:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
@@ -793,36 +794,61 @@ public class Scheduler {
                 "- COMPARED TO REQUEST ZONE: " + targetZone.toString() +
                 " AND DRONE DESTINATION: " + destinationZone.toString());
 
-        return false;
+//        return false;
 
         // TODO: UNCOMMENT THE FOLLOWING LOCATION COMPARISON CALCULATIONS ....
-//        // check if the drone is already in its destination zone
-//        if (droneX >= destinationZone.getStartX() && droneX <= destinationZone.getEndX() &&
-//                droneY >= destinationZone.getStartY() && droneY <= destinationZone.getEndY())
-//        {
-//            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the DESTINATION zone... invalid reassignment.");
-//            return false;
-//        }
-//
-//        // check if the drone is already in the request zone
-//        if (droneX >= targetZone.getStartX() && droneX <= targetZone.getEndX() &&
-//                droneY >= targetZone.getStartY() && droneY <= targetZone.getEndY())
-//        {
-//            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the REQUEST zone... valid reassignment.");
-//            return true;
-//        }
-//
-//        // get center of destination zone
-//        int centerXDestination = (destinationZone.getStartX() + destinationZone.getEndX()) / 2;
-//        int centerYDestination = (destinationZone.getStartY() + destinationZone.getEndY()) / 2;
-//
-//        // get center of request zone
-//        int centerXRequest = (targetZone.getStartX() + targetZone.getEndX()) / 2;
-//        int centerYRequest = (targetZone.getStartY() + targetZone.getEndY()) / 2;
-//
-//        // check distances to compare which zone the drone is closer to
-//        double distanceToDestination = Math.sqrt(Math.pow(droneX - centerXDestination, 2) + Math.pow(droneY - centerYDestination, 2));
-//        double distanceToRequest = Math.sqrt(Math.pow(droneX - centerXRequest, 2) + Math.pow(droneY - centerYRequest, 2));
+        // check if the drone is already in its destination zone
+        if (droneX >= destinationZone.getStartX() && droneX <= destinationZone.getEndX() &&
+                droneY >= destinationZone.getStartY() && droneY <= destinationZone.getEndY())
+        {
+            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the DESTINATION zone... invalid reassignment.");
+            return false;
+        }
+
+        // check if the drone is already in the request zone
+        if (droneX >= targetZone.getStartX() && droneX <= targetZone.getEndX() &&
+                droneY >= targetZone.getStartY() && droneY <= targetZone.getEndY())
+        {
+            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the REQUEST zone... valid reassignment.");
+            return true;
+        }
+
+
+        // Logic for if Drone is going to pass through request zone before destination zone
+
+        // get center of destination zone
+        int centerXDestination = (destinationZone.getStartX() + destinationZone.getEndX()) / 2;
+        int centerYDestination = (destinationZone.getStartY() + destinationZone.getEndY()) / 2;
+
+        // get center of request zone
+        int centerXRequest = (targetZone.getStartX() + targetZone.getEndX()) / 2;
+        int centerYRequest = (targetZone.getStartY() + targetZone.getEndY()) / 2;
+
+        // check distances to compare which zone the drone is closer to
+        double distanceToDestination = Math.sqrt(Math.pow(droneX - centerXDestination, 2) + Math.pow(droneY - centerYDestination, 2));
+        double distanceToRequest = Math.sqrt(Math.pow(droneX - centerXRequest, 2) + Math.pow(droneY - centerYRequest, 2));
+
+        double droneSlope = (double) (destinationZone.getStartY() - droneY) / ( destinationZone.getStartX() - droneX );
+
+
+        if (distanceToRequest <= distanceToDestination) {
+            if ( (targetZone.getStartX() * droneSlope) >= targetZone.getStartY() || (targetZone.getStartX() * droneSlope) <= targetZone.getEndY() ) {
+                return true;
+            }
+            else if ( (targetZone.getEndX() * droneSlope) >= targetZone.getStartY() || (targetZone.getEndX() * droneSlope) <= targetZone.getEndY() ) {
+                return true;
+            }
+            else if ( (targetZone.getStartY() * droneSlope) >= targetZone.getStartX() || (targetZone.getStartY() * droneSlope) <= targetZone.getEndX() ) {
+                return true;
+            }
+            else if ( (targetZone.getEndY() * droneSlope) >= targetZone.getStartX() || (targetZone.getEndY() * droneSlope) <= targetZone.getEndX() ) {
+                return true;
+            }
+        }
+
+        return false;
+
+
 //
 //        // check which zone the drone is closer to
 //        if (distanceToRequest < distanceToDestination)
