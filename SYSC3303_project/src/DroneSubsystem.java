@@ -261,21 +261,6 @@ public class DroneSubsystem implements Runnable {
         }
     }
 
-    // for seperate thread of listening to scheduler requests ?
-    private void handleLocationStatusInterrupt()
-    {
-        /*  request types from Scheduler: "STATUS"
-         */
-
-        // check all drones for their state of DroneTravel
-        // from those call
-        //this.drones.get(droneId).interrupt();
-        // they will stop traveling and send their location to the scheduler,
-        // and response will determine if they proceed with next
-        // "ACK" response header means they will continue to travel
-        // "NEW" response header means they will be reassigned new fire request
-    }
-
     /**
      * handle the response passed to the drone subsystem from the scheduler
      * <p>
@@ -304,17 +289,6 @@ public class DroneSubsystem implements Runnable {
 
         // add response to the response queue for drones to get
         addResponse(droneId, response);
-
-        // handle interrupt
-        // check if the scheduler is requesting location status for interrupt during travel
-//        if( items[0].contains("STATUS") )
-//        {
-//            System.out.println("\n[  DSS  ]     items[0] contains STATUS -> interrupt called :        " + items[0] );
-//
-////            System.out.println("\n[  DSS  ]  -   addResponse          " + response);
-//            // thread safe to interrupt travel
-//            drones.get(droneId).interrupt();
-//        }
     }
 
     /**
