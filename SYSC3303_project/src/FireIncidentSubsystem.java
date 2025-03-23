@@ -156,8 +156,7 @@ public class FireIncidentSubsystem implements Runnable {
         readZoneFile(zoneFile);
         // For debugging, print the parsed zones.
         for (Zone zone : zoneMap.values()) {
-            System.out.println("Parsed zone: " + zone);
-            System.out.println(zoneMap.get(7) + "\n");
+            System.out.println("[F] Parsed zone: " + zoneMap.get(zone.getZoneId()));
         }
 
         readInputFile(inputFile);
