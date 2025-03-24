@@ -15,6 +15,9 @@ public class Drone implements Runnable
      * maximum velocity of the drone in meters per second */
     private final float maxVelocity = 200;
     /**
+     * number of deltaX deltaY increment the drone travels before sending a location update to scheduler  */
+    private final float TRAVEL_INCREMENTS = 30;
+    /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;
     /**
@@ -69,7 +72,7 @@ public class Drone implements Runnable
     public void setState(DroneState newState) {
         DroneState oldState = this.currentState;
         this.currentState = newState;
-        System.out.println("* DRONE STATE CHANGE * " + oldState.display() + " -> " + this.currentState.display());
+        System.out.println("* DRONE STATE CHANGE * " + oldState.display() + " -> " + this.currentState.display() + "\n\n");
     }
 
     /**
@@ -175,7 +178,7 @@ public class Drone implements Runnable
 
         double spentTime = 0;
         // for ( int i = 0 ; (i < 10) || (spentTime < travelTime) ; ++i )
-        for ( int i = 0 ; (i < 10) ; ++i )
+        for ( int i = 0 ; (i < TRAVEL_INCREMENTS) ; ++i )
         {
             try {
                 Thread.sleep((long) stepTime);
@@ -188,7 +191,7 @@ public class Drone implements Runnable
             spentTime += stepTime;
             this.xPos += deltaX;
             this.yPos += deltaY;
-            System.out.println(" [ DRONE TRAVEL ]       Drone " + this.droneId + " is at         (" + this.xPos + "," +this.yPos + ") ");
+            System.out.println(" [ DRONE TRAVEL ]       Drone " + this.droneId + " is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
         }
         if(spentTime>=travelTime)
         {
@@ -294,7 +297,7 @@ public class Drone implements Runnable
     private void handleResponse(String response) {
 
         String[] items = response.split(":");
-        System.out.println("\n[ DRONE ] Items of fire request as an array: \n     " + Arrays.toString(items));
+        System.out.println("[ DRONE ] Items of fire request as an array:                        " + Arrays.toString(items));
 
         String schedulerInstructions = items[0];
 
@@ -359,7 +362,7 @@ public class Drone implements Runnable
             if ( eventRequest.equals(DroneEvent.STATUS) )
             {
                 // hit if Scheduler responds with ACK when it receives and processes the drones location. drone waits for next instruction
-                System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.toString() + ")  ...    " +eventRequest.toString() );
+                System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.display() + ")  ...    " +eventRequest.toString() );
                 this.currentState.handleEvent(this, DroneEvent.STATUS);
             }
             else

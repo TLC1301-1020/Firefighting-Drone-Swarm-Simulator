@@ -122,7 +122,7 @@ public class DroneSubsystem implements Runnable {
      */
     public void addResponse(int droneId, String response)
     {
-        System.out.println( "[  DSS  ]                 adding response to queue drone:"+droneId+":         " + response );
+//        System.out.println( "[  DSS  ]                 adding response to queue drone:"+droneId+":         " + response );
         synchronized (this.responseQueue)
         {
             LinkedList<String> responses = this.responseQueue.get(droneId);
@@ -247,7 +247,7 @@ public class DroneSubsystem implements Runnable {
         while (true) {
             // Check request queue - communication from drones
             String request = getRequest();
-            System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                       " + request);
+            System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                                         " + request);
 
             // Artificial delay added here to slow things down
             try {
@@ -277,7 +277,7 @@ public class DroneSubsystem implements Runnable {
          */
         String[] items = response.split(":");
 
-        System.out.println("\n[  DSS  ] parsing scheduler response and sending to drone:        " + Arrays.toString(items) );
+//        System.out.println("\n[  DSS  ] parsing scheduler response and sending to drone:        " + Arrays.toString(items) );
 
         // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         int droneId = -1;

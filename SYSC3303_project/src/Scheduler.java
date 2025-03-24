@@ -323,8 +323,8 @@ public class Scheduler {
                             drone.getX() + ":" + drone.getY() + ":" + match.request;
 
                     System.out.println("[SD->DSS] Sending assignment from queue to drone: " + droneRequest);
-                    sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
-                    return "ACK:" + request;
+//                    sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
+                    return droneRequest;
                 }
 
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == STATUS:    drone " + droneId + " * NO STATE CHANGE remains at  " + drone.getState() + "*");
