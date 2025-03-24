@@ -6,8 +6,29 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * {@code Scheduler} coordinates fire requests between the fire incident and drone subsystem threads.
- * Scheduler synchronizes request handling, ensuring proper thread-safe task distribution and response management
+ * {@code Scheduler} class coordinates fire incident handling by acting as the central controller
+ * between the {@code FireIncidentSubsystem} and the {@code DroneSubsystem}.
+ * <p>
+ * Summary:
+ *   <li>Receives fire incident requests from the {@code FireIncidentSubsystem}
+ *   <li>Maintains a queue of pending fire requests
+ *   <li>Assigns fire requests to drones based on availability, location, and severity
+ *   <li>Receives status updates and requests from drones
+ *   <li>Sends commands to drones and responds back to the fire subsystem
+ *
+ * <p>This class has three main threads:
+ * <ul>
+ *   <li>{@code listenToFire}: Listens for fire incident data and completion data requests from the {@code FireIncidentSubsystem}.
+ *           If a new incident is received, it is added to the request queue.
+ *           If a {@code FIRE_DATA_REQUEST} is received, the scheduler responds with completed fire task information
+ *
+ *   <li>{@code listenToDrone}: Listens for drone status updates and task requests from the {@code DroneSubsystem}.
+ *      Parses drone messages and updates internal drone states. Responds with commands or task acknowledgements.
+ *
+ *   <li>{@code ProcessPendingRequests}: Continuously monitors the fire request queue.
+ *
+ *           Tries to assign each pending request to an available drone.
+ *           Considers drone availability, task severity, and possible rerouting logic.
  */
 public class Scheduler {
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
@@ -15,11 +36,14 @@ public class Scheduler {
     /**
      * Thread safe Queue to store multiple responses from FireIncidentSubsystem */
     private final Queue<String> responseQueue = new ConcurrentLinkedQueue<>();
-
+    /**
+     * hash map of {@link DroneStatus} objects by drone ID <p>DroneStatus stores drone data and is updated on the scheduler side only</p>*/
     private HashMap<Integer, DroneStatus> drones;
     private List<Integer> reassignedDrones;
-
+    /**
+     * Thread safe Queue to store fire requests tasked from FireIncidentSubsystem, but will also hold requests reassigned*/
     private Queue<FireRequest> requestQueue;
+
     private SchedulerState currentState;
 
     public static final int DATA_BUFFER_SIZE = 256;
@@ -27,9 +51,12 @@ public class Scheduler {
     public static final int DRONE_TO_SCHEDULER_PORT = 5001;
     public static final int FIRE_INCIDENT_SUBSYSTEM_PORT = 5002;
     public static final int DRONE_SUBSYSTEM_PORT = 5003;
+
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, fireSendSocket, droneSendSocket;
     private final ConcurrentLinkedQueue<DroneAssignment> pendingAssignments = new ConcurrentLinkedQueue<>();
 
+    /**
+     * Object used to store drones marked for 'interrupt' reassignment by SP thread for checking in SD thread */
     private static class DroneAssignment {
         int droneId;
         FireRequest request;
@@ -40,6 +67,8 @@ public class Scheduler {
         }
     }
 
+    /**
+     * function used to parse zone_file.csv for zone data and creates {@link Zone} object from data with respective coordinates and zone id */
     public void parseZoneFile(String zoneFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(zoneFilePath))) {
             String header = br.readLine(); // Skip header line
@@ -70,9 +99,14 @@ public class Scheduler {
     }
 
     /**
-     * Thread to listen to FireIncidentSubsystem.
+     * SF Thread to listen to packets from {@link FireIncidentSubsystem} and creates {@link FireRequest} objects as they arrive
+     * <p>responds to FireIncidentSubsystem with acknowledgements and when the FireRequests are completed</p>
      */
     private class listenToFire extends Thread {
+        /**
+         * SF Thread function to listen to packets from {@link FireIncidentSubsystem} and creates {@link FireRequest} objects as they arrive
+         * <p>responds to FireIncidentSubsystem with acknowledgements and when the FireRequests are completed</p>
+         */
         @Override
         public void run() {
             System.out.println("\n[   SF]  -   SCHEDULER IS LISTENING TO FIRE  -   ");
@@ -108,9 +142,14 @@ public class Scheduler {
     }
 
     /**
-     * Thread to listen to DroneSubsystem.
+     * SD Thread to listen to packets from {@link DroneSubsystem} and calls {@link Scheduler#handleDroneRequest} to handle the requests
+     * <p>{@link Scheduler#handleDroneRequest} returns a response string to send back to DroneSubsystem</p>
      */
     private class listenToDrone extends Thread {
+        /**
+         * SD Thread function to listen to packets from {@link DroneSubsystem} and calls {@link Scheduler#handleDroneRequest} to handle the requests
+         * <p>{@link Scheduler#handleDroneRequest} returns a response string to send back to DroneSubsystem</p>
+         */
         @Override
         public void run() {
             System.out.println("\n[SD  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
@@ -133,8 +172,15 @@ public class Scheduler {
         }
     }
 
-    // assigning fire requests
+    /**
+     * SP Thread to handle Scheduler fire requests added from {@link listenToFire} and checks the {@link #requestQueue}
+     * <p>{@link FireRequest} objects taken (not removed) from this queue is passed into {@link Scheduler#assignFireRequest}</p>
+     */
     private class ProcessPendingRequests implements Runnable {
+        /**
+         * SP Thread function to handle Scheduler fire requests added from {@link listenToFire} and checks the {@link #requestQueue}
+         * <p>{@link FireRequest} objects taken (not removed) from this queue is passed into {@link Scheduler#assignFireRequest}</p>
+         */
         @Override
         public void run() {
             System.out.println("\n[  SP  ]  -   SCHEDULER IS CHECKING LISTENING TO REQUEST QUEUE  -   ");
@@ -171,11 +217,14 @@ public class Scheduler {
 
 
     /**
-     * response format is:<p>
+     * Parses the Drones request and returns:
+     * <li>an ACK header for permission for that drone to proceed with its next state transition (or to continue waiting for a fire request)</li>
+     * <li>a NEW header with an attached fire request when the drone is to be assigned OR reassigned a new fire request </li>
+     * <p>response format is:<p>
      *     RESPONSE_HEADER:REQUEST<p>
-     *     or<p>
-     *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS
-     @return String value of entire formatted respnse to send to Drone
+     *     the same as...<p>
+     *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS:CURR)FIREREQUEST
+     @return String value of entire formatted response to send to Drone in {@link listenToDrone}
      */
     private String handleDroneRequest(String request)
     {
@@ -340,7 +389,8 @@ public class Scheduler {
     }
 
     /**
-     * Assigns a fire request to the most appropriate drone.
+     * Called from {@link ProcessPendingRequests} (SP) thread and Assigns a fire request to the most appropriate drone using {@link Scheduler#pendingAssignments}
+     * queue to be received and handled in {@link Scheduler#handleDroneRequest} from the SD thread as a response to a drone Status request
      */
     private synchronized boolean assignFireRequest(FireRequest fireRequest) {
 
@@ -397,6 +447,14 @@ public class Scheduler {
         return true;
     }
 
+    /**
+     * Called from {@link Scheduler#findClosestDrone} function called from {@link Scheduler#selectDrone} from the SP thread
+     * 
+     * <p>Compares each request based on severity</p>
+     * @param currentRequest   the drone is handling
+     * @param newRequest       the drone may be tasked 
+     * @return true if the new request is more or equal in FireRequest severity, false if it is less severe
+     */
     boolean isNewRequestMoreSevere(FireRequest currentRequest, FireRequest newRequest) {
         Map<String, Integer> severityRank = Map.of(
                 "Low", 1,
@@ -411,7 +469,9 @@ public class Scheduler {
     }
 
     /**
-     * Removes a fire request from the queue after it has been assigned.
+     * Called from {@link Scheduler#assignFireRequest} function from the SP thread
+     * <p>Removes a fire request from the {@link Scheduler#requestQueue} after it has been assigned to a drone</p>
+     * @param fireRequest to be removed from the queue
      */
     private void removeRequest(FireRequest fireRequest) {
         synchronized (requestQueue) {
@@ -423,6 +483,11 @@ public class Scheduler {
         }
     }
 
+    /**
+     * contructor calls {@link Scheduler#parseZoneFile} to populate {@link Scheduler#zoneMap} with zone data
+     * <p>initializes various member collection objects and send/receive sockets</p>
+     * <p>initializes and starts all scheduler threads</p>
+     */
     public Scheduler() {
         this.drones = new HashMap<>();
         this.requestQueue = new LinkedList<>();
@@ -456,11 +521,18 @@ public class Scheduler {
         new Thread(new ProcessPendingRequests()).start();
     }
 
+    /** sets the state of the scheduler
+    @param newState next state the scheduler transitions to
+     */
     public void setState(SchedulerState newState){
         System.out.println("* SCHEDULER STATE CHANGE * " + this.currentState.display() + " -> " + newState.display());
         this.currentState = newState;
     }
 
+    /** creates a {@link DroneStatus} object with the passed drone ID and returns an acknowledgement to be passed to DroneSubsystem to indicate
+     *  the drone is successfully added to the {@link Scheduler#drones} hashmap
+     @param droneId of the drone that is created on the DroneSubsystem side
+     */
     public String registerDrone(int droneId)
     {
         // drone is not initialized
@@ -472,7 +544,13 @@ public class Scheduler {
         else return "ERROR: drone initialization with id error " + droneId;
     }
 
-    // if return is -1, there are no traveling drones, there are no idle drones, they are in another state
+    /**
+     * selects an available drone to be tasked with the passed fireRequest and returns that drones ID. If no drone is availible given environment/system context
+     * will return -1 if there are no traveling drones and there are no idle drones
+     * <p>Called from {@link Scheduler#assignFireRequest} in the SP thread </p>
+     * @param request is the {@link FireRequest} object the Scheduler is finding an availible drone to answer
+     * @return drone id of selected drone (default is -1)
+     */
     public int selectDrone(FireRequest request) {
 
         System.out.println("\n[  SP  ]  -   SELECT DRONE CALLED  -   " + request.toString());
@@ -526,13 +604,17 @@ public class Scheduler {
     }
 
     /**
-     * Finds the closest idle drone to the center of the target zone.
+     * checks all drones in {@link Scheduler#drones} if they are able to be reassigned from their current task if
+     * <li>they are traveling
+     * <li>they have a less severity than the fire request passed in
+     * <p>if these^ are true, returns the drone id of that drone, otherwise returns -1<p/>
      *
-     * @param targetZone the target Zone object.
-     * @return the drone ID of the closest idle drone, or -1 if none are available.
+     * @param targetZone the target Zone of the new fire request to be compared with the drones current target zone
+     * @param newRequest the new fire request that the scheduler is looking to reassign any drone
+     * @return the drone ID of the valid drone to be reassigned, or -1 if none are available or conditions dont meet
      */
     public int findClosestDrone(Zone targetZone, FireRequest newRequest) {
-        System.out.println("\n[   SF]  -   FIND CLOSEST DRONE CALLED  -   " + targetZone.toString());
+        System.out.println("\n[  SP  ]  -   FIND CLOSEST DRONE CALLED  -   " + targetZone.toString());
 
         if (targetZone == null) {
             System.out.println("Error: Target zone not found for the requested zone ID.");
@@ -548,12 +630,12 @@ public class Scheduler {
                 // check if this is for a request for a current zone being answered
                 if ( drone.getCurrentTask().getZoneId() == targetZone.getZoneId() )
                 {
-                    System.out.println("\n[   SF]  -   DRONE "+drone.getDroneId()+" IS ALREADY MOVING TO THIS ZONE -      " + targetZone.toString());
+                    System.out.println("\n[  SP  ]  -   DRONE "+drone.getDroneId()+" IS ALREADY MOVING TO THIS ZONE -      " + targetZone.toString());
                     continue;
                 }
                 // Only allow reassignment if new request is more severe or equal
                 if (!isNewRequestMoreSevere(drone.getCurrentTask(), newRequest)) {
-                    System.out.println("\n[   SF]  -   DRONE " + drone.getDroneId() + " is on a more severe task. Skipping reassignment.");
+                    System.out.println("\n[  SP  ]  -   DRONE " + drone.getDroneId() + " is on a more severe task. Skipping reassignment.");
                     continue;
                 }
 
@@ -570,6 +652,12 @@ public class Scheduler {
         return bestDroneId;
     }
 
+    /**
+     * checks if this drone will pass through the target zone
+     * @param drone DroneStatus object with real time drone location data to check if the condition is true
+     * @param targetZone immutable Zone object that contains coordinates to check if the conditions are true
+     * @return true if the drone will pass through the target zone
+     */
     public boolean willPassThrough(DroneStatus drone, Zone targetZone) {
 
         // Get the destination zone from the drone's current task
@@ -642,8 +730,8 @@ public class Scheduler {
     }
 
     /**
-     * adds a fire request to the scheduler, ensuring only one request is handled at a time.
-     * To be used by Fire Incident Subsystem
+     * adds a fire request to the {@link Scheduler#requestQueue}
+     *
      * @param request the FireRequest to be added
      */
     public synchronized void addRequest(FireRequest request) {
@@ -651,6 +739,11 @@ public class Scheduler {
         System.out.println("From Scheduler - receiving request from fire incident: \n" + request + "\n");
     }
 
+    /**
+     * returns a response from {@link Scheduler#responseQueue} sent from the {@link FireIncidentSubsystem} called from SF thread in {@link listenToFire}
+     *
+     * @return string response
+     */
     public String takeResponse() {
         synchronized (responseQueue) {
             while (responseQueue.isEmpty()) {
@@ -670,6 +763,12 @@ public class Scheduler {
         }
     }
 
+    /**
+     * adds a response to {@link Scheduler#responseQueue} added in the {@link Scheduler#handleDroneRequest} called from SD thread when the fireRequest
+     * is completed and drone returns to base after it refills
+     *
+     * @param response string object to add to the queue
+     */
     public void addResponse(String response) {
         if (response == null || response.isEmpty()) {
             System.out.println("[  SP  ] - WARNING: Attempted to add an empty response!");
