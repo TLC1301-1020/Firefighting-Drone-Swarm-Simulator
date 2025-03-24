@@ -52,7 +52,6 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public FireIncidentSubsystem() {
         this.tasks = new ArrayList<>();
-        readyToSend.add(new FireRequest("String"));
 
         try {
             sendSocket = new DatagramSocket();
@@ -95,11 +94,11 @@ public class FireIncidentSubsystem implements Runnable {
                             readyToSend.wait();
                         }
                         //not empty list, taking the request
-                        request = readyToSend.removeFirst();
+                        request = readyToSend.remove(0);
                     }
                     //send the request
                     if(request!=null){
-                        System.out.println("[ STS ] - sending the request.");
+                        System.out.println("[ STS ] - sending the request: " + request);
                         sendIncident(request.toString());
                     }
                 } catch (InterruptedException e) {
@@ -144,7 +143,10 @@ public class FireIncidentSubsystem implements Runnable {
 
         while (true) {
             Event event = scheduler.getEvent();
-            readyToSend.add(event.getEvent());
+            synchronized (readyToSend) {
+                readyToSend.add((FireRequest) event.getEvent());
+                readyToSend.notifyAll();
+            }
         }
     }
 

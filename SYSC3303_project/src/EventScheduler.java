@@ -2,7 +2,9 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.text.SimpleDateFormat;
@@ -14,8 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class EventScheduler {
 
-    private PriorityQueue<Event> eventQueue;
-    private PriorityQueue<Event> readyQueue;
+    private Queue<Event> eventQueue;
+    private Queue<Event> readyQueue;
 
     private final long simulationSpeed = 1;
 
@@ -30,8 +32,8 @@ public class EventScheduler {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        this.eventQueue = new PriorityQueue<>();
-        this.readyQueue = new PriorityQueue<>();
+        this.eventQueue = new LinkedList<>();
+        this.readyQueue = new LinkedList<>();
     }
 
     public void addEvent(Event event) {
