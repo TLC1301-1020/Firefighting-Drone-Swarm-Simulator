@@ -316,22 +316,26 @@ public class Drone implements Runnable
 
         if (schedulerInstructions.equals("WAIT")) {
             System.out.println("\n[ DRONE ]   WAIT order -> drone " + droneId + " waiting for new task...");
-            try{
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                // sleep interrupted
-            }
-            String newResponse;
-            do {
-                try{
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    // sleep interrupted
-                }
-                newResponse = droneSubsystem.getResponse(droneId);
+            this.sendStatus = true;
 
-            } while (newResponse.startsWith("WAIT")); // Continue if response still indicates WAIT
-            handleResponse(newResponse);
+            while (true) {
+                try {
+                    Thread.sleep(500);  // wait before pinging
+                } catch (InterruptedException e) {
+                    // interrupted
+                }
+
+                // Send STATUS to Scheduler to check for assignment
+                String statusRequest = makeStatusRequest();  // Already implemented in your drone
+                droneSubsystem.addRequest(statusRequest);
+
+                String newResponse = droneSubsystem.getResponse(droneId);
+
+                if (!newResponse.startsWith("WAIT")) {
+                    handleResponse(newResponse);
+                    break;
+                }
+            }
         }
 
         // if schedulerInstructions is acknowledgement

@@ -28,6 +28,17 @@ public class Scheduler {
     public static final int FIRE_INCIDENT_SUBSYSTEM_PORT = 5002;
     public static final int DRONE_SUBSYSTEM_PORT = 5003;
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, fireSendSocket, droneSendSocket;
+    private final ConcurrentLinkedQueue<DroneAssignment> pendingAssignments = new ConcurrentLinkedQueue<>();
+
+    private static class DroneAssignment {
+        int droneId;
+        FireRequest request;
+
+        DroneAssignment(int droneId, FireRequest request) {
+            this.droneId = droneId;
+            this.request = request;
+        }
+    }
 
     public void parseZoneFile(String zoneFilePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(zoneFilePath))) {
@@ -293,10 +304,30 @@ public class Scheduler {
             case STUCK_RESOLVED:
                 return "ACK:" + request;
             case STATUS:
-                // drone is sending location update while traveling to fire zone
-                if (!drone.getState().equals("[TRAVELING]")) { drone.setState("[TRAVELING]"); }
-                System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
+                if (!drone.getState().equals("[TRAVELING]") && !drone.getCurrentTask().isDefault()) { drone.setState("[TRAVELING]"); }
 
+                // Check if this drone has a pending assignment
+                DroneAssignment match = null;
+                for (DroneAssignment assignment : pendingAssignments) {
+                    if (assignment.droneId == droneId) {
+                        match = assignment;
+                        break;
+                    }
+                }
+
+                if (match != null) {
+                    pendingAssignments.remove(match);
+                    drone.setCurrentTask(match.request);
+
+                    String droneRequest = "NEW:" + droneId + ":" + drone.getState() + ":NEW_FIRE_REQUEST:" +
+                            drone.getX() + ":" + drone.getY() + ":" + match.request;
+
+                    System.out.println("[SD->DSS] Sending assignment from queue to drone: " + droneRequest);
+                    sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
+                    return "ACK:" + request;
+                }
+
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == STATUS:    drone " + droneId + " * NO STATE CHANGE remains at  " + drone.getState() + "*");
                 return "ACK:" + request;
             case CONTINUING:
                 // Send an ack -- this drone is continuing on its old mission
@@ -343,25 +374,40 @@ public class Scheduler {
         if ( !previousTask.isDefault() && selectedDrone.getState().equals("[TRAVELING]"))
         {
             // If drone had a previous task, droneRequest is constructed with "NEW" and uses the current x and y location values
-            String droneRequest = "NEW:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
-                    selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
 
-            System.out.println("\n[ SP->DSS ]   Sending to DroneSubsystem change task:   -       " + droneRequest);
-            sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
+            //String droneRequest = "NEW:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
+            //        selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
+
+            //System.out.println("\n[ SP->DSS ]   Sending to DroneSubsystem change task:   -       " + droneRequest);
+            //sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
 
             System.out.println("[  SP  ]    Reassigning previous task:      " + previousTask);
             addRequest(previousTask); // put the old request back into the queue to preserve reassigned task
         }
         else {
             // This drone did not have a previous task, so droneRequest is constructed as a simple acknowledgment to begin the drone's activity
-            String droneRequest = "NEW:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
-                    selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
+            //String droneRequest = "NEW:" + selectedDroneId + ":"+ selectedDrone.getState()+ ":NEW_FIRE_REQUEST:" +
+            //        selectedDrone.getX() + ":" + selectedDrone.getY() + ":" + fireRequest;
 
-            System.out.println("\n[ SP->DSS ]       Sending to DroneSubsystem START task:   -       " + droneRequest);
-            sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
+            //System.out.println("\n[ SP->DSS ]       Sending to DroneSubsystem START task:   -       " + droneRequest);
+            //sendPacket(droneSendSocket, DRONE_SUBSYSTEM_PORT, droneRequest);
         }
+        pendingAssignments.add(new DroneAssignment(selectedDroneId, fireRequest));
 
         return true;
+    }
+
+    boolean isNewRequestMoreSevere(FireRequest currentRequest, FireRequest newRequest) {
+        Map<String, Integer> severityRank = Map.of(
+                "Low", 1,
+                "Moderate", 2,
+                "High", 3
+        );
+
+        int currentSeverity = severityRank.getOrDefault(currentRequest.getSeverity(), 0);
+        int newSeverity = severityRank.getOrDefault(newRequest.getSeverity(), 0);
+
+        return newSeverity >= currentSeverity;
     }
 
     /**
@@ -447,7 +493,7 @@ public class Scheduler {
                 // For illustration, assume we have an isOnPath() method:
 
                 // if return is -1, do not use that drone id
-                int droneID = findClosestDrone(targetZone);
+                int droneID = findClosestDrone(targetZone, request);
                 if( droneID != -1 )
                 {
                     return droneID;
@@ -485,7 +531,7 @@ public class Scheduler {
      * @param targetZone the target Zone object.
      * @return the drone ID of the closest idle drone, or -1 if none are available.
      */
-    public int findClosestDrone(Zone targetZone) {
+    public int findClosestDrone(Zone targetZone, FireRequest newRequest) {
         System.out.println("\n[   SF]  -   FIND CLOSEST DRONE CALLED  -   " + targetZone.toString());
 
         if (targetZone == null) {
@@ -503,6 +549,11 @@ public class Scheduler {
                 if ( drone.getCurrentTask().getZoneId() == targetZone.getZoneId() )
                 {
                     System.out.println("\n[   SF]  -   DRONE "+drone.getDroneId()+" IS ALREADY MOVING TO THIS ZONE -      " + targetZone.toString());
+                    continue;
+                }
+                // Only allow reassignment if new request is more severe or equal
+                if (!isNewRequestMoreSevere(drone.getCurrentTask(), newRequest)) {
+                    System.out.println("\n[   SF]  -   DRONE " + drone.getDroneId() + " is on a more severe task. Skipping reassignment.");
                     continue;
                 }
 
