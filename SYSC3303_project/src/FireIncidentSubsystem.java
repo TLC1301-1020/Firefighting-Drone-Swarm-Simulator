@@ -1,3 +1,5 @@
+import jdk.javadoc.doclet.Taglet;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -43,9 +45,14 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
+
+    //TODO: THIS IS FOR THE SORTING TASKS FUNCTION
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH-mm-ss");
+
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
      */
+
     public FireIncidentSubsystem() {
         this.tasks = new ArrayList<>();
 
@@ -237,16 +244,41 @@ public class FireIncidentSubsystem implements Runnable {
                 String severity = parts[3].trim();
 
                 FireRequest task = new FireRequest(time, zoneId, eventType, severity);
-                tasks.add(task);
-
-                System.out.println("Adding task: " + task);
+                addTask(task);
             }
             System.out.println("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    /**TODO: Add task to the list by timestamps
+     *
+     */
 
+    public void addTask(FireRequest task){
+        LocalTime taskLocalTime = LocalTime.parse(task.getTime(), timeFormatter);
+        int low = 0;
+        int high = tasks.size()-1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            FireRequest midTask = tasks.get(mid);
+            //Insertion comparison
+            LocalTime midTaskTime = LocalTime.parse(midTask.getTime(), timeFormatter);
+            int comparison = midTaskTime.compareTo(taskLocalTime);
+            if (comparison < 0) {
+                low = mid + 1;
+            } else if (comparison > 0) {
+                high = mid - 1;
+            } else {
+                tasks.add(mid, task);
+                return;
+            }
+        }
+        tasks.add(low, task);
+        System.out.println("Task added: " + task);
+
+    }
     /**
      * Reads the zone information from the given CSV file and stores it in the static zoneMap.
      * Expected CSV format:
