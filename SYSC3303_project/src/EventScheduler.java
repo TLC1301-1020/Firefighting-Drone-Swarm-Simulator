@@ -1,9 +1,5 @@
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,9 +12,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class EventScheduler {
 
+    // Queues to store events to be distributed, and events to be sent
     private Queue<Event> eventQueue;
     private Queue<Event> readyQueue;
 
+    // Simulation speed can be changed to speed up the processing of Events
     private final long simulationSpeed = 1;
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("HH-mm-ss");
@@ -27,6 +25,7 @@ public class EventScheduler {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public EventScheduler() {
+        // Initialize a system time that comes before any events
         try {
             systemTime = formatter.parse("10-00-00").getTime();
         } catch (ParseException e) {
@@ -36,10 +35,18 @@ public class EventScheduler {
         this.readyQueue = new LinkedList<>();
     }
 
+    /**
+     * Method to be used by the containing object to add Events that should be processed and waited on.
+     * @param event Event to process.
+     */
     public void addEvent(Event event) {
         eventQueue.add(event);
     }
 
+    /**
+     * Method to be used by the containing object to retrieve Events that are ready to be handled.
+     * @return the Event that is ready to be handled.
+     */
     public Event getEvent() {
         synchronized (readyQueue) {
             while (readyQueue.isEmpty()) {
@@ -54,10 +61,16 @@ public class EventScheduler {
         }
     }
 
+    /**
+     * Start the scheduler, and start processing Events.
+     */
     public void start() {
         scheduler.execute(this::processEvents);
     }
 
+    /**
+     * Schedule the distribution of each Event in eventQueue using a delay based on the current system time.
+     */
     private void processEvents() {
         while (!eventQueue.isEmpty()) {
 
@@ -75,6 +88,10 @@ public class EventScheduler {
         }
     }
 
+    /**
+     * Add this event to the thread-safe readyQueue so that the containing object can receive them.
+     * @param event Event that has been flagged as ready.
+     */
     private void distributeEvent(Event event) {
         synchronized (readyQueue) {
             readyQueue.add(event);

@@ -142,6 +142,7 @@ public class FireIncidentSubsystem implements Runnable {
         receiver.start();
         sender.start();
 
+        // Retrieve and store FireRequests that are ready to be sent from the EventScheduler
         while (true) {
             Event event = scheduler.getEvent();
             synchronized (readyToSend) {
