@@ -326,12 +326,19 @@ public class Drone implements Runnable
                 }
 
                 // Send STATUS to Scheduler to check for assignment
-                String statusRequest = makeStatusRequest();  // Already implemented in your drone
+                String statusRequest = makeStatusRequest();
                 droneSubsystem.addRequest(statusRequest);
 
                 String newResponse = droneSubsystem.getResponse(droneId);
 
-                if (!newResponse.startsWith("WAIT")) {
+                if (newResponse.startsWith("WAIT")) {
+                    continue; // still waiting, continue loop
+                } else if (newResponse.startsWith("ACK") && newResponse.contains("STATUS")) {
+                    // still just getting status acks, ignore
+                    System.out.println("[ DRONE ] Still waiting... got STATUS ACK.");
+                    continue;
+                } else {
+                    // this must be a NEW or a non-status ACK (like NEW_FIRE_REQUEST)
                     handleResponse(newResponse);
                     break;
                 }
