@@ -86,69 +86,9 @@ public class FireIncidentSubsystem implements Runnable {
     private class SendToScheduler extends Thread {
         @Override
         public void run() {
-
-            int counter = 0;
-            int i = 0;
-            while(true) {
-
-//                  if( ++counter>1 )
-//                  {
-//                        System.out.println("\n[ FIRE ]  ONE FIRE INCIDENT SENT TO SYSTEM .... ");
-//                        break;
-//                  }
-
-//                // testing only 2 fire incidents
-//                if( ++counter>2 )
-//                {
-//                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENTS SENT TO SYSTEM .... ");
-//                    break;
-//                }
-
-                if(tasks.isEmpty() )
-                {
-                    System.out.println("\n[ FIRE->S ]  ALL FIRE INCIDENTS SENT TO SCHEDULER .... ");
-                    break;
-                }
-                System.out.println();
-                String task = tasks.remove(0).toString();
-
-                System.out.println("\n[ FIRE->S ]  sending task: " + (++i) + "    " + task);
-                sendIncident(task);
-                try{
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            counter = 0;
-            while(true)
-            {
-//                if( ++counter>1 )
-//                {
-//                    System.out.println("\n[ FIRE ]  ONE FIRE INCIDENT FOLLOWUP SENT TO SYSTEM .... ");
-//                    break;
-//                }
-
-                // testing only 2 fire incidents
-//                if( ++counter>2 )
-//                {
-//                    System.out.println("\n[ FIRE ]  BOTH FIRE INCIDENT FOLLOWUPS SENT TO SYSTEM .... ");
-//                    break;
-//                }
-
-                // testing all fire incidents
-                if( ++counter>i )
-                {
-                    System.out.println("\n[ FIRE->S ]  ALL FIRE_DATA_REQUEST SENT TO SCHEDULER .... ");
-                    break;
-                }
-
-                System.out.println("\n[ FIRE->S ]  sending:    FIRE_DATA_REQUEST");
-                sendIncident("FIRE_DATA_REQUEST");
-            }
-
-
-            System.out.println("\n[ FIRE->S ]  SendToScheduler thread finished .... ");
+            // Make a new list for requests that are ready to send ex) List<FireRequest> readyToSend
+            // Synchronize on readyToSend
+            // if there's a request in readyToSend, send it with sendIncident(firerequest.toString())
         }
     }
 
@@ -238,7 +178,8 @@ public class FireIncidentSubsystem implements Runnable {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 //                String time = parts[0].trim();
-                String time = parts[0].trim().replace(":", "-");
+                String time = parts[0].trim().replaceAll(":", "-");
+
                 int zoneId = Integer.parseInt(parts[1].trim());
                 String eventType = parts[2].trim();
                 String severity = parts[3].trim();
@@ -256,6 +197,7 @@ public class FireIncidentSubsystem implements Runnable {
      */
 
     public void addTask(FireRequest task){
+        System.out.println(task.getTime());
         LocalTime taskLocalTime = LocalTime.parse(task.getTime(), timeFormatter);
         int low = 0;
         int high = tasks.size()-1;
