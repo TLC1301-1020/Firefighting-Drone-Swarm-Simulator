@@ -95,6 +95,7 @@ public class FireIncidentSubsystem implements Runnable {
                         }
                         //not empty list, taking the request
                         request = readyToSend.remove(0);
+                        readyToSend.notifyAll();
                     }
                     //send the request
                     if(request!=null){
