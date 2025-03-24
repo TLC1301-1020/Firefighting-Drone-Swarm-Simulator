@@ -96,4 +96,21 @@ class FireIncidentSubsystemTest {
         assertNotNull(fireSubsystem.getSendSocket(), "Send socket should be initialized");
         assertNotNull(fireSubsystem.getReceiveSocket(), "Receive socket should be initialized");
     }
+
+    // Checks the order of the tasks, should be in timestamp order
+    @Test
+    void testAddTasksInOrder(){
+        FireIncidentSubsystem fis = new FireIncidentSubsystem();
+        //the order should be req2,req1,req3
+        FireRequest req1 = new FireRequest("10:30:15", 1, "Fire", "High");
+        FireRequest req2 = new FireRequest("10:15:45", 2, "Fire", "Low");
+        FireRequest req3 = new FireRequest("12:25:45", 2, "Fire", "Low");
+        fis.addTask(req1);
+        fis.addTask(req2);
+        fis.addTask(req3);
+
+        Assertions.assertEquals(req1,fis.getTasks().get(1),"This should be the second request in the task list.");
+        Assertions.assertEquals(req2,fis.getTasks().get(0), "This should be the first request in the task list.");
+        Assertions.assertEquals(req3,fis.getTasks().get(2), "This should be the third request in the task list.");
+    }
 }
