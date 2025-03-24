@@ -141,6 +141,11 @@ public class FireIncidentSubsystem implements Runnable {
 
         receiver.start();
         sender.start();
+
+        while (true) {
+            Event event = scheduler.getEvent();
+            readyToSend.add(event.getEvent());
+        }
     }
 
     /**

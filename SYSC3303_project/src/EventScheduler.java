@@ -17,6 +17,8 @@ public class EventScheduler {
     private PriorityQueue<Event> eventQueue;
     private PriorityQueue<Event> readyQueue;
 
+    private final long simulationSpeed = 1;
+
     private final SimpleDateFormat formatter = new SimpleDateFormat("HH-mm-ss");
     private final long systemTime;
 
@@ -45,6 +47,7 @@ public class EventScheduler {
                     throw new RuntimeException(e);
                 }
             }
+            readyQueue.notifyAll();
             return readyQueue.poll();
         }
     }
@@ -60,7 +63,7 @@ public class EventScheduler {
             long delay;
 
             try {
-                delay = ( formatter.parse(event.getEventTime()).getTime() ) - systemTime;
+                delay = ( ( formatter.parse(event.getEventTime()).getTime() ) - systemTime ) / simulationSpeed;
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -73,6 +76,7 @@ public class EventScheduler {
     private void distributeEvent(Event event) {
         synchronized (readyQueue) {
             readyQueue.add(event);
+            readyQueue.notifyAll();
         }
     }
 }
