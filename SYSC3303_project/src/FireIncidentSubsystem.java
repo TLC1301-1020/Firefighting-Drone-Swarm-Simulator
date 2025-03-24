@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.net.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The FireIncidentSubsystem handles fire incident requests and communicates with the Scheduler.
@@ -48,13 +45,14 @@ public class FireIncidentSubsystem implements Runnable {
 
     //TODO: THIS IS FOR THE SORTING TASKS FUNCTION
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH-mm-ss");
-
+    //TODO:
+    private ArrayList<FireRequest> readyToSend = new ArrayList<>();
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
      */
-
     public FireIncidentSubsystem() {
         this.tasks = new ArrayList<>();
+        readyToSend.add(new FireRequest("String"));
 
         try {
             sendSocket = new DatagramSocket();
@@ -63,8 +61,6 @@ public class FireIncidentSubsystem implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
-
 
     /**
      * Thread to listen to DroneSubsystem.
@@ -81,18 +77,39 @@ public class FireIncidentSubsystem implements Runnable {
     }
 
     /**
-     * Thread to listen to DroneSubsystem.
+     * TODO: Thread to listen to DroneSubsystem.
+     * TODO: Make a new list for requests that are ready to send ex) List<FireRequest> readyToSend
+     * TODO: Synchronize on readyToSend
+     * TODO: if there's a request in readyToSend, send it with sendIncident(firerequest.toString())
      */
     private class SendToScheduler extends Thread {
+
         @Override
         public void run() {
-            // Make a new list for requests that are ready to send ex) List<FireRequest> readyToSend
-            // Synchronize on readyToSend
-            // if there's a request in readyToSend, send it with sendIncident(firerequest.toString())
+            while (true) {
+                try {
+                    FireRequest request;
+                    synchronized (readyToSend) {
+                        while (readyToSend.isEmpty()) {
+                            System.out.println("[ STS ] - waiting for upcoming tasks.");
+                            readyToSend.wait();
+                        }
+                        //not empty list, taking the request
+                        request = readyToSend.removeFirst();
+                    }
+                    //send the request
+                    if(request!=null){
+                        System.out.println("[ STS ] - sending the request.");
+                        sendIncident(request.toString());
+                    }
+                } catch (InterruptedException e) {
+                    System.out.println("SendToScheduler interrupted.");
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
         }
     }
-
-
 
     /**
      * thread function for the fire incident subsystem
