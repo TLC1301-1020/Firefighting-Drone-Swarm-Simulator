@@ -49,7 +49,6 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public FireIncidentSubsystem() {
         this.tasks = new ArrayList<>();
-        readyToSend.add(new FireRequest("String"));
 
         try {
             sendSocket = new DatagramSocket();
