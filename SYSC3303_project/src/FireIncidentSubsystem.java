@@ -91,7 +91,7 @@ public class FireIncidentSubsystem implements Runnable {
                             readyToSend.wait();
                         }
                         //not empty list, taking the request
-                        request = readyToSend.removeFirst();
+                        request = readyToSend.remove(0);
                     }
                     //send the request
                     if(request!=null){
@@ -121,6 +121,14 @@ public class FireIncidentSubsystem implements Runnable {
 
         readInputFile(inputFile);
 
+        // After readInputFile(), tasks stores all FireRequests in sorted order by time
+        // Send these FireRequests to our EventScheduler
+        // Pass pointer to this entity so that we can re-add tasks that are ready?
+        EventScheduler scheduler = new EventScheduler();
+        for (FireRequest fr : tasks) {
+            scheduler.addEvent(new Event(fr, fr.getTime()));
+        }
+        scheduler.start();
 
         // Create and start threads to listen to other subsystems
         Thread receiver = new FireIncidentSubsystem.ListenToScheduler();
@@ -129,54 +137,14 @@ public class FireIncidentSubsystem implements Runnable {
         receiver.start();
         sender.start();
 
-
-        // send all incidents
-
-//        sendIncident(tasks.remove(0).toString());
-//
-//        while(true) {
-//
-//            String update = receiveUpdate();
-//            System.out.println("\n[ FIRE ]  UPDATE 1 IS: " + update);
-//            // Request the scheduler for updates
-//
-//            sendIncident("FIRE_DATA_REQUEST");
-//            String update2 = receiveUpdate();
-//            System.out.println("[ FIRE ]  UPDATE 2 IS: " + update2);
-//
-//            if(tasks.isEmpty())
-//            {
-//                System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS SENT BY TO SYSTEM .... ");
-//                break;
-//            }
-//            sendIncident(tasks.remove(0).toString());
-//            System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS HANDLED BY TO SYSTEM .... ");
-//        }
-
-//        while(true) {
-//
-//            String update = receiveUpdate();
-//            System.out.println("\n[ FIRE ]  UPDATE 1 IS: " + update);
-//            // Request the scheduler for updates
-//
-//            sendIncident("FIRE_DATA_REQUEST");
-//            String update2 = receiveUpdate();
-//            System.out.println("[ FIRE ]  UPDATE 2 IS: " + update2);
-//
-//            // This should be an update that a drone has completed a FireRequest
-//            if( update2.contains("COMPLETED") )
-//            {
-//                if(tasks.isEmpty())
-//                {
-//                    System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS HANDLED BY SYSTEM .... ");
-//                    break;
-//                }
-//                sendIncident(tasks.remove(0).toString());
-//            }
-//        }
-
-
-
+        // Retrieve and store FireRequests that are ready to be sent from the EventScheduler
+        while (true) {
+            Event event = scheduler.getEvent();
+            synchronized (readyToSend) {
+                readyToSend.add((FireRequest) event.getEvent());
+                readyToSend.notifyAll();
+            }
+        }
     }
 
     /**
