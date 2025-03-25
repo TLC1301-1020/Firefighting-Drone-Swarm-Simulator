@@ -98,4 +98,23 @@ public class EventScheduler {
             readyQueue.notifyAll();
         }
     }
+    /**
+     * Test class for the {@link EventScheduler} class's {@link EventScheduler#getEventQueue()} method.
+     * This test ensures that the event queue is correctly initialized and can be accessed.
+     */
+    public Queue<Event> getEventQueue() {
+        return eventQueue;
+    }
+    /**
+     * Retrieves the queue of ready events.
+     *
+     * This method returns the {@code readyQueue} that holds the events that are ready to be processed or distributed.
+     * This queue is used to manage events that have been processed and are awaiting further handling.
+     *
+     * @return A {@link Queue} of {@link Event} objects representing events that are ready to be processed.
+     */
+    public Queue<Event> getReadyQueue(){
+        return readyQueue;
+    }
+
 }

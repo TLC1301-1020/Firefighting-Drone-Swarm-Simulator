@@ -45,29 +45,41 @@ class FireIncidentSubsystemTest {
         fireSubsystem.readZoneFile(zoneFile);
 
         assertFalse(FireIncidentSubsystem.zoneMap.isEmpty(), "Zone map should be populated");
-        assertEquals(3, FireIncidentSubsystem.zoneMap.size(), "Should contain 3 zones");
+        assertEquals(5, FireIncidentSubsystem.zoneMap.size(), "Should contain 5 zones");
 
-        Zone zone7 = FireIncidentSubsystem.zoneMap.get(7);
-        Zone zone3 = FireIncidentSubsystem.zoneMap.get(3);
+        Zone zone1 = FireIncidentSubsystem.zoneMap.get(1);
         Zone zone2 = FireIncidentSubsystem.zoneMap.get(2);
+        Zone zone3 = FireIncidentSubsystem.zoneMap.get(3);
+        Zone zone4 = FireIncidentSubsystem.zoneMap.get(4);
+        Zone zone5 = FireIncidentSubsystem.zoneMap.get(5);
 
-        assertNotNull(zone7);
-        assertEquals(0, zone7.getStartX());
-        assertEquals(0, zone7.getStartY());
-        assertEquals(700, zone7.getEndX());
-        assertEquals(600, zone7.getEndY());
-
-        assertNotNull(zone3);
-        assertEquals(0, zone3.getStartX());
-        assertEquals(600, zone3.getStartY());
-        assertEquals(650, zone3.getEndX());
-        assertEquals(1500, zone3.getEndY());
-
+        assertNotNull(zone1);
         assertNotNull(zone2);
-        assertEquals(650, zone2.getStartX());
-        assertEquals(1500, zone2.getStartY());
-        assertEquals(800, zone2.getEndX());
-        assertEquals(1800, zone2.getEndY());
+        assertNotNull(zone3);
+        assertNotNull(zone4);
+        assertNotNull(zone5);
+
+        assertEquals(0, zone1.getStartX());
+        assertEquals(0, zone1.getStartY());
+        assertEquals(0, zone2.getStartX());
+        assertEquals(600, zone2.getStartY());
+        assertEquals(0, zone3.getStartX());
+        assertEquals(1500, zone3.getStartY());
+        assertEquals(700, zone4.getStartX());
+        assertEquals(0, zone4.getStartY());
+        assertEquals(650, zone5.getStartX());
+        assertEquals(600, zone5.getStartY());
+
+        assertEquals(700, zone1.getEndX());
+        assertEquals(600, zone1.getEndY());
+        assertEquals(650, zone2.getEndX());
+        assertEquals(1500, zone2.getEndY());
+        assertEquals(1000, zone3.getEndX());
+        assertEquals(1700, zone3.getEndY());
+        assertEquals(1000, zone4.getEndX());
+        assertEquals(600, zone4.getEndY());
+        assertEquals(1000, zone5.getEndX());
+        assertEquals(1500, zone5.getEndY());
     }
 
     // Ensure sendIncident() does not throw an exception
@@ -113,4 +125,6 @@ class FireIncidentSubsystemTest {
         Assertions.assertEquals(req2,fireSubsystem.getTasks().get(0), "This should be the first request in the task list.");
         Assertions.assertEquals(req3,fireSubsystem.getTasks().get(2), "This should be the third request in the task list.");
     }
+
 }
+

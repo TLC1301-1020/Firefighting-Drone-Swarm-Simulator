@@ -42,16 +42,14 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
-
-    //TODO: THIS IS FOR THE SORTING TASKS FUNCTION
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH-mm-ss");
-    //TODO:
     private ArrayList<FireRequest> readyToSend = new ArrayList<>();
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
      */
     public FireIncidentSubsystem() {
         this.tasks = new ArrayList<>();
+        readyToSend.add(new FireRequest("String"));
 
         try {
             sendSocket = new DatagramSocket();
@@ -94,12 +92,11 @@ public class FireIncidentSubsystem implements Runnable {
                             readyToSend.wait();
                         }
                         //not empty list, taking the request
-                        request = readyToSend.remove(0);
-                        readyToSend.notifyAll();
+                        request = readyToSend.removeFirst();
                     }
                     //send the request
                     if(request!=null){
-                        System.out.println("[ STS ] - sending the request: " + request);
+                        System.out.println("[ STS ] - sending the request.");
                         sendIncident(request.toString());
                     }
                 } catch (InterruptedException e) {
@@ -125,15 +122,6 @@ public class FireIncidentSubsystem implements Runnable {
 
         readInputFile(inputFile);
 
-        // After readInputFile(), tasks stores all FireRequests in sorted order by time
-        // Send these FireRequests to our EventScheduler
-        // Pass pointer to this entity so that we can re-add tasks that are ready?
-        EventScheduler scheduler = new EventScheduler();
-        for (FireRequest fr : tasks) {
-            scheduler.addEvent(new Event(fr, fr.getTime()));
-        }
-        scheduler.start();
-
 
         // Create and start threads to listen to other subsystems
         Thread receiver = new FireIncidentSubsystem.ListenToScheduler();
@@ -142,14 +130,54 @@ public class FireIncidentSubsystem implements Runnable {
         receiver.start();
         sender.start();
 
-        // Retrieve and store FireRequests that are ready to be sent from the EventScheduler
-        while (true) {
-            Event event = scheduler.getEvent();
-            synchronized (readyToSend) {
-                readyToSend.add((FireRequest) event.getEvent());
-                readyToSend.notifyAll();
-            }
-        }
+
+        // send all incidents
+
+//        sendIncident(tasks.remove(0).toString());
+//
+//        while(true) {
+//
+//            String update = receiveUpdate();
+//            System.out.println("\n[ FIRE ]  UPDATE 1 IS: " + update);
+//            // Request the scheduler for updates
+//
+//            sendIncident("FIRE_DATA_REQUEST");
+//            String update2 = receiveUpdate();
+//            System.out.println("[ FIRE ]  UPDATE 2 IS: " + update2);
+//
+//            if(tasks.isEmpty())
+//            {
+//                System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS SENT BY TO SYSTEM .... ");
+//                break;
+//            }
+//            sendIncident(tasks.remove(0).toString());
+//            System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS HANDLED BY TO SYSTEM .... ");
+//        }
+
+//        while(true) {
+//
+//            String update = receiveUpdate();
+//            System.out.println("\n[ FIRE ]  UPDATE 1 IS: " + update);
+//            // Request the scheduler for updates
+//
+//            sendIncident("FIRE_DATA_REQUEST");
+//            String update2 = receiveUpdate();
+//            System.out.println("[ FIRE ]  UPDATE 2 IS: " + update2);
+//
+//            // This should be an update that a drone has completed a FireRequest
+//            if( update2.contains("COMPLETED") )
+//            {
+//                if(tasks.isEmpty())
+//                {
+//                    System.out.println("\n[ FIRE ]  ALL FIRE INCIDENTS HANDLED BY SYSTEM .... ");
+//                    break;
+//                }
+//                sendIncident(tasks.remove(0).toString());
+//            }
+//        }
+
+
+
     }
 
     /**
@@ -178,10 +206,10 @@ public class FireIncidentSubsystem implements Runnable {
             e.printStackTrace();
         }
     }
+
     /**TODO: Add task to the list by timestamps
      *
      */
-
     public void addTask(FireRequest task){
         System.out.println(task.getTime());
         LocalTime taskLocalTime = LocalTime.parse(task.getTime(), timeFormatter);
