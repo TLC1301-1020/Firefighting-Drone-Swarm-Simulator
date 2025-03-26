@@ -243,6 +243,17 @@ public class DroneSubsystem implements Runnable {
             drone.start();
         }
 
+        // After readFaultFile(), tasks stores all fault events in faults
+        // Send these faults to our EventScheduler
+        EventScheduler scheduler = new EventScheduler();
+        for (Event fault : faults) {
+            scheduler.addEvent(fault);
+        }
+        scheduler.start();
+
+        // Retrieve and store drone faults that are ready to be sent from the EventScheduler
+        // TODO: Do we need a new thread to process the faults above?
+
         while (true) {
             // Check request queue - communication from drones
             String request = getRequest();
