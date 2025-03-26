@@ -50,6 +50,7 @@ public class DroneSubsystem implements Runnable {
      */
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
+    private ArrayList<Event> faults = new ArrayList<>();
     /**
      * Placeholder zone coordinates
      */
@@ -208,7 +209,6 @@ public class DroneSubsystem implements Runnable {
         this.dronesInitialized = true;
     }
 
-
     private void startListeningToScheduler() {
         Thread schedulerListener = new Thread(() -> {
             while (true) {
@@ -234,7 +234,6 @@ public class DroneSubsystem implements Runnable {
     public void run() {
 
         // TODO: determine a proper condition for thread lifespan
-
         // Start listening to Scheduler messages in a separate thread
         startListeningToScheduler();
 
@@ -336,6 +335,30 @@ public class DroneSubsystem implements Runnable {
         return new String(data,0,len);
     }
 
+    /**
+     * TODO: read fault input file
+     * */
+    public void readFaultFile(String inputFile){
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))){
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] parts = line.split(",");
+
+                if (parts.length >= 2) {
+                    String time = parts[0].trim().replaceAll(":", "-");
+                    String eventType = parts[1].trim();
+
+                    Event event = new Event(eventType, time);
+                    faults.add(event);
+                    System.out.println("Reading faults: " + event.getEventTime() + " - " + event.getEvent());
+                }
+            }
+            System.out.println("\n");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
     public void readZoneFile(String zoneFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(zoneFile))) {
             String header = reader.readLine(); // Skip header
@@ -372,11 +395,15 @@ public class DroneSubsystem implements Runnable {
     public Zone getZone(int zoneId) {
         return zoneMap.get(zoneId);
     }
+    public ArrayList<Event> getFaults(){
+        return faults;
+    }
 
     public static void main(String[] args)
     {
         DroneSubsystem dss = new DroneSubsystem();
         dss.readZoneFile("SYSC3303_project/src/zone_file.csv");
+        dss.readFaultFile("SYSC3303_project/src/Faults.txt");
         dss.initializeAllDrones(dss, 1);
 
         Thread droneSubsystem = new Thread( dss );

@@ -1,0 +1,2 @@
+10:30:15,Drone stuck
+10:30:55,Drone stuck
