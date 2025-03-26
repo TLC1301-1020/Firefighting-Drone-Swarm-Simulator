@@ -295,7 +295,10 @@ public class Scheduler {
                 // Send an ACK with a completed to allow to transition to next state
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [DEPLOYING] *");
                 drone.setState("[DEPLOYING]");
-//                return "ACK:" + request + ":COMPLETED";
+                
+                // Send confirmation that this drone has completed its request asynchronously to the FireIncidentSubsystem
+                sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, drone.getCurrentTask()+ ":COMPLETED");
+
                 return "ACK:" + request;
             case PAYLOAD_DEPLOY_FAILURE:
                 drone.setState("[DEPLOY FAILURE]");
@@ -330,7 +333,6 @@ public class Scheduler {
                     System.out.println("\n[SD   ]***************** SHOULD hit when drone returns to base ******************* handleDroneRequest");
                     // add complete so scheduler passes to FIS the task is completed
                     System.out.println(responseToDrone+ ":COMPLETED \n\n\n");
-                    sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, responseToDrone+ ":COMPLETED");
                     drone.setCurrentTask(new FireRequest());
                 }
                 return "ACK:" + request;
