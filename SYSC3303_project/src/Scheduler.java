@@ -57,7 +57,7 @@ public class Scheduler {
 
     /**
      * Object used to store drones marked for 'interrupt' reassignment by SP thread for checking in SD thread */
-    private static class DroneAssignment {
+    public static class DroneAssignment {
         int droneId;
         FireRequest request;
 
@@ -382,6 +382,10 @@ public class Scheduler {
                 // Send an ack -- this drone is continuing on its old mission
                 if (!drone.getState().equals("[TRAVELING]")) { drone.setState("[TRAVELING]"); }
                 return "ACK:" + request;
+            case RETURN_STATUS:
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == RETURN_STATUS:    drone " + droneId + " * is currently  " + drone.getState() + "*");
+                drone.setState("[RETURNING]");
+                return "ACK:" + request;
             default:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == UNKNOWN:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
                 return "ERROR: UNKNOWN drone request: " + request; // should never hit
@@ -655,40 +659,40 @@ public class Scheduler {
     /**
      * checks if this drone will pass through the target zone
      * @param drone DroneStatus object with real time drone location data to check if the condition is true
-     * @param targetZone immutable Zone object that contains coordinates to check if the conditions are true
+     * @param newTargetZone immutable Zone object that contains coordinates to check if the conditions are true
      * @return true if the drone will pass through the target zone
      */
-    public boolean willPassThrough(DroneStatus drone, Zone targetZone) {
+    public boolean willPassThrough(DroneStatus drone, Zone newTargetZone) {
 
         // Get the destination zone from the drone's current task
-        Zone destinationZone = zoneMap.get(drone.getCurrentTask().getZoneId());
+        Zone currDestinationZone = zoneMap.get(drone.getCurrentTask().getZoneId());
 
-        if (destinationZone == null || targetZone == null) {
+        if (currDestinationZone == null || newTargetZone == null) {
             return false; // Cannot determine without proper zone data
         }
 
         int droneX = drone.getX();
         int droneY = drone.getY();
         System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " LOCATION (" + droneX + "," + droneY + ") " +
-                "- COMPARED TO REQUEST ZONE: " + targetZone.toString() +
-                " AND DRONE DESTINATION: " + destinationZone.toString());
+                "- COMPARED TO REQUEST ZONE: " + newTargetZone.toString() +
+                " AND DRONE DESTINATION: " + currDestinationZone.toString());
 
 //        return false;
 
         // TODO: UNCOMMENT THE FOLLOWING LOCATION COMPARISON CALCULATIONS ....
-        // check if the drone is already in its destination zone
-        if (droneX >= destinationZone.getStartX() && droneX <= destinationZone.getEndX() &&
-                droneY >= destinationZone.getStartY() && droneY <= destinationZone.getEndY())
+        // prevents reassigning a drone that has already arrived at its current destination.
+        if (droneX >= currDestinationZone.getStartX() && droneX <= currDestinationZone.getEndX() &&
+                droneY >= currDestinationZone.getStartY() && droneY <= currDestinationZone.getEndY())
         {
-            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the DESTINATION zone... invalid reassignment.");
+            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the CURRENT DESTINATION zone... invalid reassignment.");
             return false;
         }
 
-        // check if the drone is already in the request zone
-        if (droneX >= targetZone.getStartX() && droneX <= targetZone.getEndX() &&
-                droneY >= targetZone.getStartY() && droneY <= targetZone.getEndY())
+        // if the drone is already in the new target zone then immediate reassignment is optimal and no further checking is required
+        if (droneX >= newTargetZone.getStartX() && droneX <= newTargetZone.getEndX() &&
+                droneY >= newTargetZone.getStartY() && droneY <= newTargetZone.getEndY())
         {
-            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the REQUEST zone... valid reassignment.");
+            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " is already in the NEW REQUEST zone... valid reassignment.");
             return true;
         }
 
@@ -696,34 +700,35 @@ public class Scheduler {
         // Logic for if Drone is going to pass through request zone before destination zone
 
         // get center of destination zone
-        int centerXDestination = (destinationZone.getStartX() + destinationZone.getEndX()) / 2;
-        int centerYDestination = (destinationZone.getStartY() + destinationZone.getEndY()) / 2;
+        int centerXCurrDestination = (currDestinationZone.getStartX() + currDestinationZone.getEndX()) / 2;
+        int centerYCurrDestination = (currDestinationZone.getStartY() + currDestinationZone.getEndY()) / 2;
 
         // get center of request zone
-        int centerXRequest = (targetZone.getStartX() + targetZone.getEndX()) / 2;
-        int centerYRequest = (targetZone.getStartY() + targetZone.getEndY()) / 2;
+        int centerXNewRequest = (newTargetZone.getStartX() + newTargetZone.getEndX()) / 2;
+        int centerYNewRequest = (newTargetZone.getStartY() + newTargetZone.getEndY()) / 2;
 
         // check distances to compare which zone the drone is closer to
-        double distanceToDestination = Math.sqrt(Math.pow(droneX - centerXDestination, 2) + Math.pow(droneY - centerYDestination, 2));
-        double distanceToRequest = Math.sqrt(Math.pow(droneX - centerXRequest, 2) + Math.pow(droneY - centerYRequest, 2));
+        double distanceToCurrDestination = Math.sqrt(Math.pow(droneX - centerXCurrDestination, 2) + Math.pow(droneY - centerYCurrDestination, 2));
+        double distanceToNewRequest = Math.sqrt(Math.pow(droneX - centerXNewRequest, 2) + Math.pow(droneY - centerYNewRequest, 2));
 
-        double droneSlope = (double) (destinationZone.getStartY() - droneY) / ( destinationZone.getStartX() - droneX );
+        double droneSlope = (double) (currDestinationZone.getStartY() - droneY) / ( currDestinationZone.getStartX() - droneX );
 
-
-        if (distanceToRequest <= distanceToDestination) {
-            if ( (targetZone.getStartX() * droneSlope) >= targetZone.getStartY() || (targetZone.getStartX() * droneSlope) <= targetZone.getEndY() ) {
+        // if new request is closer than current request
+        if (distanceToNewRequest <= distanceToCurrDestination) {
+            System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " not in either new or current zone... checking trajectory...");
+            if ( (newTargetZone.getStartX() * droneSlope) >= newTargetZone.getStartY() || (newTargetZone.getStartX() * droneSlope) <= newTargetZone.getEndY() ) {
                 return true;
             }
-            else if ( (targetZone.getEndX() * droneSlope) >= targetZone.getStartY() || (targetZone.getEndX() * droneSlope) <= targetZone.getEndY() ) {
+            else if ( (newTargetZone.getEndX() * droneSlope) >= newTargetZone.getStartY() || (newTargetZone.getEndX() * droneSlope) <= newTargetZone.getEndY() ) {
                 return true;
             }
-            else if ( (targetZone.getStartY() * droneSlope) >= targetZone.getStartX() || (targetZone.getStartY() * droneSlope) <= targetZone.getEndX() ) {
+            else if ( (newTargetZone.getStartY() * droneSlope) >= newTargetZone.getStartX() || (newTargetZone.getStartY() * droneSlope) <= newTargetZone.getEndX() ) {
                 return true;
             }
-            else if ( (targetZone.getEndY() * droneSlope) >= targetZone.getStartX() || (targetZone.getEndY() * droneSlope) <= targetZone.getEndX() ) {
+            else if ( (newTargetZone.getEndY() * droneSlope) >= newTargetZone.getStartX() || (newTargetZone.getEndY() * droneSlope) <= newTargetZone.getEndX() ) {
                 return true;
             }
-        }
+        } else System.out.println("\n[ SF ] - DRONE " + drone.getDroneId() + " not in either new or current zone... request is further than current assignment...");
 
         return false;
 

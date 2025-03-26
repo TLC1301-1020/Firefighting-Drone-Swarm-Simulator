@@ -15,7 +15,8 @@ public enum DroneEvent
     DRONE_STUCK("DRONE_STUCK"),
     STUCK_RESOLVED("STUCK_RESOLVED"),
     STATUS("STATUS"),
-    CONTINUING("CONTINUING");
+    CONTINUING("CONTINUING"),
+    RETURN_STATUS("RETURN_STATUS");
 
     /**
      * string value of event*/
@@ -52,6 +53,7 @@ public enum DroneEvent
             case "STUCK_RESOLVED": return STUCK_RESOLVED;
             case "STATUS": return STATUS;
             case "CONTINUING": return CONTINUING;
+            case "RETURN_STATUS": return RETURN_STATUS;
             default:
                 throw new IllegalArgumentException("Unknown event: " + stringEvent);
         }

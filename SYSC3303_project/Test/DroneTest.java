@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,6 +32,16 @@ public class DroneTest
         {
             receiveSocket.close();
         }
+    }
+
+    /**
+     * UNIT TEST: verify is default for instantiating default constructor fireRequest Objects */
+    @Test
+    void testFireRequestIsDefault() throws Exception
+    {
+        FireRequest fr = new FireRequest();
+        assertEquals("FireRequest{time=0, zone=-1, event=0, severity=0}", fr.toString());
+        assertTrue(fr.isDefault());
     }
 
     /**
@@ -311,7 +323,8 @@ public class DroneTest
         String result2 = (String) makeStatusRequest.invoke(drone);
 
         // assert the status to be sent is the  (ignoring location)
-        assertTrue(result2.contains("1:[ACTIVE][RETURNING]:STATUS:"));
+        assertTrue(result2.contains("1:[ACTIVE][RETURNING]:RETURN_STATUS:"));
+        assertFalse(result2.contains("1:[ACTIVE][RETURNING]:STATUS:"));
         assertTrue(result2.contains(":FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
 
         xPosField.set(drone, 0.0);

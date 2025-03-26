@@ -207,7 +207,7 @@ class DroneDeploy implements DroneState {
 class DroneReturn implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
-        if ( event.equals( DroneEvent.STATUS ) )
+        if ( event.equals( DroneEvent.RETURN_STATUS ) )
         {
             // continuing to return to base
             System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " is continuing to return to base after sending status update" );

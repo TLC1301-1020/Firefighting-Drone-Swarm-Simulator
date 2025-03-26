@@ -348,7 +348,9 @@ public class Drone implements Runnable
      */
     private String makeStatusRequest()
     {
-        return this.droneId+":"+this.currentState.display()+":"+DroneEvent.STATUS+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
+        DroneEvent status = DroneEvent.STATUS;
+        if(this.currentState.display().equals("[ACTIVE][RETURNING]") ) status = DroneEvent.RETURN_STATUS;    // check if this is a return or travel status
+        return this.droneId+":"+this.currentState.display()+":"+status+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
     }
 
     public String getLocation() {return "("+ this.xPos + "," + this.yPos+")";}
@@ -462,6 +464,12 @@ public class Drone implements Runnable
                 // hit if Scheduler responds with ACK when it receives and processes the drones location. drone waits for next instruction
                 System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.display() + ")  ...    " +eventRequest.toString() );
                 this.currentState.handleEvent(this, DroneEvent.STATUS);
+            }
+            else if ( eventRequest.equals(DroneEvent.RETURN_STATUS) )
+            {
+                // hit if Scheduler responds with ACK when it receives and processes the drones location on return travel. drone waits for next instruction
+                System.out.println("\n[ DRONE ]   ACK  RETURN_STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.display() + ")  ...    " +eventRequest.toString() );
+                this.currentState.handleEvent(this, DroneEvent.RETURN_STATUS);
             }
             else
             {
