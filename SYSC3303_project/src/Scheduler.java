@@ -34,9 +34,6 @@ public class Scheduler {
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
     /**
-     * Thread safe Queue to store multiple responses from FireIncidentSubsystem */
-    private final Queue<String> responseQueue = new ConcurrentLinkedQueue<>();
-    /**
      * hash map of {@link DroneStatus} objects by drone ID <p>DroneStatus stores drone data and is updated on the scheduler side only</p>*/
     private HashMap<Integer, DroneStatus> drones;
     private List<Integer> reassignedDrones;
@@ -114,29 +111,18 @@ public class Scheduler {
             while (true) {
                 System.out.println("\n[   SF]  -   SCHEDULER IS WAITING FOR MESSAGE FROM FIRE  -   ");
 
-                // This request will be a new FireRequest to add, or just a data request for an available Drone response
+                // This request will be a new FireRequest to add
                 String request = receivePacket(fireReceiveSocket);
 
                 System.out.print("\n[ SF<-F ]  -   SCHEDULER RECEIVED FROM FIRE: "+request+ "  -   ");
 
-                // This is a data request, and we will wait via takeResponse() until an available Drone response is ready to send back
-                if (request.contains("FIRE_DATA_REQUEST")) {
-                    String update = takeResponse();
-                    System.out.println("\n[ SF->F ]  -   SCHEDULER WILL NOW SEND TO FIRE  -   " + update);
-                    sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, update);
-                    System.out.println("\n[ SF->F ]  -   * SENT TO FIRE  -   " + update);
-                }
+                System.out.println("request is new fire request - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
 
-                // Otherwise it's a new FireRequest. Add it, and send back an acknowledgement
-                else {
-                    System.out.println("request is new fire request - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
-
-                    FireRequest fireRequest = new FireRequest(request);
-                    addRequest(fireRequest);
-                    System.out.println("\n[ SF->F ]  -   SCHEDULER WILL NOW SEND TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
-                    sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
-                    System.out.println("\n[ SF->F ]  -   * SENT TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
-                }
+                FireRequest fireRequest = new FireRequest(request);
+                addRequest(fireRequest);
+                System.out.println("\n[ SF->F ]  -   SCHEDULER WILL NOW SEND TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
+                sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
+                System.out.println("\n[ SF->F ]  -   * SENT TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
             }
         }
     }
@@ -309,7 +295,10 @@ public class Scheduler {
                 // Send an ACK with a completed to allow to transition to next state
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [DEPLOYING] *");
                 drone.setState("[DEPLOYING]");
-//                return "ACK:" + request + ":COMPLETED";
+                
+                // Send confirmation that this drone has completed its request asynchronously to the FireIncidentSubsystem
+                sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, drone.getCurrentTask()+ ":COMPLETED");
+
                 return "ACK:" + request;
             case PAYLOAD_DEPLOY_FAILURE:
                 drone.setState("[DEPLOY FAILURE]");
@@ -334,7 +323,7 @@ public class Scheduler {
                     // if task is defualt meaning they are sending a fire request to scheduler with no data
                     System.out.println(" \n[SD   ]***************** SHOULD HIT WHEN DRONE IS DONE REFILLING ******************* handleDroneRequest handling no data");
                     System.out.println(responseToDrone + "\n\n\n");
-                    addResponse(responseToDrone);
+                    // addResponse(responseToDrone);
                     drone.setCurrentTask(new FireRequest());
                 }
                 else
@@ -344,7 +333,6 @@ public class Scheduler {
                     System.out.println("\n[SD   ]***************** SHOULD hit when drone returns to base ******************* handleDroneRequest");
                     // add complete so scheduler passes to FIS the task is completed
                     System.out.println(responseToDrone+ ":COMPLETED \n\n\n");
-                    addResponse(responseToDrone+ ":COMPLETED");
                     drone.setCurrentTask(new FireRequest());
                 }
                 return "ACK:" + request;
@@ -742,50 +730,6 @@ public class Scheduler {
     public synchronized void addRequest(FireRequest request) {
         requestQueue.offer(request);
         System.out.println("From Scheduler - receiving request from fire incident: \n" + request + "\n");
-    }
-
-    /**
-     * returns a response from {@link Scheduler#responseQueue} sent from the {@link FireIncidentSubsystem} called from SF thread in {@link listenToFire}
-     *
-     * @return string response
-     */
-    public String takeResponse() {
-        synchronized (responseQueue) {
-            while (responseQueue.isEmpty()) {
-                try {
-                    System.out.println("\n[   SF]  -   WAITING FOR RESPONSE -   ");
-                    responseQueue.wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
-            }
-
-            String response = responseQueue.poll();
-            System.out.println("[   SF]  -   RESPONSE TAKEN FROM QUEUE: " + response);
-
-            return response;
-        }
-    }
-
-    /**
-     * adds a response to {@link Scheduler#responseQueue} added in the {@link Scheduler#handleDroneRequest} called from SD thread when the fireRequest
-     * is completed and drone returns to base after it refills
-     *
-     * @param response string object to add to the queue
-     */
-    public void addResponse(String response) {
-        if (response == null || response.isEmpty()) {
-            System.out.println("[  SP  ] - WARNING: Attempted to add an empty response!");
-            return;
-        }
-
-        synchronized (responseQueue) {
-            responseQueue.offer(response);
-            System.out.println("\n[  SP  ]  -   RESPONSE ADDED TO QUEUE: " + response);
-
-            responseQueue.notifyAll();
-        }
     }
 
     /**
