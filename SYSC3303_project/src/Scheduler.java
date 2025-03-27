@@ -51,6 +51,9 @@ public class Scheduler {
 
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, fireSendSocket, droneSendSocket;
     private final ConcurrentLinkedQueue<DroneAssignment> pendingAssignments = new ConcurrentLinkedQueue<>();
+    /**
+     * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of scheduler threads running */
+    private volatile boolean running = true;
 
     /**
      * Object used to store drones marked for 'interrupt' reassignment by SP thread for checking in SD thread */
@@ -108,7 +111,7 @@ public class Scheduler {
         public void run() {
             System.out.println("\n[   SF]  -   SCHEDULER IS LISTENING TO FIRE  -   ");
 
-            while (true) {
+            while (running) {
                 System.out.println("\n[   SF]  -   SCHEDULER IS WAITING FOR MESSAGE FROM FIRE  -   ");
 
                 // This request will be a new FireRequest to add
@@ -139,7 +142,7 @@ public class Scheduler {
         @Override
         public void run() {
             System.out.println("\n[SD  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
-            while (true) {
+            while (running) {
                 System.out.println("\n[SD  ]  -   SCHEDULER IS WAITING FOR MESSAGE FROM DRONE  -   ");
                 // Receive packet from the DroneSubsystem
                 String request = receivePacket(droneReceiveSocket);
@@ -170,7 +173,7 @@ public class Scheduler {
         @Override
         public void run() {
             System.out.println("\n[  SP  ]  -   SCHEDULER IS CHECKING LISTENING TO REQUEST QUEUE  -   ");
-            while (true) {
+            while (running) {
                 synchronized(requestQueue) {
                     if (!requestQueue.isEmpty()) {
                         FireRequest req = requestQueue.peek();
@@ -778,6 +781,18 @@ public class Scheduler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * gracefull exit for all thread function loops. running set to false only in testing contexts for back to back instances of scheduler threads running */
+    private void shutdown() {
+        this.running = false;
+
+        // close sockets if they are open
+        if (fireReceiveSocket != null && !fireReceiveSocket.isClosed()) fireReceiveSocket.close();
+        if (droneReceiveSocket != null && !droneReceiveSocket.isClosed()) droneReceiveSocket.close();
+        if (fireSendSocket != null && !fireSendSocket.isClosed()) fireSendSocket.close();
+        if (droneSendSocket != null && !droneSendSocket.isClosed()) droneSendSocket.close();
     }
 
     /**

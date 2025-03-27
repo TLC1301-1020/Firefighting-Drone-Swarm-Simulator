@@ -21,6 +21,20 @@ class SchedulerTest {
         scheduler = new Scheduler();
     }
 
+    /**
+        after each test function, calls Scheduler.shutdown() for gracefull exit of 3 scheduler threads */
+    @AfterEach
+    void tearDown() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        try
+        {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+        Method shutdown = Scheduler.class.getDeclaredMethod("shutdown");
+        shutdown.setAccessible(true);
+        shutdown.invoke(scheduler);
+    }
+
     @Test
     public void testNewRequestHasHigherSeverity() {
         FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Moderate");
