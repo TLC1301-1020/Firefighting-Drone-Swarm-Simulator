@@ -21,6 +21,10 @@ public class FireRequest {
      */
     private String severity;
 
+    private static int idCounter = 0;
+
+    private int id;
+
     /**
      * create a fire request instance with specified details
      * @param time the time of the fire incident
@@ -33,6 +37,7 @@ public class FireRequest {
         this.zoneId = zoneId;
         this.eventType = eventType;
         this.severity = severity;
+        this.id = ++FireRequest.idCounter;
     }
 
     public FireRequest() {
@@ -40,6 +45,7 @@ public class FireRequest {
         this.zoneId = -1;
         this.eventType = "0";
         this.severity = "0";
+        this.id = -1;
     }
 
     /**

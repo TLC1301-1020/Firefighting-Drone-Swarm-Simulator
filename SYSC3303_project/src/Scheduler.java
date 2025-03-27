@@ -176,16 +176,18 @@ public class Scheduler {
             while (running) {
                 synchronized(requestQueue) {
                     if (!requestQueue.isEmpty()) {
-                        FireRequest req = requestQueue.peek();
+                        // request is removed here and added back only if it is not assigned to a drone
+                        FireRequest req = requestQueue.remove();
 
                         System.out.println("\n[  SP  ]  -   SCHEDULER REQUEST QUEUE REMOVED  -       " + req.toString());
 
-                        if ( assignFireRequest(req) )
+                        if ( assignFireRequest(req) )   // returns true if drone was assigned this fire request
                         {
                             System.out.println("\n[  SP  ]  -   SCHEDULER SUCCESSFULLY TASKED A DRONE TO ANSWER REQUEST  -       " + req.toString());
                         }
                         else
-                        {
+                        {   // request is added back here only when it is not assigned to a drone
+                            requestQueue.add(req);
                             System.out.println("\n[  SP  ]  -   SCHEDULER FOUND NO DRONES TO ANSWER REQUEST              -       " + req.toString());
                             try {
                                 Thread.sleep(100); // Check every 1000ms; adjust as needed.
@@ -410,10 +412,6 @@ public class Scheduler {
         // FOLLOWING LOGIC IS FOR preserving previous task for drone in case they are reassigned
         FireRequest previousTask = selectedDrone.getCurrentTask();
         selectedDrone.setCurrentTask(fireRequest);  // set the task to the new one so scheduler knows but do not set the drone state
-
-        // TODO: Instead of removing this request, need to take into account severity, and possibly
-        // TODO: throw it back at the start of the queue to be assigned to different drones
-        removeRequest(fireRequest);
 
         // FOLLOWING LOGIC IS checking if drone had previous default task and if not if that drones state is traveling        // Build request string in expected format: "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         if ( !previousTask.isDefault() && selectedDrone.getState().equals("[TRAVELING]"))

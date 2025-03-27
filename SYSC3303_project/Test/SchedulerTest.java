@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -345,20 +346,18 @@ class SchedulerTest {
         idleDrone.setState("[IDLE]");
         drones.put(1, idleDrone);
 
-        // add new fire request
-        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
-        requestQueueField.setAccessible(true);
-        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-        requestQueue.offer(request);
-
         // invoke assignFireRequest
         boolean result = (boolean) assignFireRequest.invoke(this.scheduler, request);
 
         // check fire request added
         assertTrue(result);
 
-        // check fire request was removed from queue
+        // check new request was not added to queue // check request queue is now empty
+        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
+        requestQueueField.setAccessible(true);
+        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
         assertFalse(requestQueue.contains(request));
+        assertTrue(requestQueue.isEmpty());
 
         // check drone task is updated correctly
         DroneStatus updatedDrone = drones.get(1);
@@ -404,29 +403,22 @@ class SchedulerTest {
         travelingDrone.setLocation(20, 20); // in neither zones
         drones.put(1, travelingDrone);
 
-        // add new request to queue
-        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
-        requestQueueField.setAccessible(true);
-        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-        requestQueue.offer(newRequest);
-
         // invoke assignFireRequest
         boolean result = (boolean) assignFireRequest.invoke(this.scheduler, newRequest);
 
         // check fireRequest was reassigned/assigned to a drone
         assertTrue(result);
 
-        // check new request was removed from queue
+        // check new request was not added to queue // check old fire request was stored in request queue
+        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
+        requestQueueField.setAccessible(true);
+        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
         assertFalse(requestQueue.contains(newRequest));
+        assertTrue(requestQueue.contains(oldRequest));
 
         // check drone task is the new task
         DroneStatus updatedDrone = drones.get(1);
         assertEquals(newRequest.toString(), updatedDrone.getCurrentTask().toString());
-
-        // check old fire request was stored in request queue
-        requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-        FireRequest remaining = requestQueue.peek();
-        assertTrue(remaining.equals(oldRequest));
 
         // check that the followup assignment for the old fire request was not given again to the drone that was reassigned (no new assignment made for that drone)
         Field pendingAssignmentsField = Scheduler.class.getDeclaredField("pendingAssignments");
@@ -469,29 +461,22 @@ class SchedulerTest {
         travelingDrone.setLocation(25, 25); // inside zone1 (on path to zone3)
         drones.put(1, travelingDrone);
 
-        // add new request for zone1
-        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
-        requestQueueField.setAccessible(true);
-        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-        requestQueue.offer(newRequest);
-
         // invoke assignFireRequest
         boolean result = (boolean) assignFireRequest.invoke(this.scheduler, newRequest);
 
         // check fireRequest was reassigned to a drone
         assertTrue(result);
 
-        // check new request was removed from queue
+        // check new request was not added to queue // check old fire request was stored in request queue
+        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
+        requestQueueField.setAccessible(true);
+        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
         assertFalse(requestQueue.contains(newRequest));
+        assertTrue(requestQueue.contains(oldRequest));
 
         // check drone now has the new task
         DroneStatus updatedDrone = drones.get(1);
         assertEquals(newRequest.toString(), updatedDrone.getCurrentTask().toString());
-
-        // check old request was re-added to queue
-        requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-        FireRequest remaining = requestQueue.peek();
-        assertTrue(remaining.equals(oldRequest));
 
         // check that the assignment was placed in pendingAssignments to be handled (removed + assigned) when handleDroneRequest is called
         Field pendingAssignmentsField = Scheduler.class.getDeclaredField("pendingAssignments");
@@ -595,12 +580,6 @@ class SchedulerTest {
         travelingDrone.setLocation(24, 24); // inside zone1 (on path to zone3)
         drones.put(1, travelingDrone);
 
-        // add new request for zone1
-        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
-        requestQueueField.setAccessible(true);
-        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-        requestQueue.offer(newRequest);
-
         // invoke assignFireRequest
         boolean result = (boolean) assignFireRequest.invoke(this.scheduler, newRequest);
 
@@ -611,10 +590,12 @@ class SchedulerTest {
         DroneStatus updatedDrone = drones.get(1);
         assertEquals(newRequest.toString(), updatedDrone.getCurrentTask().toString());
 
-        // check old request was re-added to queue
-        requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-        FireRequest remaining = requestQueue.peek();
-        assertTrue(remaining.equals(oldRequest));
+        // check new request was not added to queue // check old fire request was stored in request queue
+        Field requestQueueField = Scheduler.class.getDeclaredField("requestQueue");
+        requestQueueField.setAccessible(true);
+        Queue<FireRequest> requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
+        assertFalse(requestQueue.contains(newRequest));
+        assertTrue(requestQueue.contains(oldRequest));
 
         // check that the assignment was placed in pendingAssignments to be handled (removed + assigned) when handleDroneRequest is called
         Field pendingAssignmentsField = Scheduler.class.getDeclaredField("pendingAssignments");
