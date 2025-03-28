@@ -430,4 +430,11 @@ public class Drone extends Thread
         this.xPos = 0;
         this.yPos = 0;
     }
+
+    public boolean getIsJammed(){
+        return isJammed;
+    }
+    public boolean getIsStuck(){
+        return isStuck;
+    }
 }

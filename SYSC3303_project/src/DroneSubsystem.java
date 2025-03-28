@@ -241,7 +241,6 @@ public class DroneSubsystem implements Runnable {
                 }
 
                 Drone drone = drones.get(droneId);
-
                 switch (parts[0]) {
                     case "DRONE_STUCK":
                         drone.setStuckFault();

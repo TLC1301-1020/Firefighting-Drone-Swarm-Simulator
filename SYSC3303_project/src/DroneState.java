@@ -52,7 +52,7 @@ class DroneIdle implements DroneState {
         }
         else if (  event.equals( DroneEvent.STATUS ) )
         {
-            // returns to this point when scheduler acknowlodges drones location and processes it. Waiting for next assignment from scheduler thread handling new assignments
+            // returns to this point when scheduler acknowledges drones location and processes it. Waiting for next assignment from scheduler thread handling new assignments
             System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " is waiting for next instruction after interrupt at    " + drone.getLocation());
         }
     }
@@ -165,6 +165,11 @@ class DroneTravel implements DroneState
         if (drone.getContinueTravel()) {
             return String.valueOf(DroneEvent.CONTINUING);
         }
+
+        //TODO: ITERATION 4
+        if(drone.getIsStuck()) return String.valueOf(DroneEvent.DRONE_STUCK);
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.JAMMED);
+
         return String.valueOf(DroneEvent.PERMISSION_TO_DROP);
     }
 }
@@ -191,6 +196,9 @@ class DroneDeploy implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
+        //TODO: ITERATION 4
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.JAMMED);
+
         return String.valueOf(DroneEvent.PAYLOAD_DROPPED);
     }
 }
@@ -212,12 +220,11 @@ class DroneReturn implements DroneState {
             /*
             System.out.println("DRONE " + drone.getDroneId() + " has returned to base and is now refilling payload");
             drone.setState( new DroneRefill() );
-
             */
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) ) {
             // drone became stuck during active flight return
-            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is stuck during return flight");
+            System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() +" is stuck during return flight");
             // set state to fault of stuck
             drone.setState( new DroneFault(new DroneFaultStuck()) );
         }
@@ -229,6 +236,8 @@ class DroneReturn implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
+        if(drone.getIsStuck()) return String.valueOf(DroneEvent.DRONE_STUCK);
+
         return String.valueOf(DroneEvent.RETURNED_TO_BASE);
     }
 }
@@ -260,6 +269,9 @@ class DroneRefill implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
+        //TODO: ITERATION 4
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.JAMMED);
+
         return String.valueOf(DroneEvent.REFILL_COMPLETE);
     }
 }
