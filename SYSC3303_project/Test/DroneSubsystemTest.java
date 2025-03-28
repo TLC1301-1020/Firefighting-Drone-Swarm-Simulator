@@ -73,9 +73,9 @@ class DroneSubsystemTest {
         ArrayList<Event> faultList = droneSubsystem.getFaults();
         assertEquals(3, faultList.size(), "Should have 2 faults in the list.");
 
-        Event event1 = new Event("DRONE_STUCK:0","10-30-15");
-        Event event2 = new Event("NOZZLE_JAMMED:0","10-30-55");
-        Event event3 = new Event("PACKET_LOSS:0","10-31-55");
+        Event event1 = new Event("DRONE_STUCK:0","10-00-05");
+        Event event2 = new Event("NOZZLE_JAMMED:0","10-00-10");
+        Event event3 = new Event("PACKET_LOSS:0","10-00-15");
         assertEquals(event1.getEventTime(),droneSubsystem.getFaults().get(0).getEventTime(), "The time of two events should be the same.");
         assertEquals(event2.getEventTime(),droneSubsystem.getFaults().get(1).getEventTime(), "The time of two events should be the same.");
         assertEquals(event3.getEventTime(),droneSubsystem.getFaults().get(2).getEventTime(), "The time of two events should be the same.");

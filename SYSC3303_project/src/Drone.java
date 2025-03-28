@@ -276,11 +276,21 @@ public class Drone extends Thread
         {
 //            System.out.println("\n[ DRONE RUN ] starting DRONE RUN id key: " + this.droneId );
             String request;
-            // check if drone should send its location status as a request, otherwise, sends normal request based on state
-            if( checkSendStatus()) request = makeStatusRequest();
-            else                    request = makeRequest();
 
 //            System.out.println("\n[ DRONE RUN ] making request DRONE RUN id key: " + this.droneId + " :         " + request);
+
+            // If this drone is injected with a PACKET_LOSS fault, send corrupted packet instead
+            if (packetLoss) {
+                request = "CORRUPTED_PACKET";
+                packetLoss = false;
+            }
+            // check if drone should send its location status as a request, otherwise, sends normal request based on state
+            else if (checkSendStatus()) {
+                request = makeStatusRequest();
+            }
+            else {
+                request = makeRequest();
+            }
 
             // adds the request to the router host
             this.droneSubsystem.addRequest( request );
@@ -288,6 +298,12 @@ public class Drone extends Thread
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
+
+            // First check to see if Scheduler needs a resend of last request
+            if (response.contains("RESEND")) {
+                continue;
+            }
+
             // handle instructions given, will trigger travel()
             handleResponse(response);
         }

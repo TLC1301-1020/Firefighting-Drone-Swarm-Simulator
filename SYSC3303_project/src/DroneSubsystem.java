@@ -241,18 +241,23 @@ public class DroneSubsystem implements Runnable {
                 }
 
                 Drone drone = drones.get(droneId);
-                switch (parts[0]) {
-                    case "DRONE_STUCK":
-                        drone.setStuckFault();
-                        break;
-                    case "NOZZLE_JAMMED":
-                        drone.setJammedFault();
-                        break;
-                    case "PACKET_LOSS":
-                        drone.setPacketLossFault();
-                        break;
-                }
 
+                if (drone != null) {
+                    switch (parts[0]) {
+                        case "DRONE_STUCK":
+                            drone.setStuckFault();
+                            break;
+                        case "NOZZLE_JAMMED":
+                            drone.setJammedFault();
+                            break;
+                        case "PACKET_LOSS":
+                            drone.setPacketLossFault();
+                            break;
+                    }
+                    System.out.println("\nDRONE " + droneId + " injected with " + parts[0] + " fault\n");
+                } else {
+                    System.out.println("\nFault " + parts[0] + " failed to inject: Invalid Drone ID\n");
+                }
             }
         }
     }
@@ -267,7 +272,6 @@ public class DroneSubsystem implements Runnable {
      * 3. receives responses from scheduler and puts them unmodified in {@code DroneSubsystem.responseQueue}
      */
     public void run() {
-
         // TODO: determine a proper condition for thread lifespan
         // Start listening to Scheduler messages in a separate thread
         startListeningToScheduler();
