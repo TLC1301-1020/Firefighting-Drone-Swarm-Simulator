@@ -21,9 +21,7 @@ public class FireRequest {
      */
     private String severity;
 
-    private static int idCounter = 0;
-
-    private int id;
+    private String id;
 
     /**
      * create a fire request instance with specified details
@@ -32,12 +30,12 @@ public class FireRequest {
      * @param eventType the type of fire event
      * @param severity the severity level of the fire
      */
-    public FireRequest(String time, int zoneId, String eventType, String severity) {
+    public FireRequest(String time, int zoneId, String eventType, String severity, String id) {
         this.time = time;
         this.zoneId = zoneId;
         this.eventType = eventType;
         this.severity = severity;
-        this.id = ++FireRequest.idCounter;
+        this.id = id;
     }
 
     public FireRequest() {
@@ -45,7 +43,7 @@ public class FireRequest {
         this.zoneId = -1;
         this.eventType = "0";
         this.severity = "0";
-        this.id = -1;
+        this.id = "0";
     }
 
     /**
@@ -70,6 +68,9 @@ public class FireRequest {
                     break;
                 case "severity":
                     this.severity = value[1];
+                    break;
+                case "id":
+                    this.id = value[1];
                     break;
             }
         }
@@ -124,6 +125,8 @@ public class FireRequest {
                 this.severity.equals("0");
     }
 
+    public String getId() {return this.id;}
+
     /**
      * creates a string representation of the fire request object
      * @return formatted string representing the fire request
@@ -131,8 +134,8 @@ public class FireRequest {
     @Override
     public String toString() {
         return String.format(
-                "FireRequest{time=%s, zone=%d, event=%s, severity=%s}",
-                time, zoneId, eventType, severity
+                "FireRequest{time=%s, zone=%d, event=%s, severity=%s, id=%s}",
+                time, zoneId, eventType, severity, id
         );
     }
 }

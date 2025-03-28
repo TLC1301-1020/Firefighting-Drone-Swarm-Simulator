@@ -38,40 +38,40 @@ class SchedulerTest {
 
     @Test
     public void testNewRequestHasHigherSeverity() {
-        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Moderate");
-        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "High");
+        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Moderate", "1");
+        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "High", "2");
 
         assertTrue(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
     @Test
     public void testNewRequestHasEqualSeverity() {
-        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Moderate");
-        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Moderate");
+        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Moderate", "1");
+        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Moderate", "2");
 
         assertTrue(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
     @Test
     public void testNewRequestHasLowerSeverity() {
-        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "High");
-        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Moderate");
+        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "High", "1");
+        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Moderate", "2");
 
         assertFalse(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
     @Test
     public void testHandlesUnknownSeverityGracefully() {
-        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "High");
-        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Unknown");
+        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "High", "1");
+        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Unknown", "2");
 
         assertFalse(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
     @Test
     public void testBothSeveritiesUnknown() {
-        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Blah");
-        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Blah");
+        FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Blah", "1");
+        FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Blah", "2");
 
         assertTrue(scheduler.isNewRequestMoreSevere(current, incoming)); // both default to 0 -> equal
     }
@@ -98,34 +98,34 @@ class SchedulerTest {
 
         // check default drone status object is in idle state when not assigned
         assertNotNull(drone);
-        assertEquals("1:[IDLE]:0:0", drone.toString());
+        assertEquals("1:[IDLE]:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", drone.toString());
         assertTrue(drone.getCurrentTask().isDefault());
 
 
         // handle first waiting drone request
-        String req1 = "1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}";
+        String req1 = "1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}";
 
         String res1 = (String) handleDroneRequest.invoke(this.scheduler, req1);
 
         // check response from scheduler should be...
-        assertEquals("WAIT:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}", res1);     // ***
+        assertEquals("WAIT:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", res1);     // ***
         // check drone status obj
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[IDLE]:0:0", drone.toString());
+        assertEquals("1:[IDLE]:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", drone.toString());
         assertTrue(drone.getCurrentTask().isDefault());
 
 
         // handle followup waiting drone request
-        String req2 = "1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}";
+        String req2 = "1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}";
         String res2 = (String) handleDroneRequest.invoke(this.scheduler, req2);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}", res2);                // ***
+        assertEquals("ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", res2);                // ***
         // check drone status obj
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[IDLE]:0:0", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[IDLE]:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", drone.toString()); // <- DRONE STATUS DATA IS
         assertTrue(drone.getCurrentTask().isDefault());
 
 
@@ -133,117 +133,117 @@ class SchedulerTest {
         Field assignments = Scheduler.class.getDeclaredField("pendingAssignments");
         assignments.setAccessible(true);
         ConcurrentLinkedQueue<Scheduler.DroneAssignment> pendingAssignments = (ConcurrentLinkedQueue<Scheduler.DroneAssignment>) assignments.get(this.scheduler);
-        pendingAssignments.add(new Scheduler.DroneAssignment(1, new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}")));
+        pendingAssignments.add(new Scheduler.DroneAssignment(1, new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}")));
 
-        String req3 = "1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}";
+        String req3 = "1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}";
         String res3 = (String) handleDroneRequest.invoke(this.scheduler, req3);
 
         // check response from scheduler should be...
-        assertEquals("NEW:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}", res3);                // ***
+        assertEquals("NEW:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", res3);                // ***
         // check drone status obj for the following coupled data: 1:[IDLE]:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[IDLE]:0:0", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[IDLE]:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}",drone.getCurrentTask().toString());
 
 
         // handle travel status update (no interrupt)
-        String req4 = "1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}";
+        String req4 = "1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}";
         String res4 = (String) handleDroneRequest.invoke(this.scheduler, req4);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}", res4);             // ***
+        assertEquals("ACK:1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", res4);             // ***
         // check drone status obj for the following coupled data: 1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[TRAVELING]:28:9", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[TRAVELING]:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}",drone.getCurrentTask().toString());
 
 
         // handle drone arrive at zone
-        String req5 = "1:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}";
+        String req5 = "1:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}";
         String res5 = (String) handleDroneRequest.invoke(this.scheduler, req5);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}", res5);             // ***
+        assertEquals("ACK:1:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", res5);             // ***
         // check drone status obj for the following coupled data:
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[TRAVELING]:850:300", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[TRAVELING]:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}",drone.getCurrentTask().toString());
 
 
         // handle drone payload dropped
-        String req6 = "1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}";
+        String req6 = "1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}";
         String res6 = (String) handleDroneRequest.invoke(this.scheduler, req6);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}", res6);             // ***
+        assertEquals("ACK:1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", res6);             // ***
         // check drone status obj for the following coupled data:
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[DEPLOYING]:850:300", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[DEPLOYING]:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}",drone.getCurrentTask().toString());
 
 
         // handle drone return travel status
-        String req7 = "1:[ACTIVE][RETURNING]:RETURN_STATUS:821:290:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}";
+        String req7 = "1:[ACTIVE][RETURNING]:RETURN_STATUS:821:290:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}";
         String res7 = (String) handleDroneRequest.invoke(this.scheduler, req7);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:821:290:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}", res7);             // ***
+        assertEquals("ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:821:290:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", res7);             // ***
         // check drone status obj for the following coupled data:
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[RETURNING]:821:290", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[RETURNING]:821:290:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}",drone.getCurrentTask().toString());
 
 
         // handle drone returned to based
-        String req8 = "1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}";
+        String req8 = "1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}";
         String res8 = (String) handleDroneRequest.invoke(this.scheduler, req8);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}", res8);             // ***
+        assertEquals("ACK:1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", res8);             // ***
         // check drone status obj for the following coupled data:
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[RETURNING]:0:0", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[RETURNING]:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}",drone.getCurrentTask().toString());
 
 
         // handle drone refill
-        String req9 = "1:[REFILLING]:REFILL_COMPLETE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}";
+        String req9 = "1:[REFILLING]:REFILL_COMPLETE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}";
         String res9 = (String) handleDroneRequest.invoke(this.scheduler, req9);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[REFILLING]:REFILL_COMPLETE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}", res9);             // ***
+        assertEquals("ACK:1:[REFILLING]:REFILL_COMPLETE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}", res9);             // ***
         // check drone status obj for the following coupled data:
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[REFILLING]:0:0", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[REFILLING]:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", drone.toString()); // <- DRONE STATUS DATA IS
         assertTrue(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=0, zone=-1, event=0, severity=0}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=0, zone=-1, event=0, severity=0, id=0}",drone.getCurrentTask().toString());
 
 
         // handle drone return to IDLE
-        String req10 = "1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}";
+        String req10 = "1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}";
         String res10 = (String) handleDroneRequest.invoke(this.scheduler, req10);
 
         // check response from scheduler should be...
-        assertEquals("WAIT:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}", res10);             // ***
+        assertEquals("WAIT:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", res10);             // ***
         // check drone status obj for the following coupled data:
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[IDLE]:0:0", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[IDLE]:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", drone.toString()); // <- DRONE STATUS DATA IS
         assertTrue(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=0, zone=-1, event=0, severity=0}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=0, zone=-1, event=0, severity=0, id=0}",drone.getCurrentTask().toString());
     }
 
     /**
@@ -267,63 +267,63 @@ class SchedulerTest {
 
         // check default drone status object is in idle state when not assigned
         assertNotNull(drone);
-        assertEquals("1:[IDLE]:0:0", drone.toString());
+        assertEquals("1:[IDLE]:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", drone.toString());
         assertTrue(drone.getCurrentTask().isDefault());
 
         // handle first waiting drone request
-        String req1 = "1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}";
+        String req1 = "1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}";
         String res1 = (String) handleDroneRequest.invoke(this.scheduler, req1);
         // check response from scheduler should be...
-        assertEquals("WAIT:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}", res1);     // ***
+        assertEquals("WAIT:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", res1);     // ***
 
 
         // handle new fire request on waiting drone request
         Field assignments = Scheduler.class.getDeclaredField("pendingAssignments");
         assignments.setAccessible(true);
         ConcurrentLinkedQueue<Scheduler.DroneAssignment> pendingAssignments = (ConcurrentLinkedQueue<Scheduler.DroneAssignment>) assignments.get(this.scheduler);
-        pendingAssignments.add(new Scheduler.DroneAssignment(1, new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low}")));
+        pendingAssignments.add(new Scheduler.DroneAssignment(1, new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}")));
 
-        String req3 = "1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}";
+        String req3 = "1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}";
         String res3 = (String) handleDroneRequest.invoke(this.scheduler, req3);
 
         // check response from scheduler should be...
-        assertEquals("NEW:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low}", res3);                // ***
+        assertEquals("NEW:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}", res3);                // ***
         // check drone status obj for the following coupled data: 1:[IDLE]:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[IDLE]:0:0", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[IDLE]:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}",drone.getCurrentTask().toString());
 
 
         // handle travel status update (no interrupt)
-        String req4 = "1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low}";
+        String req4 = "1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}";
         String res4 = (String) handleDroneRequest.invoke(this.scheduler, req4);
 
         // check response from scheduler should be...
-        assertEquals("ACK:1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low}", res4);             // ***
+        assertEquals("ACK:1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}", res4);             // ***
         // check drone status obj for the following coupled data: 1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[TRAVELING]:28:9", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[TRAVELING]:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}",drone.getCurrentTask().toString());
 
 
         pendingAssignments = (ConcurrentLinkedQueue<Scheduler.DroneAssignment>) assignments.get(this.scheduler);
-        pendingAssignments.add(new Scheduler.DroneAssignment(1, new FireRequest("FireRequest{time=10-31-15, zone=5, event=FIRE_DETECTED, severity=Moderate}")));
+        pendingAssignments.add(new Scheduler.DroneAssignment(1, new FireRequest("FireRequest{time=10-31-15, zone=5, event=FIRE_DETECTED, severity=Moderate, id=2A}")));
 
-        String req5 = "1:[ACTIVE][TRAVELING]:STATUS:50:25:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low}";
+        String req5 = "1:[ACTIVE][TRAVELING]:STATUS:50:25:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}";
         String res5 = (String) handleDroneRequest.invoke(this.scheduler, req5);
 
         // check response from scheduler should be...
-        assertEquals("NEW:1:[TRAVELING]:NEW_FIRE_REQUEST:50:25:FireRequest{time=10-31-15, zone=5, event=FIRE_DETECTED, severity=Moderate}", res5);             // ***
+        assertEquals("NEW:1:[TRAVELING]:NEW_FIRE_REQUEST:50:25:FireRequest{time=10-31-15, zone=5, event=FIRE_DETECTED, severity=Moderate, id=2A}", res5);             // ***
         // check drone status obj for the following coupled data: 1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}
         allDrones = (HashMap<Integer, DroneStatus>) drones.get(this.scheduler);
         drone = allDrones.get(1);
-        assertEquals("1:[TRAVELING]:50:25", drone.toString()); // <- DRONE STATUS DATA IS
+        assertEquals("1:[TRAVELING]:50:25:FireRequest{time=10-31-15, zone=5, event=FIRE_DETECTED, severity=Moderate, id=2A}", drone.toString()); // <- DRONE STATUS DATA IS
         assertFalse(drone.getCurrentTask().isDefault());
-        assertEquals( "FireRequest{time=10-31-15, zone=5, event=FIRE_DETECTED, severity=Moderate}",drone.getCurrentTask().toString());
+        assertEquals( "FireRequest{time=10-31-15, zone=5, event=FIRE_DETECTED, severity=Moderate, id=2A}",drone.getCurrentTask().toString());
     }
 
 
@@ -560,8 +560,8 @@ class SchedulerTest {
         assignFireRequest.setAccessible(true);
 
         // create 2 fire requests (old and new)
-        FireRequest oldRequest = new FireRequest("FireRequest{time=10-30-00, zone=4, event=FIRE_DETECTED, severity=Moderate}");
-        FireRequest newRequest = new FireRequest("FireRequest{time=10-31-15, zone=3, event=FIRE_DETECTED, severity=Moderate}");
+        FireRequest oldRequest = new FireRequest("FireRequest{time=10-30-00, zone=4, event=FIRE_DETECTED, severity=Moderate, id=1A}");
+        FireRequest newRequest = new FireRequest("FireRequest{time=10-31-15, zone=3, event=FIRE_DETECTED, severity=Moderate, id=2A}");
 
         // define 4 touching zones
         Scheduler.zoneMap.put(1, new Zone(1, 0, 0, 50, 50));     // zone1
@@ -605,7 +605,7 @@ class SchedulerTest {
         Scheduler.DroneAssignment da = pendingAssignments.poll();
 
         assertEquals(1, da.droneId);
-        assertEquals( "FireRequest{time=10-31-15, zone=3, event=FIRE_DETECTED, severity=Moderate}", da.request.toString());
+        assertEquals( "FireRequest{time=10-31-15, zone=3, event=FIRE_DETECTED, severity=Moderate, id=2A}", da.request.toString());
     }
 
 
@@ -665,6 +665,62 @@ class SchedulerTest {
         pendingAssignmentsField.setAccessible(true);
         ConcurrentLinkedQueue<Scheduler.DroneAssignment> pendingAssignments = (ConcurrentLinkedQueue<Scheduler.DroneAssignment>) pendingAssignmentsField.get(this.scheduler);
         assertTrue(pendingAssignments.isEmpty());
+    }
+
+
+    /**
+     * SYSTEM TEST: test that makeFireRequests() correctly generates multiple FireRequest objects
+     * for each severity level: Low (1), Moderate (2), High (3).
+     */
+    @Test
+    public void test_makeFireRequests_generatesCorrectCount() throws Exception {
+
+        // Access the private makeFireRequests method
+        Method makeFireRequests = Scheduler.class.getDeclaredMethod("makeFireRequests", String.class);
+        makeFireRequests.setAccessible(true);
+
+        // Prepare test inputs
+        String requestLow = "FireRequest{time=12:00, zone=1, event=FIRE_DETECTED, severity=Low, id=1}";
+        String requestModerate = "FireRequest{time=12:01, zone=2, event=FIRE_DETECTED, severity=Moderate, id=2}";
+        String requestHigh = "FireRequest{time=12:02, zone=3, event=FIRE_DETECTED, severity=High, id=3}";
+
+        // Invoke and assert LOW (should create 1)
+        Queue<FireRequest> lowQueue = (Queue<FireRequest>) makeFireRequests.invoke(scheduler, requestLow);
+        assertEquals(1, lowQueue.size());
+        assertTrue(lowQueue.stream().allMatch(fr -> fr.getSeverity().equals("Low")));
+        // Check sub-IDs are appended correctly (optional)
+        String[] expectedIds1 = {"1A"};
+        int i = 0;
+        for (FireRequest fr : lowQueue) {
+            System.out.println(fr);
+            assertEquals(expectedIds1[i++], fr.getId());
+        }
+
+        // Invoke and assert MODERATE (should create 2)
+        Queue<FireRequest> moderateQueue = (Queue<FireRequest>) makeFireRequests.invoke(scheduler, requestModerate);
+        assertEquals(2, moderateQueue.size());
+        assertTrue(moderateQueue.stream().allMatch(fr -> fr.getSeverity().equals("Moderate")));
+
+        // Check sub-IDs are appended correctly (optional)
+        String[] expectedIds2 = {"2A", "2B"};
+        i = 0;
+        for (FireRequest fr : moderateQueue) {
+            System.out.println(fr);
+            assertEquals(expectedIds2[i++], fr.getId());
+        }
+
+        // Invoke and assert HIGH (should create 3)
+        Queue<FireRequest> highQueue = (Queue<FireRequest>) makeFireRequests.invoke(scheduler, requestHigh);
+        assertEquals(3, highQueue.size());
+        assertTrue(highQueue.stream().allMatch(fr -> fr.getSeverity().equals("High")));
+
+        // Check sub-IDs are appended correctly (optional)
+        String[] expectedIds3 = {"3A", "3B", "3C"};
+        i = 0;
+        for (FireRequest fr : highQueue) {
+            System.out.println(fr);
+            assertEquals(expectedIds3[i++], fr.getId());
+        }
     }
 
 //    @Test

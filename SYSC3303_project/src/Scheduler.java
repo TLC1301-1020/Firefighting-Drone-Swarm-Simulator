@@ -121,14 +121,89 @@ public class Scheduler {
 
                 System.out.println("request is new fire request - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
 
-                FireRequest fireRequest = new FireRequest(request);
-                addRequest(fireRequest);
+                Queue<FireRequest> fireRequests = makeFireRequests(request);
+//                FireRequest fireRequest = new FireRequest(request);
+                for( FireRequest fr : fireRequests ) addRequest(fr);
+
                 System.out.println("\n[ SF->F ]  -   SCHEDULER WILL NOW SEND TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
                 sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
                 System.out.println("\n[ SF->F ]  -   * SENT TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
             }
         }
     }
+
+    /**
+     * Parses a single FireRequest string and expands it into multiple {@link FireRequest} objects
+     * based on its severity level.
+     * <p>
+     * The number of fire requests created is determined by the severity:
+     * <ul>
+     *   <li>Low &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 1 FireRequest</li>
+     *   <li>Moderate → 2 FireRequests</li>
+     *   <li>High &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 3 FireRequests</li>
+     * </ul>
+     * Each generated request has a unique sub-ID appended (eg A, B, C) to indicate this was a split request
+     * <p>
+     * The input string must follow the format produced by {@code FireRequest.toString()}:
+     * <pre>
+     * FireRequest{time=12:00, zone=2, event=FIRE_DETECTED, severity=High, id=1}
+     * </pre>
+     *
+     * @param request the string representation of a FireRequest
+     * @return a queue of FireRequest objects with adjusted IDs and same metadata
+     */
+    private Queue<FireRequest> makeFireRequests(String request)
+    {
+        Queue<FireRequest> fireRequests = new LinkedList<>();
+
+        request = request.replace("FireRequest{", "").replace("}", "");
+        String[] parts = request.split(", ");
+
+        int requestsRequired = 0;
+        for (String part : parts)
+        {
+            if(part.contains("severity"))
+            {
+                if (part.contains("High")) requestsRequired = 3;
+                else if (part.contains("Moderate")) requestsRequired = 2;
+                else if (part.contains("Low")) requestsRequired = 1;
+            }
+        }
+        String[] subID = {"A","B","C"};
+        for( int i = 0 ; i < requestsRequired ; ++i )
+        {
+            String time = "0";
+            int zoneId = -1;
+            String eventType = "0";
+            String severity = "0";
+            String id = "0";
+
+            for (String part : parts) {
+                String[] value = part.split("=");
+                switch (value[0]) {
+                    case "time":
+                        time = value[1];
+                        break;
+                    case "zone":
+                        zoneId = Integer.parseInt(value[1]);
+                        break;
+                    case "event":
+                        eventType = value[1];
+                        break;
+                    case "severity":
+                        severity = value[1];
+                        break;
+                    case "id":
+                        id = value[1]+subID[i];
+                        break;
+                }
+            }
+            fireRequests.add(new FireRequest(time, zoneId, eventType, severity, id));
+        }
+        return fireRequests;
+    }
+
+
 
     /**
      * SD Thread to listen to packets from {@link DroneSubsystem} and calls {@link Scheduler#handleDroneRequest} to handle the requests
@@ -228,12 +303,12 @@ public class Scheduler {
             return "ACK:" + droneId + ":REGISTERED";
         }
 
-        // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+        // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID"
         String[] items = request.split(":");
-        if (items.length != 6) return "ERROR: Invalid request format:" + request;
+//        if (items.length != 6) return "ERROR: Invalid request format:" + request;
         FireRequest currTask = new FireRequest(items[5]);
 
-        // get drone id     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+        // get drone id     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:ID"
         int droneId = -1;
         try {
             droneId = Integer.parseInt(items[0]);
@@ -247,7 +322,7 @@ public class Scheduler {
 
         // otherwise parse & handle request...
 
-        // get current state of this drone     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+        // get current state of this drone     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID"
         String droneState = items[1];
 
         // get request of this drone and convert it to DroneEvent
@@ -274,15 +349,15 @@ public class Scheduler {
         // update location of drone
         drone.setLocation(x, y);
         /* request types
-            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y:CURR_TASK  -> when there is a status update
-                       DRONE_ID:<STATE>:REQUEST:X:Y:CURR_TASK  -> when there is all other requests
+            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y:CURR_TASK:FIREREQ_ID  -> when there is a status update
+                       DRONE_ID:<STATE>:REQUEST:X:Y:CURR_TASK:FIREREQ_ID  -> when there is all other requests
          */
 
         /*  response types
-            "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for wait for a fire request
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for saying acknowledge
+            "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID    - for wait for a fire request
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID    - for saying acknowledge
 
-             not assigned here* "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
+             not assigned here* "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK:FIREREQ_ID  - for reassigning current task and state
          */
         // TODO: handle request to proceed with the state corresponding to when this event occurs
         switch(eventRequest)

@@ -40,7 +40,7 @@ public class DroneTest
     void testFireRequestIsDefault() throws Exception
     {
         FireRequest fr = new FireRequest();
-        assertEquals("FireRequest{time=0, zone=-1, event=0, severity=0}", fr.toString());
+        assertEquals("FireRequest{time=0, zone=-1, event=0, severity=0, id=0}", fr.toString());
         assertTrue(fr.isDefault());
     }
 
@@ -107,20 +107,20 @@ public class DroneTest
         // verify default task
         FireRequest initialTask = drone.getCurrTask();
         assertNotNull(initialTask);
-        assertTrue(initialTask.toString().equals("FireRequest{time=0, zone=-1, event=0, severity=0}"));
+        assertTrue(initialTask.toString().equals("FireRequest{time=0, zone=-1, event=0, severity=0, id=0}"));
 
         // make new task using full string constructor
-        FireRequest newTask = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}");
+        FireRequest newTask = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
 
         // set new task and retrieve the old one
         FireRequest oldTask = drone.setCurrTask(newTask);
 
         // oldTask should be the initial one
-        assertTrue(oldTask.toString().equals("FireRequest{time=0, zone=-1, event=0, severity=0}"));
+        assertTrue(oldTask.toString().equals("FireRequest{time=0, zone=-1, event=0, severity=0, id=0}"));
 
         // Now getCurrTask should return the new one
         FireRequest currentTask = drone.getCurrTask();
-        assertTrue(currentTask.toString().equals("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
+        assertTrue(currentTask.toString().equals("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
         resetDroneSubsystem(dss);
     }
@@ -140,7 +140,7 @@ public class DroneTest
         DroneSubsystem.zoneMap.put(zoneId, zone);
 
         // Assign fire request corresponding to that zone
-        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}");
+        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
         drone.setCurrTask(task);
         drone.setBasePosition();
 
@@ -171,7 +171,7 @@ public class DroneTest
 
         // assert the status to be sent is the  (ignoring location)
         assertTrue(result.contains("1:[ACTIVE][TRAVELING]:STATUS:"));
-        assertTrue(result.contains(":FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
+        assertTrue(result.contains(":FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
         // set xPos and yPos to arrive at zone centre
         Field xPosField = Drone.class.getDeclaredField("xPos");
@@ -189,7 +189,7 @@ public class DroneTest
         Method makeRequest = Drone.class.getDeclaredMethod("makeRequest");
         makeRequest.setAccessible(true);
         String result2 = (String) makeRequest.invoke(drone);
-        assertTrue(result2.equals("1:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
+        assertTrue(result2.equals("1:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
         // verify send status is now false, continue travel option is now false when arrived at zone
         assertFalse((boolean) sendStatusField.get(drone));
@@ -214,7 +214,7 @@ public class DroneTest
         DroneSubsystem.zoneMap.put(zoneId, zone);
 
         // Assign fire request corresponding to that zone
-        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}");
+        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
         drone.setCurrTask(task);
 
         // set state
@@ -258,7 +258,7 @@ public class DroneTest
         makeRequest.setAccessible(true);
         String result2 = (String) makeRequest.invoke(drone);
 
-        assertTrue(result2.equals("1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
+        assertTrue(result2.equals("1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
         assertEquals( 0, (int) payloadCount.get(drone));
 
@@ -283,7 +283,7 @@ public class DroneTest
         DroneSubsystem.zoneMap.put(zoneId, zone);
 
         // Assign fire request corresponding to that zone
-        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}");
+        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
         drone.setCurrTask(task);
 
         //
@@ -303,7 +303,7 @@ public class DroneTest
         makeRequest.setAccessible(true);
         String result1 = (String) makeRequest.invoke(drone);
 
-        assertTrue(result1.equals("1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
+        assertTrue(result1.equals("1:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
         drone.currentState.handleEvent(drone, DroneEvent.PAYLOAD_DROPPED); // triggers returnTravel()
 
@@ -325,14 +325,14 @@ public class DroneTest
         // assert the status to be sent is the  (ignoring location)
         assertTrue(result2.contains("1:[ACTIVE][RETURNING]:RETURN_STATUS:"));
         assertFalse(result2.contains("1:[ACTIVE][RETURNING]:STATUS:"));
-        assertTrue(result2.contains(":FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
+        assertTrue(result2.contains(":FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
         xPosField.set(drone, 0.0);
         yPosField.set(drone, 0.0);
 
         String result3 = (String) makeRequest.invoke(drone);
 
-        assertEquals(result3, "1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}");
+        assertEquals(result3, "1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
 
         // After return travel, verify xPos and yPos are back at base (0, 0)
         double xFinal = (double) xPosField.get(drone);
@@ -367,7 +367,7 @@ public class DroneTest
         DroneSubsystem.zoneMap.put(zoneId, zone);
 
         // Assign fire request corresponding to that zone
-        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}");
+        FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
         drone.setCurrTask(task);
 
         //
@@ -388,7 +388,7 @@ public class DroneTest
         String result1 = (String) makeRequest.invoke(drone);
 
         System.out.println(result1);
-        assertTrue(result1.equals("1:[REFILLING]:REFILL_COMPLETE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High}"));
+        assertTrue(result1.equals("1:[REFILLING]:REFILL_COMPLETE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
         drone.currentState.handleEvent(drone, DroneEvent.REFILL_COMPLETE);
 
@@ -401,7 +401,7 @@ public class DroneTest
         // check request to send to scheduler is the following
         String result2 = (String) makeRequest.invoke(drone);
 
-        assertTrue(result2.equals("1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0}"));
+        assertTrue(result2.equals("1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}"));
 
         resetDroneSubsystem(dss);
     }

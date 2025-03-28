@@ -19,10 +19,10 @@ public class Drone implements Runnable
     private final float TRAVEL_INCREMENTS = 30;
     /**
      *  time for doors to open or close in ms */
-    private final int APPARATUS_DOORS_MOVE_TIME = 1000;
+    private final int APPARATUS_DOORS_MOVE_TIME = 10;
     /**
      *  drop time for each FEB to drop in ms */
-    private final int PAYLOAD_DROP_TIME = 300;
+    private final int PAYLOAD_DROP_TIME = 30;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;
