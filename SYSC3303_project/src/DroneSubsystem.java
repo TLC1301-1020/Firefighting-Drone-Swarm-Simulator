@@ -23,7 +23,7 @@ public class DroneSubsystem implements Runnable {
      * list of Drone objects being routed messages by DroneSubsystem process through direction
      * of the Scheduler
      */
-    private final HashMap<Integer,Thread> drones = new HashMap<>();
+    private final HashMap<Integer,Drone> drones = new HashMap<>();
 
     /**
      * flag for checking if the drones have been initialized after creating the DroneSubsystem Instance.
@@ -50,16 +50,15 @@ public class DroneSubsystem implements Runnable {
      */
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
-    private ArrayList<Event> faults = new ArrayList<>();
     /**
-     * Placeholder zone coordinates
+     * {@code EventScheduler} object to process Drone faults and deploy them at desired times.
      */
-    public final static int zone2X = 100;
-    public final static int zone2Y = 150;
-    public final static int zone3X = 200;
-    public final static int zone3Y = 100;
-    public final static int zone7X = 350;
-    public final static int zone7Y = 50;
+    EventScheduler scheduler = new EventScheduler();
+
+    /**
+     * Array that holds Drone faults read from file to be passed to an {@code EventScheduler}.
+     */
+    private ArrayList<Event> faults = new ArrayList<>();
 
     /**
      * creates a drone subsystem instance for routing messages to and from all drone threads and
@@ -198,7 +197,7 @@ public class DroneSubsystem implements Runnable {
             // Check if the response contains "ACK"
             if (response != null && response.trim().contains("ACK")) {
                 // Registration is successful; add the drone thread to the collection.
-                this.drones.put(i, new Thread(new Drone(droneSubsystem, i)));
+                this.drones.put(i, new Drone(droneSubsystem, i));
                 droneCounter++;
                 System.out.println("DRONE " + i + " is online");
             } else {
@@ -222,6 +221,43 @@ public class DroneSubsystem implements Runnable {
         schedulerListener.start();
     }
 
+    private class processFaults extends Thread {
+        @Override
+        public void run() {
+
+            // Retrieve Drone faults that are ready to be processed
+            // Events are in example format "DRONE_STUCK:0"
+
+            while (true) {
+                // Block until a fault is ready to process
+                String fault = (String)scheduler.getEvent().getEvent();
+                String[] parts = fault.split(":");
+
+                int droneId = -1;
+                try {droneId = Integer.parseInt(parts[1]);}
+                catch (NumberFormatException e) {
+                    System.out.println("ERROR: Invalid int parsing processFaults");
+                    return;
+                }
+
+                Drone drone = drones.get(droneId);
+
+                switch (parts[0]) {
+                    case "DRONE_STUCK":
+                        drone.setStuckFault();
+                        break;
+                    case "NOZZLE_JAMMED":
+                        drone.setJammedFault();
+                        break;
+                    case "PACKET_LOSS":
+                        drone.setPacketLossFault();
+                        break;
+                }
+
+            }
+        }
+    }
+
 
     /**
      * thread function for the drone subsystem. calls the thread function for all drones in
@@ -238,21 +274,21 @@ public class DroneSubsystem implements Runnable {
         startListeningToScheduler();
 
         // Start thread functions for all drones
-        Collection<Thread> allDrones = this.drones.values();
-        for (Thread drone : allDrones) {
+        Collection<Drone> allDrones = this.drones.values();
+        for (Drone drone : allDrones) {
             drone.start();
         }
 
         // After readFaultFile(), tasks stores all fault events in faults
         // Send these faults to our EventScheduler
-        EventScheduler scheduler = new EventScheduler();
         for (Event fault : faults) {
             scheduler.addEvent(fault);
         }
         scheduler.start();
 
-        // Retrieve and store drone faults that are ready to be sent from the EventScheduler
-        // TODO: Do we need a new thread to process the faults above?
+        // Start the processFaults thread
+        Thread faultHandler = new DroneSubsystem.processFaults();
+        faultHandler.start();
 
         while (true) {
             // Check request queue - communication from drones
@@ -350,6 +386,10 @@ public class DroneSubsystem implements Runnable {
      * TODO: read fault input file
      * */
     public void readFaultFile(String inputFile){
+
+        // Read in faults from file in the example form "10:00:00,DRONE_STUCK:0"
+        // Create an event with the time as the timestamp, and the String "DRONE_STUCK:0" as the event
+
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))){
             String line;
             while((line = reader.readLine()) != null){

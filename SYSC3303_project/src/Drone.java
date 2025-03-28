@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Drone implements Runnable
+public class Drone extends Thread
 {
     /**
      * State Machine Object to handle the state of the drone */
@@ -39,9 +39,16 @@ public class Drone implements Runnable
     private boolean sendStatus = false;
 
     /**
-     * Used by the DroneTravel getRequest() to send back the appropriate DroneEvent
+     * Used by the DroneTravel state getRequest() to send back the appropriate DroneEvent
      */
     private boolean continueTravel = true;
+
+    /**
+     * Booleans to determine whether this Drone should encounter a respective fault
+     */
+    public boolean isStuck = false;
+    protected boolean isJammed = false;
+    protected boolean packetLoss = false;
 
     // TODO: Add drone attributes such as battery, acceleration etc.
 
@@ -395,6 +402,27 @@ public class Drone implements Runnable
             // set drone to travel
 //            boolean travelIsInterrupted = travel();
         }
+    }
+
+    /**
+     * Set the isStuck boolean.
+     */
+    public void setStuckFault() {
+        this.isStuck = true;
+    }
+
+    /**
+     * Set the isJammed boolean.
+     */
+    public void setJammedFault() {
+        this.isJammed = true;
+    }
+
+    /**
+     * Set the packetLoss boolean.
+     */
+    public void setPacketLossFault() {
+        this.packetLoss = true;
     }
 
     public void setBasePosition()

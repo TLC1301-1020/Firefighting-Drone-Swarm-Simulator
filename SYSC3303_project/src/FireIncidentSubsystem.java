@@ -43,7 +43,12 @@ public class FireIncidentSubsystem implements Runnable {
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH-mm-ss");
+
+    /**
+     * ArrayList that stores FireRequests from an EventScheduler that are ready to be processed.
+     */
     private ArrayList<FireRequest> readyToSend = new ArrayList<>();
+
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
      */
