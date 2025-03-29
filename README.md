@@ -148,3 +148,64 @@ Project uses Junit5.8.1, JDK22
 
 ### Note
 Some issues to check for: https://docs.google.com/document/d/1yOJuDtkl1yb6xlGa3G38a8q0eshFcxU1HcMObruX3mc/edit?tab=t.0
+
+# Work Breakdown - Iteration 4
+
+### Work Breakdown
+
+Handling Drone Faults - Dylan, Tina, Jake
+
+Scheduler Refactoring - Dylan, Jake, Mike
+
+Update testing (unit and system) - Mike
+
+Update diagrams and readme file - Jake, Tina, Mike
+
+UI (Future Iteration) - Damon, Andrew
+
+### Files - Source code
+- *DroneState.java*: Stores the states to be used for the drones
+- *DroneSubsystem.java* Manages drones, interacts with Scheduler class
+- *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
+- *FireRequest.java*: Data model, manages the variables for each incident
+- *Response.java*: Data model, contains the status of a fire incident request
+- *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
+- *SchedulerState.java*: Stores the states to be used for the scheduler
+- *Zone.java*:Contains the zone information
+- *Drone.java*: Contains information of the drone
+- *DroneEvent.java*: Event information of the drone
+- *DroneStatus.java*: Current status of the drone
+- *Event.java*: Stores a timed event such as a drone fault or a fire incident
+- *EventScheduler.java*: Handles the proper deployment of Events based on its timestamp
+
+### Files - Test code
+- *SchedulerTest.java*: Contains the test methods for the scheduler source code, focusing on the state transitions
+- *FireIncidentSubsystemTest.java*: Contains the test methods for the fire incident subsystem class
+- *DroneSubsystemTest.java*: Contains the test methods for the drone subsystem, focusing on the state transitions
+- *DroneTest.java*: Contains the test methods for the drones, focusing on the state transitions
+
+### Files - Diagrams and others
+- *README.md*: Contains the explanation of the project for this iteration (2), including names of the files, team members, work breakdown, and instruction to set and run the program
+- *Fireincidents.txt*: Contains the incident events, used in FireIncidentSubsystem class
+- *Faults.txt*: Contains the drone fault events, used in DroneSubsystem class
+- *UMLClassDiagram-iteration1*: Shows the relationships and structure of the classes for iteration 1
+- *DroneSequenceDiagram-iteration1*: Shows interactions between the components for iteration 1
+- *UMLClassDiagram-iteration2*: Shows the relationships and structure of the classes for iteration 2
+- *UMLSequenceDiagram-iteration2*: Shows the interactions between the components for iteration 2
+- *SchedulerStateDiagram-iteration2*: The behavioural diagram for the Scheduler that represents the transitions between the states on events/conditions
+- *DroneStateDiagram-iteration2*: The behavioural diagram for the DroneSubsystem that represents the transitions between the states on events/conditions
+- *UMLClassDiagram-iteration3*: The overall structure of the project in iteration 3
+- *zone_file.csv*: Zone id, Zone range (x and y)
+- *run.bat*: command to run the program
+
+### Setup instruction
+Make sure the directory of the Zone file and FireIncident input file is correct
+Run Scheduler, DroneSubsystem, FireIncidentSubsystem in that order
+Change incident timing through fireincidents.txt, Drone fault timing through Faults.txt
+Change overall timing simulation speed through the simulationSpeed attribute located in EventScheduler
+
+### Test instruction
+Project uses Junit5.8.1, JDK22
+
+### Note
+Some issues to check for: https://docs.google.com/document/d/1yOJuDtkl1yb6xlGa3G38a8q0eshFcxU1HcMObruX3mc/edit?tab=t.0
