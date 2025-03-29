@@ -456,11 +456,11 @@ public class Scheduler {
                 return "ACK:" + request;
             case CONTINUING:
                 // Send an ack -- this drone is continuing on its old mission
-                if (!drone.getState().equals("[TRAVELING]")) { drone.setState("[TRAVELING]"); }
+                if (!drone.getState().equals("[TRAVELING]") && !drone.getState().equals("[OFFLINE]")) { drone.setState("[TRAVELING]"); }
                 return "ACK:" + request;
             case RETURN_STATUS:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == RETURN_STATUS:    drone " + droneId + " * is currently  " + drone.getState() + "*");
-                drone.setState("[RETURNING]");
+                if (!drone.getState().equals("[OFFLINE]")) {drone.setState("[RETURNING]");}
                 return "ACK:" + request;
             case null:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == DEFAULT:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
