@@ -52,9 +52,14 @@ public class Drone extends Thread
     /**
      * Booleans to determine whether this Drone should encounter a respective fault
      */
-    public boolean isStuck = false;
-    protected boolean isJammed = false;
-    protected boolean packetLoss = false;
+    private boolean isStuck = false;
+    private boolean isJammed = false;
+    private boolean packetLoss = false;
+
+    /**
+     * Boolean to determine lifespan of this Drone thread, flipped by an unrecoverable fault
+     */
+    private boolean alive = true;
 
     // TODO: Add drone attributes such as battery, acceleration etc.
 
@@ -374,6 +379,10 @@ public class Drone extends Thread
     {
         while (true)
         {
+            // Determine whether this Drone should keep running
+            if (!alive) {
+                return;
+            }
 //            System.out.println("\n[ DRONE RUN ] starting DRONE RUN id key: " + this.droneId );
             String request;
 
@@ -381,7 +390,7 @@ public class Drone extends Thread
 
             // If this drone is injected with a PACKET_LOSS fault, send corrupted packet instead
             if (packetLoss) {
-                request = "CORRUPTED_PACKET";
+                request = this.droneId+":"+this.currentState.display()+":"+"CORRUPTED_PACKET"+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
                 packetLoss = false;
             }
             // check if drone should send its location status as a request, otherwise, sends normal request based on state
@@ -545,6 +554,13 @@ public class Drone extends Thread
      */
     public void setPacketLossFault() {
         this.packetLoss = true;
+    }
+
+    /**
+     * Set the alive boolean to false.
+     */
+    public void setAlive() {
+        this.alive = false;
     }
 
     public void setBasePosition()

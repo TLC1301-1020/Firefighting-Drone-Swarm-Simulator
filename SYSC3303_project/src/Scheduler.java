@@ -335,11 +335,7 @@ public class Scheduler {
         try {
             eventRequest = DroneEvent.valueOfEvent(items[2]); // Convert string to enum
         } catch (IllegalArgumentException e) {
-            if (!items[2].equals( DroneEvent.STATUS )) return "ERROR: Unknown drone event: " + items[2];
-            else
-            {
-                // Status request event flow here
-            }
+            System.out.println("ERROR: Unknown drone event: " + items[2]);
         }
 
         // get location of this drone
@@ -396,7 +392,7 @@ public class Scheduler {
                 return "ACK:" + request;
             case RETURNED_TO_BASE:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [RETURNING] *");
-                drone.setState("[RETURNING]");
+                if (!drone.getState().equals("[OFFLINE]")) {drone.setState("[RETURNING]");}
 //                return "ACK:" + request + ":COMPLETED";
                 return "ACK:" + request;
             case REFILL_COMPLETE:
@@ -466,6 +462,9 @@ public class Scheduler {
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == RETURN_STATUS:    drone " + droneId + " * is currently  " + drone.getState() + "*");
                 drone.setState("[RETURNING]");
                 return "ACK:" + request;
+            case null:
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == DEFAULT:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
+                return "RESEND:" + request; // should hit when the case is garbled due to packet being corrupted
             default:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == DEFAULT:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
                 return "RESEND:" + request; // should hit when the case is garbled due to packet being corrupted
