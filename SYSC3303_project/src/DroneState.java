@@ -168,7 +168,7 @@ class DroneTravel implements DroneState
 
         //TODO: ITERATION 4
         if(drone.getIsStuck()) return String.valueOf(DroneEvent.DRONE_STUCK);
-        if(drone.getIsJammed()) return String.valueOf(DroneEvent.JAMMED);
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
 
         return String.valueOf(DroneEvent.PERMISSION_TO_DROP);
     }
@@ -197,7 +197,7 @@ class DroneDeploy implements DroneState {
     @Override
     public String getRequest(Drone drone) {
         //TODO: ITERATION 4
-        if(drone.getIsJammed()) return String.valueOf(DroneEvent.JAMMED);
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
 
         return String.valueOf(DroneEvent.PAYLOAD_DROPPED);
     }
@@ -270,7 +270,7 @@ class DroneRefill implements DroneState {
     @Override
     public String getRequest(Drone drone) {
         //TODO: ITERATION 4
-        if(drone.getIsJammed()) return String.valueOf(DroneEvent.JAMMED);
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
 
         return String.valueOf(DroneEvent.REFILL_COMPLETE);
     }

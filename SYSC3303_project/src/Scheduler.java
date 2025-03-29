@@ -484,7 +484,7 @@ public class Scheduler {
     }
 
     /**
-     * contructor calls {@link Scheduler#parseZoneFile} to populate {@link Scheduler#zoneMap} with zone data
+     * constructor calls {@link Scheduler#parseZoneFile} to populate {@link Scheduler#zoneMap} with zone data
      * <p>initializes various member collection objects and send/receive sockets</p>
      * <p>initializes and starts all scheduler threads</p>
      */
