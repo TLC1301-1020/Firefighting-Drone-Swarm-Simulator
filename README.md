@@ -199,10 +199,10 @@ UI (Future Iteration) - Damon, Andrew
 - *run.bat*: command to run the program
 
 ### Setup instruction
-Make sure the directory of the Zone file and FireIncident input file is correct
-Run Scheduler, DroneSubsystem, FireIncidentSubsystem in that order
-Change incident timing through fireincidents.txt, Drone fault timing through Faults.txt
-Change overall timing simulation speed through the simulationSpeed attribute located in EventScheduler
+- Make sure the directory of the Zone file and FireIncident input file is correct
+- Run Scheduler, DroneSubsystem, FireIncidentSubsystem in that order
+- Change incident timing through fireincidents.txt, Drone fault timing through Faults.txt
+- Change overall timing simulation speed through the simulationSpeed attribute located in EventScheduler
 
 ### Test instruction
 Project uses Junit5.8.1, JDK22
