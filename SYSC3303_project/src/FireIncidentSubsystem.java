@@ -97,10 +97,11 @@ public class FireIncidentSubsystem implements Runnable {
                         }
                         //not empty list, taking the request
                         request = readyToSend.remove(0);
+                        readyToSend.notifyAll();
                     }
                     //send the request
                     if(request!=null){
-                        System.out.println("[ STS ] - sending the request.");
+                        System.out.println("[ STS ] - sending the request: " + request);
                         sendIncident(request.toString());
                     }
                 } catch (InterruptedException e) {
@@ -161,6 +162,7 @@ public class FireIncidentSubsystem implements Runnable {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
+            int id = 0;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 //                String time = parts[0].trim();
@@ -170,7 +172,7 @@ public class FireIncidentSubsystem implements Runnable {
                 String eventType = parts[2].trim();
                 String severity = parts[3].trim();
 
-                FireRequest task = new FireRequest(time, zoneId, eventType, severity);
+                FireRequest task = new FireRequest(time, zoneId, eventType, severity, String.valueOf(++id));
                 addTask(task);
             }
             System.out.println("\n");

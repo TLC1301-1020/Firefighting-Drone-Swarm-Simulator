@@ -21,6 +21,8 @@ public class FireRequest {
      */
     private String severity;
 
+    private String id;
+
     /**
      * create a fire request instance with specified details
      * @param time the time of the fire incident
@@ -28,11 +30,12 @@ public class FireRequest {
      * @param eventType the type of fire event
      * @param severity the severity level of the fire
      */
-    public FireRequest(String time, int zoneId, String eventType, String severity) {
+    public FireRequest(String time, int zoneId, String eventType, String severity, String id) {
         this.time = time;
         this.zoneId = zoneId;
         this.eventType = eventType;
         this.severity = severity;
+        this.id = id;
     }
 
     public FireRequest() {
@@ -40,6 +43,7 @@ public class FireRequest {
         this.zoneId = -1;
         this.eventType = "0";
         this.severity = "0";
+        this.id = "0";
     }
 
     /**
@@ -64,6 +68,9 @@ public class FireRequest {
                     break;
                 case "severity":
                     this.severity = value[1];
+                    break;
+                case "id":
+                    this.id = value[1];
                     break;
             }
         }
@@ -115,8 +122,11 @@ public class FireRequest {
         return this.zoneId == -1 &&
                 this.time.equals("0") &&
                 this.eventType.equals("0") &&
-                this.severity.equals("0");
+                this.severity.equals("0") &&
+                this.id.equals("0");
     }
+
+    public String getId() {return this.id;}
 
     /**
      * creates a string representation of the fire request object
@@ -125,8 +135,8 @@ public class FireRequest {
     @Override
     public String toString() {
         return String.format(
-                "FireRequest{time=%s, zone=%d, event=%s, severity=%s}",
-                time, zoneId, eventType, severity
+                "FireRequest{time=%s, zone=%d, event=%s, severity=%s, id=%s}",
+                time, zoneId, eventType, severity, id
         );
     }
 }

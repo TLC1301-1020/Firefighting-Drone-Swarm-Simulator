@@ -13,10 +13,16 @@ public class Drone extends Thread
     private int droneId;
     /**
      * maximum velocity of the drone in meters per second */
-    private final float maxVelocity = 200;
+    private final float maxVelocity = 400;
     /**
      * number of deltaX deltaY increment the drone travels before sending a location update to scheduler  */
     private final float TRAVEL_INCREMENTS = 30;
+    /**
+     *  time for doors to open or close in ms */
+    private final int APPARATUS_DOORS_MOVE_TIME = 10;
+    /**
+     *  drop time for each FEB to drop in ms */
+    private final int PAYLOAD_DROP_TIME = 30;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;
@@ -172,19 +178,7 @@ public class Drone extends Thread
         double deltaX = (finalX - this.xPos) / steps;
         double deltaY = (finalY - this.yPos) / steps;
 
-//        System.out.println("\n[ DRONE TRAVEL DEBUG ]");
-//        System.out.println(" - Drone ID: " + this.droneId);
-//        System.out.println(" - Current Position: (" + this.xPos + ", " + this.yPos + ")");
-//        System.out.println(" - Target Zone Position: (" + finalX + ", " + finalY + ")");
-//        System.out.println(" - Distance to Target: " + distance + " meters");
-//        System.out.println(" - Max Velocity: " + this.maxVelocity + " m/s");
-//        System.out.println(" - Estimated Travel Time: " + travelTime + " ms");
-//        System.out.println(" - Step Time (per update cycle): " + stepTime + " ms");
-//        System.out.println(" - Number of Steps: " + steps);
-//        System.out.println("\n[ DRONE TRAVEL ] travel : deltaX=" + deltaX + ", deltaY=" + deltaY);
-
         double spentTime = 0;
-        // for ( int i = 0 ; (i < 10) || (spentTime < travelTime) ; ++i )
         for ( int i = 0 ; (i < TRAVEL_INCREMENTS) ; ++i )
         {
             try {
@@ -207,7 +201,7 @@ public class Drone extends Thread
             System.out.println("\n [ DRONE TRAVEL ]     Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
 
             // Set boolean to determine that we actually arrived in the zone
-            continueTravel = false;
+            this.continueTravel = false;
         }
         else
         {
@@ -215,6 +209,110 @@ public class Drone extends Thread
             System.out.println("\n [ DRONE TRAVEL ]     Drone " + this.droneId + ": sending status \n");
         }
         return false;
+    }
+
+    /**
+     * Simulates the drone's payload doors opening and closing, checks for faults */
+    public void activatePayloadDoors()
+    {
+        System.out.println("[ DRONE ]      Drone " + this.droneId + ": ACTIVATING FEB APPARATUS DOORS ");
+        // check fault
+        try {
+            Thread.sleep(APPARATUS_DOORS_MOVE_TIME);
+        } catch (InterruptedException e) {
+            System.out.println("\n[ DRONE ]      Drone " + this.droneId + ": interrupted during activateApparatusDoors");
+            // fault
+        }
+    }
+
+    /**
+     * Simulates the drone dropping its payload one at a time, decrements the payloadCount as they drop, checks for faults */
+    public void dropPayload()
+    {
+        if(this.payloadCount==0)
+        {
+            System.out.println("[ DRONE ]      Drone " + this.droneId + ": FAULT DROPPING PAYLOAD - EMPTY PAYLOAD");
+            // fault
+        }
+        while (this.payloadCount>0)
+        {
+            // check for fault (stuck?)
+            System.out.println("[ DRONE ]      Drone " + this.droneId + ": DROPPING PAYLOAD #" +this.payloadCount);
+            this.payloadCount--;
+            try {
+                Thread.sleep(PAYLOAD_DROP_TIME);
+            } catch (InterruptedException e) {
+                System.out.println("\n[ DRONE ]      Drone " + this.droneId + ": interrupted during dropPayload");
+                // fault
+            }
+        }
+    }
+
+    /**
+     * Simulates the drone loading payload, sets the payload count to MAX_PAYLOAD */
+    public void loadPayload()
+    {
+        System.out.println("[ DRONE ]      Drone " + this.droneId + ": LOADING PAYLOAD FROM " +this.payloadCount + " FEBs ");
+        try {
+            Thread.sleep(2*APPARATUS_DOORS_MOVE_TIME);
+        } catch (InterruptedException e) {
+            System.out.println("\n[ DRONE ]      Drone " + this.droneId + ": interrupted during activateApparatusDoors");
+            // fault
+        }
+        this.payloadCount = MAX_PAYLOAD;
+        System.out.println("[ DRONE ]      Drone " + this.droneId + ": LOADED TO " +this.payloadCount + " FEBs ");
+    }
+
+
+    /**
+     * simulates drone travel back to the (0, 0) coordinate (base) once it has dropped its payload
+     * and cannot be interrupted during return travel
+     */
+    public void returnTravel()
+    {
+        int finalX = 0;
+        int finalY = 0;
+        System.out.println( " \nTRAVEL BACK : "  + finalX + "," + finalY + "    FEB count :" + this.payloadCount);
+
+        // Calculate distance from current position to target.
+        double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
+        // Calculate travel time in milliseconds.
+        double travelTime = (distance / this.maxVelocity) * 1000;
+
+        // Determine the time per step (simulate one "step" of travel)
+        double stepTime = 1000 / this.maxVelocity; // in milliseconds
+        // Calculate the number of steps to reach the destination.
+        double steps = travelTime / stepTime;
+        // Compute change in X and Y per step.
+        double deltaX = (finalX - this.xPos) / steps;
+        double deltaY = (finalY - this.yPos) / steps;
+
+        double spentTime = 0;
+        for ( int i = 0 ; (i < TRAVEL_INCREMENTS) ; ++i )
+        {
+            try {
+                Thread.sleep((long) stepTime);
+            } catch (InterruptedException e) {
+                System.out.println("\n[ DRONE RETURN ]      Drone " + this.droneId + ": interrupted during return travel. Sending status update.");
+                setSendStatus();
+            }
+            spentTime += stepTime;
+            this.xPos += deltaX;
+            this.yPos += deltaY;
+            if( this.xPos < 0 ) break; // exits travel function if returned
+            System.out.println(" [ DRONE RETURN ]       Drone " + this.droneId + ": is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
+        }
+        if(spentTime>=travelTime)
+        {
+            this.xPos=finalX;
+            this.yPos=finalY;
+            System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": arrived back at base ready to refill\n");
+        }
+        else
+        {
+            setSendStatus();
+            System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": sending status \n");
+        }
     }
 
     /**
@@ -257,7 +355,9 @@ public class Drone extends Thread
      */
     private String makeStatusRequest()
     {
-        return this.droneId+":"+this.currentState.display()+":"+DroneEvent.STATUS+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
+        DroneEvent status = DroneEvent.STATUS;
+        if(this.currentState.display().equals("[ACTIVE][RETURNING]") ) status = DroneEvent.RETURN_STATUS;    // check if this is a return or travel status
+        return this.droneId+":"+this.currentState.display()+":"+status+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
     }
 
     public String getLocation() {return "("+ this.xPos + "," + this.yPos+")";}
@@ -387,6 +487,12 @@ public class Drone extends Thread
                 // hit if Scheduler responds with ACK when it receives and processes the drones location. drone waits for next instruction
                 System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.display() + ")  ...    " +eventRequest.toString() );
                 this.currentState.handleEvent(this, DroneEvent.STATUS);
+            }
+            else if ( eventRequest.equals(DroneEvent.RETURN_STATUS) )
+            {
+                // hit if Scheduler responds with ACK when it receives and processes the drones location on return travel. drone waits for next instruction
+                System.out.println("\n[ DRONE ]   ACK  RETURN_STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.display() + ")  ...    " +eventRequest.toString() );
+                this.currentState.handleEvent(this, DroneEvent.RETURN_STATUS);
             }
             else
             {
