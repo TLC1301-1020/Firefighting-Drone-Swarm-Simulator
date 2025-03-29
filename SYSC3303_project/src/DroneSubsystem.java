@@ -61,6 +61,10 @@ public class DroneSubsystem implements Runnable {
     private ArrayList<Event> faults = new ArrayList<>();
 
     /**
+     * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
+    private volatile boolean running = true;
+
+    /**
      * creates a drone subsystem instance for routing messages to and from all drone threads and
      * the Scheduler
      */
@@ -210,7 +214,7 @@ public class DroneSubsystem implements Runnable {
 
     private void startListeningToScheduler() {
         Thread schedulerListener = new Thread(() -> {
-            while (true) {
+            while (running) {
                 String response = receivePacket();
                 System.out.println("[ S->DSS ] startListeningToScheduler thread received RESPONSE :     " + response);
 
@@ -228,7 +232,7 @@ public class DroneSubsystem implements Runnable {
             // Retrieve Drone faults that are ready to be processed
             // Events are in example format "DRONE_STUCK:0"
 
-            while (true) {
+            while (running) {
                 // Block until a fault is ready to process
                 String fault = (String)scheduler.getEvent().getEvent();
                 String[] parts = fault.split(":");
@@ -293,7 +297,7 @@ public class DroneSubsystem implements Runnable {
         Thread faultHandler = new DroneSubsystem.processFaults();
         faultHandler.start();
 
-        while (true) {
+        while (running) {
             // Check request queue - communication from drones
             String request = getRequest();
             System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                                         " + request);
@@ -451,6 +455,16 @@ public class DroneSubsystem implements Runnable {
     }
     public ArrayList<Event> getFaults(){
         return faults;
+    }
+
+    /**
+     * gracefull exit for all thread function loops. running set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
+    private void shutdown() {
+        this.running = false;
+
+        // close sockets if they are open
+        if (sendSocket != null && !sendSocket.isClosed()) sendSocket.close();
+        if (receiveSocket != null && !receiveSocket.isClosed()) receiveSocket.close();
     }
 
     public static void main(String[] args)

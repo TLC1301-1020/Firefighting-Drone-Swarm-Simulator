@@ -1,3 +1,6 @@
+import jdk.jfr.BooleanFlag;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 //import static org.junit.Assert.*;
@@ -10,7 +13,13 @@ import java.net.DatagramSocket;
 
 public class DroneTest
 {
-    void resetDroneSubsystem(DroneSubsystem dss) throws NoSuchFieldException, IllegalAccessException
+    private DroneSubsystem dss;
+
+    @BeforeEach
+    void setUp() {dss = new DroneSubsystem();}
+
+    @AfterEach
+    void resetDroneSubsystem() throws NoSuchMethodException, InvocationTargetException, NoSuchFieldException, IllegalAccessException
     {
         Field sendSocketField = DroneSubsystem.class.getDeclaredField("sendSocket");
         sendSocketField.setAccessible(true);
@@ -32,6 +41,16 @@ public class DroneTest
         {
             receiveSocket.close();
         }
+
+        // Close remaining DSS threads
+        try
+        {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+        Method shutdown = DroneSubsystem.class.getDeclaredMethod("shutdown");
+        shutdown.setAccessible(true);
+        shutdown.invoke(dss);
     }
 
     /**
@@ -49,7 +68,6 @@ public class DroneTest
     @Test
     void testDroneInitializesAllFields() throws Exception
     {
-        DroneSubsystem dss = new DroneSubsystem();
 
         Drone drone = new Drone(dss, 1);
 
@@ -94,14 +112,13 @@ public class DroneTest
         droneSubsystem.setAccessible(true);
         assertNotNull(droneSubsystem);
 
-        resetDroneSubsystem(dss);
+        resetDroneSubsystem();
     }
 
     /**
      * UNIT TEST: checks if drone correctly stores the assigned task and can retreive it */
     @Test
-    void test_setCurrTask_getCurrTask() throws NoSuchFieldException, IllegalAccessException {
-        DroneSubsystem dss = new DroneSubsystem();
+    void test_setCurrTask_getCurrTask() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Drone drone = new Drone(dss, 1);
 
         // verify default task
@@ -122,7 +139,7 @@ public class DroneTest
         FireRequest currentTask = drone.getCurrTask();
         assertTrue(currentTask.toString().equals("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}"));
 
-        resetDroneSubsystem(dss);
+        resetDroneSubsystem();
     }
 
     /**
@@ -131,7 +148,6 @@ public class DroneTest
     @Test
     void test_drone_travel() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        DroneSubsystem dss = new DroneSubsystem();
         Drone drone = new Drone(dss, 1);
 
         // Create and store the zone
@@ -195,7 +211,7 @@ public class DroneTest
         assertFalse((boolean) sendStatusField.get(drone));
         assertFalse((boolean) continueTravelField.get(drone));
 
-        resetDroneSubsystem(dss);
+        resetDroneSubsystem();
     }
 
     /**
@@ -205,7 +221,6 @@ public class DroneTest
     @Test
     void test_drone_deploy() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        DroneSubsystem dss = new DroneSubsystem();
         Drone drone = new Drone(dss, 1);
 
         // Create and store the zone
@@ -262,7 +277,7 @@ public class DroneTest
 
         assertEquals( 0, (int) payloadCount.get(drone));
 
-        resetDroneSubsystem(dss);
+        resetDroneSubsystem();
     }
 
     /**
@@ -271,7 +286,6 @@ public class DroneTest
     @Test
     void test_drone_returnTravel() throws Exception
     {
-        DroneSubsystem dss = new DroneSubsystem();
         Drone drone = new Drone(dss, 1);
 
         //
@@ -346,7 +360,7 @@ public class DroneTest
         // check the payload count is filled after refill
         assertEquals( 10, (int) payloadCount.get(drone));
 
-        resetDroneSubsystem(dss);
+        resetDroneSubsystem();
     }
 
     /**
@@ -355,7 +369,6 @@ public class DroneTest
     @Test
     void test_drone_refill_switch_to_Idle() throws Exception
     {
-        DroneSubsystem dss = new DroneSubsystem();
         Drone drone = new Drone(dss, 1);
 
         //
@@ -403,7 +416,7 @@ public class DroneTest
 
         assertTrue(result2.equals("1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}"));
 
-        resetDroneSubsystem(dss);
+        resetDroneSubsystem();
     }
 
 
