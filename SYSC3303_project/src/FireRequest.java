@@ -122,7 +122,8 @@ public class FireRequest {
         return this.zoneId == -1 &&
                 this.time.equals("0") &&
                 this.eventType.equals("0") &&
-                this.severity.equals("0");
+                this.severity.equals("0") &&
+                this.id.equals("0");
     }
 
     public String getId() {return this.id;}

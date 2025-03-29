@@ -51,9 +51,14 @@ public class Scheduler {
 
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, fireSendSocket, droneSendSocket;
     private final ConcurrentLinkedQueue<DroneAssignment> pendingAssignments = new ConcurrentLinkedQueue<>();
+    private final List<FireRequest> readdedRequests = new ArrayList<>();
     /**
      * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of scheduler threads running */
     private volatile boolean running = true;
+
+    public HashMap<Integer, DroneStatus> getDrones() {
+        return drones;
+    }
 
     /**
      * Object used to store drones marked for 'interrupt' reassignment by SP thread for checking in SD thread */
@@ -292,7 +297,7 @@ public class Scheduler {
      *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS:CURR)FIREREQUEST
      @return String value of entire formatted response to send to Drone in {@link listenToDrone}
      */
-    private String handleDroneRequest(String request)
+    String handleDroneRequest(String request)
     {
         System.out.println("\n[SD   ]  -   SCHEDULER HANDLE DRONE REQUEST: "+request+ "  -   ");
 
@@ -381,7 +386,10 @@ public class Scheduler {
 
                 return "ACK:" + request;
             case PAYLOAD_DEPLOY_FAILURE:
-                drone.setState("[DEPLOY FAILURE]");
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
+                drone.setState("[OFFLINE]");
+                addRequest(currTask);
+                drone.setCurrentTask(new FireRequest());
                 return "ACK:" + request;
             case DEPLOY_FAILURE_ACKNOWLEDGED:
                 // TODO :                 drone.setState("[DEPLOY FAILURE]");
@@ -417,6 +425,10 @@ public class Scheduler {
                 }
                 return "ACK:" + request;
             case DRONE_STUCK:
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
+                drone.setState("[OFFLINE]");
+                addRequest(currTask);
+                drone.setCurrentTask(new FireRequest());
                 return "ACK:" + request;
             case STUCK_RESOLVED:
                 return "ACK:" + request;
@@ -455,8 +467,8 @@ public class Scheduler {
                 drone.setState("[RETURNING]");
                 return "ACK:" + request;
             default:
-                System.out.println("\n[SD   ]  -   switch(eventRequest) == UNKNOWN:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
-                return "ERROR: UNKNOWN drone request: " + request; // should never hit
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == DEFAULT:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
+                return "RESEND:" + request; // should hit when the case is garbled due to packet being corrupted
         }
     }
 
@@ -805,7 +817,12 @@ public class Scheduler {
      */
     public synchronized void addRequest(FireRequest request) {
         requestQueue.offer(request);
+        readdedRequests.add(request);
         System.out.println("From Scheduler - receiving request from fire incident: \n" + request + "\n");
+    }
+
+    public List<FireRequest> getReaddedRequests() {
+        return readdedRequests;
     }
 
     /**

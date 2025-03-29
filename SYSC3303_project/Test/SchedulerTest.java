@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -74,6 +74,58 @@ class SchedulerTest {
         FireRequest incoming = new FireRequest("12:01", 2, "FIRE_DETECTED", "Blah", "2");
 
         assertTrue(scheduler.isNewRequestMoreSevere(current, incoming)); // both default to 0 -> equal
+    }
+
+    @Test
+    void testHandleDroneRequest_DRONE_STUCK_addsBackToQueueAndSetsOffline() throws InterruptedException {
+        int droneId = 1;
+        FireRequest task = new FireRequest("FireRequest{time=14-16-03, zone=2, event=FIRE_DETECTED, severity=Moderate, id=2A}");
+
+        scheduler.registerDrone(droneId);
+        DroneStatus drone = scheduler.getDrones().get(droneId);
+        drone.setState("[TRAVELING]");
+        drone.setCurrentTask(task);
+
+        String request = droneId + ":[TRAVELING]:DRONE_STUCK:26:85:" + task;
+
+        scheduler.handleDroneRequest(request);
+
+        // Wait briefly to ensure task is added before SP thread removes it
+        Thread.sleep(50);
+
+        synchronized (scheduler.getReaddedRequests()) {
+            boolean stillExists = scheduler.getReaddedRequests().stream()
+                    .anyMatch(req -> req.toString().equals(task.toString())); // compare by content
+            assertTrue(stillExists, "FireRequest should be re-added to the readdedRequests list");
+        }
+        // Assert
+        assertEquals("[OFFLINE]", drone.getState(), "Drone should be marked as OFFLINE");
+    }
+
+    @Test
+    void testHandleDroneRequest_PAYLOAD_DEPLOY_FAILURE_addsBackToQueueAndSetsOffline() throws InterruptedException {
+        int droneId = 2;
+        FireRequest task = new FireRequest("FireRequest{time=14-16-03, zone=2, event=FIRE_DETECTED, severity=Moderate, id=3A}");
+
+        scheduler.registerDrone(droneId);
+        DroneStatus drone = scheduler.getDrones().get(droneId);
+        drone.setState("[DEPLOYING]");
+        drone.setCurrentTask(task);
+
+        String request = droneId + ":[DEPLOYING]:PAYLOAD_DEPLOY_FAILURE:50:40:" + task;
+
+        scheduler.handleDroneRequest(request);
+
+        // Wait briefly to ensure task is added before SP thread removes it
+        Thread.sleep(50);
+
+        synchronized (scheduler.getReaddedRequests()) {
+            boolean stillExists = scheduler.getReaddedRequests().stream()
+                    .anyMatch(req -> req.toString().equals(task.toString())); // compare by content
+            assertTrue(stillExists, "FireRequest should be re-added to the readdedRequests list");
+        }
+
+        assertEquals("[OFFLINE]", drone.getState(), "Drone should be marked as OFFLINE");
     }
 
     /**

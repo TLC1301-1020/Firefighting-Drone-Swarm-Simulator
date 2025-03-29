@@ -377,7 +377,7 @@ public class DroneSubsystem implements Runnable {
     {
         DroneSubsystem dss = new DroneSubsystem();
         dss.readZoneFile("SYSC3303_project/src/zone_file.csv");
-        dss.initializeAllDrones(dss, 1);
+        dss.initializeAllDrones(dss, 2);
 
         Thread droneSubsystem = new Thread( dss );
         droneSubsystem.start();
