@@ -33,9 +33,9 @@ class FireIncidentSubsystemTest {
         List<FireRequest> tasks = fireSubsystem.getTasks();
         assertEquals(3, tasks.size(), "Should have 3 fire incidents");
 
-        assertEquals(new FireRequest("10-30-15", 4, "FIRE_DETECTED", "High").toString(), tasks.get(0).toString());
-        assertEquals(new FireRequest("14-10-00", 3, "FIRE_DETECTED", "Moderate").toString(), tasks.get(1).toString());
-        assertEquals(new FireRequest("14-16-03", 2, "FIRE_DETECTED", "Moderate").toString(), tasks.get(2).toString());
+        assertEquals(new FireRequest("10-30-15", 4, "FIRE_DETECTED", "High", "1").toString(), tasks.get(0).toString());
+        assertEquals(new FireRequest("14-10-00", 3, "FIRE_DETECTED", "Moderate", "3").toString(), tasks.get(1).toString());
+        assertEquals(new FireRequest("14-16-03", 2, "FIRE_DETECTED", "Moderate", "2").toString(), tasks.get(2).toString());
     }
 
     // Ensure zones are correctly parsed and stored
@@ -115,9 +115,9 @@ class FireIncidentSubsystemTest {
     void testAddTasksInOrder(){
         // FireIncidentSubsystem fis = new FireIncidentSubsystem();
         //the order should be req2,req1,req3
-        FireRequest req1 = new FireRequest("10-30-15", 1, "Fire", "High");
-        FireRequest req2 = new FireRequest("10-15-45", 2, "Fire", "Low");
-        FireRequest req3 = new FireRequest("12-25-45", 2, "Fire", "Low");
+        FireRequest req1 = new FireRequest("10-30-15", 1, "Fire", "High", "1");
+        FireRequest req2 = new FireRequest("10-15-45", 2, "Fire", "Low", "2");
+        FireRequest req3 = new FireRequest("12-25-45", 2, "Fire", "Low", "3");
         fireSubsystem.addTask(req1);
         fireSubsystem.addTask(req2);
         fireSubsystem.addTask(req3);

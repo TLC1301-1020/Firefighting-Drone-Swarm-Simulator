@@ -23,7 +23,7 @@ public class DroneSubsystem implements Runnable {
      * list of Drone objects being routed messages by DroneSubsystem process through direction
      * of the Scheduler
      */
-    private final HashMap<Integer,Thread> drones = new HashMap<>();
+    private final HashMap<Integer,Drone> drones = new HashMap<>();
 
     /**
      * flag for checking if the drones have been initialized after creating the DroneSubsystem Instance.
@@ -51,14 +51,18 @@ public class DroneSubsystem implements Runnable {
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
     /**
-     * Placeholder zone coordinates
+     * {@code EventScheduler} object to process Drone faults and deploy them at desired times.
      */
-    public final static int zone2X = 100;
-    public final static int zone2Y = 150;
-    public final static int zone3X = 200;
-    public final static int zone3Y = 100;
-    public final static int zone7X = 350;
-    public final static int zone7Y = 50;
+    EventScheduler scheduler = new EventScheduler();
+
+    /**
+     * Array that holds Drone faults read from file to be passed to an {@code EventScheduler}.
+     */
+    private ArrayList<Event> faults = new ArrayList<>();
+
+    /**
+     * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
+    private volatile boolean running = true;
 
     /**
      * creates a drone subsystem instance for routing messages to and from all drone threads and
@@ -197,7 +201,7 @@ public class DroneSubsystem implements Runnable {
             // Check if the response contains "ACK"
             if (response != null && response.trim().contains("ACK")) {
                 // Registration is successful; add the drone thread to the collection.
-                this.drones.put(i, new Thread(new Drone(droneSubsystem, i)));
+                this.drones.put(i, new Drone(droneSubsystem, i));
                 droneCounter++;
                 System.out.println("DRONE " + i + " is online");
             } else {
@@ -208,10 +212,9 @@ public class DroneSubsystem implements Runnable {
         this.dronesInitialized = true;
     }
 
-
     private void startListeningToScheduler() {
         Thread schedulerListener = new Thread(() -> {
-            while (true) {
+            while (running) {
                 String response = receivePacket();
                 System.out.println("[ S->DSS ] startListeningToScheduler thread received RESPONSE :     " + response);
 
@@ -220,6 +223,47 @@ public class DroneSubsystem implements Runnable {
         });
         schedulerListener.setDaemon(true);
         schedulerListener.start();
+    }
+
+    private class processFaults extends Thread {
+        @Override
+        public void run() {
+
+            // Retrieve Drone faults that are ready to be processed
+            // Events are in example format "DRONE_STUCK:0"
+
+            while (running) {
+                // Block until a fault is ready to process
+                String fault = (String)scheduler.getEvent().getEvent();
+                String[] parts = fault.split(":");
+
+                int droneId = -1;
+                try {droneId = Integer.parseInt(parts[1]);}
+                catch (NumberFormatException e) {
+                    System.out.println("ERROR: Invalid int parsing processFaults");
+                    return;
+                }
+
+                Drone drone = drones.get(droneId);
+
+                if (drone != null) {
+                    switch (parts[0]) {
+                        case "DRONE_STUCK":
+                            drone.setStuckFault();
+                            break;
+                        case "NOZZLE_JAMMED":
+                            drone.setJammedFault();
+                            break;
+                        case "PACKET_LOSS":
+                            drone.setPacketLossFault();
+                            break;
+                    }
+                    System.out.println("\nDRONE " + droneId + " injected with " + parts[0] + " fault\n");
+                } else {
+                    System.out.println("\nFault " + parts[0] + " failed to inject: Invalid Drone ID\n");
+                }
+            }
+        }
     }
 
 
@@ -232,19 +276,28 @@ public class DroneSubsystem implements Runnable {
      * 3. receives responses from scheduler and puts them unmodified in {@code DroneSubsystem.responseQueue}
      */
     public void run() {
-
         // TODO: determine a proper condition for thread lifespan
-
         // Start listening to Scheduler messages in a separate thread
         startListeningToScheduler();
 
         // Start thread functions for all drones
-        Collection<Thread> allDrones = this.drones.values();
-        for (Thread drone : allDrones) {
+        Collection<Drone> allDrones = this.drones.values();
+        for (Drone drone : allDrones) {
             drone.start();
         }
 
-        while (true) {
+        // After readFaultFile(), tasks stores all fault events in faults
+        // Send these faults to our EventScheduler
+        for (Event fault : faults) {
+            scheduler.addEvent(fault);
+        }
+        scheduler.start();
+
+        // Start the processFaults thread
+        Thread faultHandler = new DroneSubsystem.processFaults();
+        faultHandler.start();
+
+        while (running) {
             // Check request queue - communication from drones
             String request = getRequest();
             System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                                         " + request);
@@ -336,6 +389,34 @@ public class DroneSubsystem implements Runnable {
         return new String(data,0,len);
     }
 
+    /**
+     * TODO: read fault input file
+     * */
+    public void readFaultFile(String inputFile){
+
+        // Read in faults from file in the example form "10:00:00,DRONE_STUCK:0"
+        // Create an event with the time as the timestamp, and the String "DRONE_STUCK:0" as the event
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))){
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] parts = line.split(",");
+
+                if (parts.length >= 2) {
+                    String time = parts[0].trim().replaceAll(":", "-");
+                    String eventType = parts[1].trim();
+
+                    Event event = new Event(eventType, time);
+                    faults.add(event);
+                    System.out.println("Reading faults: " + event.getEventTime() + " - " + event.getEvent());
+                }
+            }
+            System.out.println("\n");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
     public void readZoneFile(String zoneFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(zoneFile))) {
             String header = reader.readLine(); // Skip header
@@ -372,11 +453,25 @@ public class DroneSubsystem implements Runnable {
     public Zone getZone(int zoneId) {
         return zoneMap.get(zoneId);
     }
+    public ArrayList<Event> getFaults(){
+        return faults;
+    }
+
+    /**
+     * gracefull exit for all thread function loops. running set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
+    private void shutdown() {
+        this.running = false;
+
+        // close sockets if they are open
+        if (sendSocket != null && !sendSocket.isClosed()) sendSocket.close();
+        if (receiveSocket != null && !receiveSocket.isClosed()) receiveSocket.close();
+    }
 
     public static void main(String[] args)
     {
         DroneSubsystem dss = new DroneSubsystem();
         dss.readZoneFile("SYSC3303_project/src/zone_file.csv");
+        dss.readFaultFile("SYSC3303_project/src/Faults.txt");
         dss.initializeAllDrones(dss, 1);
 
         Thread droneSubsystem = new Thread( dss );

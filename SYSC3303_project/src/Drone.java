@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Drone implements Runnable
+public class Drone extends Thread
 {
     /**
      * State Machine Object to handle the state of the drone */
@@ -19,10 +19,10 @@ public class Drone implements Runnable
     private final float TRAVEL_INCREMENTS = 30;
     /**
      *  time for doors to open or close in ms */
-    private final int APPARATUS_DOORS_MOVE_TIME = 1000;
+    private final int APPARATUS_DOORS_MOVE_TIME = 10;
     /**
      *  drop time for each FEB to drop in ms */
-    private final int PAYLOAD_DROP_TIME = 300;
+    private final int PAYLOAD_DROP_TIME = 30;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;
@@ -45,9 +45,21 @@ public class Drone implements Runnable
     private boolean sendStatus = false;
 
     /**
-     * Used by the DroneTravel getRequest() to send back the appropriate DroneEvent
+     * Used by the DroneTravel state getRequest() to send back the appropriate DroneEvent
      */
     private boolean continueTravel = true;
+
+    /**
+     * Booleans to determine whether this Drone should encounter a respective fault
+     */
+    private boolean isStuck = false;
+    private boolean isJammed = false;
+    private boolean packetLoss = false;
+
+    /**
+     * Boolean to determine lifespan of this Drone thread, flipped by an unrecoverable fault
+     */
+    private boolean alive = true;
 
     // TODO: Add drone attributes such as battery, acceleration etc.
 
@@ -367,13 +379,27 @@ public class Drone implements Runnable
     {
         while (true)
         {
+            // Determine whether this Drone should keep running
+            if (!alive) {
+                return;
+            }
 //            System.out.println("\n[ DRONE RUN ] starting DRONE RUN id key: " + this.droneId );
             String request;
-            // check if drone should send its location status as a request, otherwise, sends normal request based on state
-            if( checkSendStatus()) request = makeStatusRequest();
-            else                    request = makeRequest();
 
 //            System.out.println("\n[ DRONE RUN ] making request DRONE RUN id key: " + this.droneId + " :         " + request);
+
+            // If this drone is injected with a PACKET_LOSS fault, send corrupted packet instead
+            if (packetLoss) {
+                request = this.droneId+":"+this.currentState.display()+":"+"CORRUPTED_PACKET"+":"+(int) this.xPos+":"+(int) this.yPos+":"+this.currTask.toString();
+                packetLoss = false;
+            }
+            // check if drone should send its location status as a request, otherwise, sends normal request based on state
+            else if (checkSendStatus()) {
+                request = makeStatusRequest();
+            }
+            else {
+                request = makeRequest();
+            }
 
             // adds the request to the router host
             this.droneSubsystem.addRequest( request );
@@ -381,6 +407,12 @@ public class Drone implements Runnable
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
+
+            // First check to see if Scheduler needs a resend of last request
+            if (response.contains("RESEND")) {
+                continue;
+            }
+
             // handle instructions given, will trigger travel()
             handleResponse(response);
         }
@@ -503,9 +535,44 @@ public class Drone implements Runnable
         }
     }
 
+    /**
+     * Set the isStuck boolean.
+     */
+    public void setStuckFault() {
+        this.isStuck = true;
+    }
+
+    /**
+     * Set the isJammed boolean.
+     */
+    public void setJammedFault() {
+        this.isJammed = true;
+    }
+
+    /**
+     * Set the packetLoss boolean.
+     */
+    public void setPacketLossFault() {
+        this.packetLoss = true;
+    }
+
+    /**
+     * Set the alive boolean to false.
+     */
+    public void setAlive() {
+        this.alive = false;
+    }
+
     public void setBasePosition()
     {
         this.xPos = 0;
         this.yPos = 0;
+    }
+
+    public boolean getIsJammed(){
+        return isJammed;
+    }
+    public boolean getIsStuck(){
+        return isStuck;
     }
 }

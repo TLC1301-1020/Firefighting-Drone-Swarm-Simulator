@@ -43,7 +43,12 @@ public class FireIncidentSubsystem implements Runnable {
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH-mm-ss");
+
+    /**
+     * ArrayList that stores FireRequests from an EventScheduler that are ready to be processed.
+     */
     private ArrayList<FireRequest> readyToSend = new ArrayList<>();
+
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
      */
@@ -157,6 +162,7 @@ public class FireIncidentSubsystem implements Runnable {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
+            int id = 0;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 //                String time = parts[0].trim();
@@ -166,7 +172,7 @@ public class FireIncidentSubsystem implements Runnable {
                 String eventType = parts[2].trim();
                 String severity = parts[3].trim();
 
-                FireRequest task = new FireRequest(time, zoneId, eventType, severity);
+                FireRequest task = new FireRequest(time, zoneId, eventType, severity, String.valueOf(++id));
                 addTask(task);
             }
             System.out.println("\n");

@@ -52,7 +52,7 @@ class DroneIdle implements DroneState {
         }
         else if (  event.equals( DroneEvent.STATUS ) )
         {
-            // returns to this point when scheduler acknowlodges drones location and processes it. Waiting for next assignment from scheduler thread handling new assignments
+            // returns to this point when scheduler acknowledges drones location and processes it. Waiting for next assignment from scheduler thread handling new assignments
             System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " is waiting for next instruction after interrupt at    " + drone.getLocation());
         }
     }
@@ -136,15 +136,10 @@ class DroneTravel implements DroneState
             // arrived at zone and is asking to open payload doors
             System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " is given permission to drop payload on fire in zone " + drone.getCurrTask().getZoneId());
             drone.setState( new DroneActive(new DroneDeploy()) );
-
-            // drop payload in 3 steps
-            drone.activatePayloadDoors(); // open doors
-            drone.dropPayload();            // drop payload
-            drone.activatePayloadDoors(); // close doors
         }
         else if ( event.equals( DroneEvent.NEW_FIRE_REQUEST ) )
         {
-            // assigned new fire request mid travel
+            // assigned new fire request mid-travel
             System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " at " + drone.getLocation()+ " has a new fire request and is now traveling to fire in zone " + drone.getCurrTask().getZoneId());
             // sets the same state of traveling but to a new zone
             drone.setState( new DroneActive(new DroneTravel()) );
@@ -167,9 +162,13 @@ class DroneTravel implements DroneState
 
     @Override
     public String getRequest(Drone drone) {
+        // ITERATION 4
+        if(drone.getIsStuck()) return String.valueOf(DroneEvent.DRONE_STUCK);
+
         if (drone.getContinueTravel()) {
             return String.valueOf(DroneEvent.CONTINUING);
         }
+
         return String.valueOf(DroneEvent.PERMISSION_TO_DROP);
     }
 }
@@ -178,14 +177,10 @@ class DroneDeploy implements DroneState {
 
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
-        if (event.equals( DroneEvent.PAYLOAD_DROPPED ))
-        {
+        if (event.equals( DroneEvent.PAYLOAD_DROPPED )) {
             // deployed payload successfully
             System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " has deployed the payload and is returning to base");
             drone.setState( new DroneActive(new DroneReturn()) );
-
-            // return travel
-            drone.returnTravel();
         }
         else if (event.equals( DroneEvent.PAYLOAD_DEPLOY_FAILURE )) {
             // failed to deploy payload
@@ -200,6 +195,9 @@ class DroneDeploy implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
+        // ITERATION 4
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
+
         return String.valueOf(DroneEvent.PAYLOAD_DROPPED);
     }
 }
@@ -207,33 +205,30 @@ class DroneDeploy implements DroneState {
 class DroneReturn implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
-        if ( event.equals( DroneEvent.RETURN_STATUS ) )
-        {
-            // continuing to return to base
-            System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() + " is continuing to return to base after sending status update" );
-            drone.setState( new DroneActive(new DroneReturn()) );
-
-            // if travel is interrupted, has to keep returning
-            drone.returnTravel();
-        }
-        else if (event.equals( DroneEvent.RETURNED_TO_BASE )) {
+        if (event.equals( DroneEvent.RETURNED_TO_BASE )) {
             // arrived at base and is now refilling
             drone.setBasePosition();
+
+            if (drone.getIsJammed()) {
+                System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has returned to base following a deployment failure. Shutting down...");
+                drone.setAlive();
+            }
             // If the current task is default, transition to idle.
-            if (drone.getCurrTask().isDefault()) {
+            else if (drone.getCurrTask().isDefault()) {
                 System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
                 drone.setState(new DroneIdle());
             } else {
                 System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" active task exists; transitioning to DroneRefill state.");
                 drone.setState(new DroneRefill());
-
-                // load payload
-                drone.loadPayload();
             }
+            /*
+            System.out.println("DRONE " + drone.getDroneId() + " has returned to base and is now refilling payload");
+            drone.setState( new DroneRefill() );
+            */
         }
         else if( event.equals( DroneEvent.DRONE_STUCK ) ) {
             // drone became stuck during active flight return
-            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is stuck during return flight");
+            System.out.println("[ DRONE STATE ] drone " + drone.getDroneId() +" is stuck during return flight");
             // set state to fault of stuck
             drone.setState( new DroneFault(new DroneFaultStuck()) );
         }
@@ -245,6 +240,8 @@ class DroneReturn implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
+        if(drone.getIsStuck()) return String.valueOf(DroneEvent.DRONE_STUCK);
+
         return String.valueOf(DroneEvent.RETURNED_TO_BASE);
     }
 }
@@ -258,8 +255,15 @@ class DroneRefill implements DroneState {
 
             // set a default fire request
             drone.setCurrTask(new FireRequest());
-            // set state back to idle
+//            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
             drone.setState(new DroneIdle());
+
+//            if (drone.getCurrTask().isDefault()) {
+//                System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has no active task; transitioning to IDLE state.");
+//                drone.setState(new DroneIdle());
+//            } else {
+//                // For now, transition to idle.
+//                drone.setState(new DroneIdle());}
         }
     }
     @Override
@@ -269,6 +273,9 @@ class DroneRefill implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
+        //TODO: ITERATION 4
+        if(drone.getIsJammed()) return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
+
         return String.valueOf(DroneEvent.REFILL_COMPLETE);
     }
 }
@@ -308,6 +315,10 @@ class DroneFaultStuck implements DroneState {
             System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is no longer stuck and is returning to base");
             drone.setState( new DroneActive(new DroneReturn()) );
         }
+        else if (event.equals( DroneEvent.DRONE_STUCK )) {
+            System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is still stuck. Shutting down drone...");
+            drone.setAlive();
+        }
     }
 
     @Override
@@ -317,6 +328,9 @@ class DroneFaultStuck implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
+        if (drone.getIsStuck()) {
+            return String.valueOf(DroneEvent.DRONE_STUCK);
+        }
         return String.valueOf(DroneEvent.STUCK_RESOLVED);
     }
 }
@@ -324,7 +338,7 @@ class DroneFaultStuck implements DroneState {
 class DroneFaultDeploy implements DroneState {
     @Override
     public void handleEvent(Drone drone, DroneEvent event) {
-        if (event.equals( DroneEvent.DEPLOY_FAILURE_ACKNOWLEDGED )) {
+        if (event.equals( DroneEvent.PAYLOAD_DEPLOY_FAILURE )) {
             System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is returning to base following a deployment failure");
             drone.setState( new DroneActive(new DroneReturn()) );
         }
@@ -342,7 +356,7 @@ class DroneFaultDeploy implements DroneState {
 
     @Override
     public String getRequest(Drone drone) {
-        return String.valueOf(DroneEvent.DEPLOY_FAILURE_ACKNOWLEDGED);
+        return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
     }
 }
 

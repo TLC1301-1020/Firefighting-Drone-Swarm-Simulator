@@ -51,9 +51,14 @@ public class Scheduler {
 
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, fireSendSocket, droneSendSocket;
     private final ConcurrentLinkedQueue<DroneAssignment> pendingAssignments = new ConcurrentLinkedQueue<>();
+    private final List<FireRequest> readdedRequests = new ArrayList<>();
     /**
      * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of scheduler threads running */
     private volatile boolean running = true;
+
+    public HashMap<Integer, DroneStatus> getDrones() {
+        return drones;
+    }
 
     /**
      * Object used to store drones marked for 'interrupt' reassignment by SP thread for checking in SD thread */
@@ -121,14 +126,89 @@ public class Scheduler {
 
                 System.out.println("request is new fire request - sending through sendSocket + port: " + FIRE_INCIDENT_SUBSYSTEM_PORT);
 
-                FireRequest fireRequest = new FireRequest(request);
-                addRequest(fireRequest);
+                Queue<FireRequest> fireRequests = makeFireRequests(request);
+//                FireRequest fireRequest = new FireRequest(request);
+                for( FireRequest fr : fireRequests ) addRequest(fr);
+
                 System.out.println("\n[ SF->F ]  -   SCHEDULER WILL NOW SEND TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
                 sendPacket(fireSendSocket, FIRE_INCIDENT_SUBSYSTEM_PORT, "SCHEDULER:ACKNOWLEDGED");
                 System.out.println("\n[ SF->F ]  -   * SENT TO FIRE  -   SCHEDULER:ACKNOWLEDGED");
             }
         }
     }
+
+    /**
+     * Parses a single FireRequest string and expands it into multiple {@link FireRequest} objects
+     * based on its severity level.
+     * <p>
+     * The number of fire requests created is determined by the severity:
+     * <ul>
+     *   <li>Low &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 1 FireRequest</li>
+     *   <li>Moderate → 2 FireRequests</li>
+     *   <li>High &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 3 FireRequests</li>
+     * </ul>
+     * Each generated request has a unique sub-ID appended (eg A, B, C) to indicate this was a split request
+     * <p>
+     * The input string must follow the format produced by {@code FireRequest.toString()}:
+     * <pre>
+     * FireRequest{time=12:00, zone=2, event=FIRE_DETECTED, severity=High, id=1}
+     * </pre>
+     *
+     * @param request the string representation of a FireRequest
+     * @return a queue of FireRequest objects with adjusted IDs and same metadata
+     */
+    private Queue<FireRequest> makeFireRequests(String request)
+    {
+        Queue<FireRequest> fireRequests = new LinkedList<>();
+
+        request = request.replace("FireRequest{", "").replace("}", "");
+        String[] parts = request.split(", ");
+
+        int requestsRequired = 0;
+        for (String part : parts)
+        {
+            if(part.contains("severity"))
+            {
+                if (part.contains("High")) requestsRequired = 3;
+                else if (part.contains("Moderate")) requestsRequired = 2;
+                else if (part.contains("Low")) requestsRequired = 1;
+            }
+        }
+        String[] subID = {"A","B","C"};
+        for( int i = 0 ; i < requestsRequired ; ++i )
+        {
+            String time = "0";
+            int zoneId = -1;
+            String eventType = "0";
+            String severity = "0";
+            String id = "0";
+
+            for (String part : parts) {
+                String[] value = part.split("=");
+                switch (value[0]) {
+                    case "time":
+                        time = value[1];
+                        break;
+                    case "zone":
+                        zoneId = Integer.parseInt(value[1]);
+                        break;
+                    case "event":
+                        eventType = value[1];
+                        break;
+                    case "severity":
+                        severity = value[1];
+                        break;
+                    case "id":
+                        id = value[1]+subID[i];
+                        break;
+                }
+            }
+            fireRequests.add(new FireRequest(time, zoneId, eventType, severity, id));
+        }
+        return fireRequests;
+    }
+
+
 
     /**
      * SD Thread to listen to packets from {@link DroneSubsystem} and calls {@link Scheduler#handleDroneRequest} to handle the requests
@@ -176,16 +256,18 @@ public class Scheduler {
             while (running) {
                 synchronized(requestQueue) {
                     if (!requestQueue.isEmpty()) {
-                        FireRequest req = requestQueue.peek();
+                        // request is removed here and added back only if it is not assigned to a drone
+                        FireRequest req = requestQueue.remove();
 
                         System.out.println("\n[  SP  ]  -   SCHEDULER REQUEST QUEUE REMOVED  -       " + req.toString());
 
-                        if ( assignFireRequest(req) )
+                        if ( assignFireRequest(req) )   // returns true if drone was assigned this fire request
                         {
                             System.out.println("\n[  SP  ]  -   SCHEDULER SUCCESSFULLY TASKED A DRONE TO ANSWER REQUEST  -       " + req.toString());
                         }
                         else
-                        {
+                        {   // request is added back here only when it is not assigned to a drone
+                            requestQueue.add(req);
                             System.out.println("\n[  SP  ]  -   SCHEDULER FOUND NO DRONES TO ANSWER REQUEST              -       " + req.toString());
                             try {
                                 Thread.sleep(100); // Check every 1000ms; adjust as needed.
@@ -215,7 +297,7 @@ public class Scheduler {
      *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS:CURR)FIREREQUEST
      @return String value of entire formatted response to send to Drone in {@link listenToDrone}
      */
-    private String handleDroneRequest(String request)
+    String handleDroneRequest(String request)
     {
         System.out.println("\n[SD   ]  -   SCHEDULER HANDLE DRONE REQUEST: "+request+ "  -   ");
 
@@ -226,12 +308,12 @@ public class Scheduler {
             return "ACK:" + droneId + ":REGISTERED";
         }
 
-        // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+        // check format     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID"
         String[] items = request.split(":");
-        if (items.length != 6) return "ERROR: Invalid request format:" + request;
+//        if (items.length != 6) return "ERROR: Invalid request format:" + request;
         FireRequest currTask = new FireRequest(items[5]);
 
-        // get drone id     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+        // get drone id     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:ID"
         int droneId = -1;
         try {
             droneId = Integer.parseInt(items[0]);
@@ -245,7 +327,7 @@ public class Scheduler {
 
         // otherwise parse & handle request...
 
-        // get current state of this drone     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
+        // get current state of this drone     -   in expected format "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID"
         String droneState = items[1];
 
         // get request of this drone and convert it to DroneEvent
@@ -253,11 +335,7 @@ public class Scheduler {
         try {
             eventRequest = DroneEvent.valueOfEvent(items[2]); // Convert string to enum
         } catch (IllegalArgumentException e) {
-            if (!items[2].equals( DroneEvent.STATUS )) return "ERROR: Unknown drone event: " + items[2];
-            else
-            {
-                // Status request event flow here
-            }
+            System.out.println("ERROR: Unknown drone event: " + items[2]);
         }
 
         // get location of this drone
@@ -272,15 +350,15 @@ public class Scheduler {
         // update location of drone
         drone.setLocation(x, y);
         /* request types
-            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y:CURR_TASK  -> when there is a status update
-                       DRONE_ID:<STATE>:REQUEST:X:Y:CURR_TASK  -> when there is all other requests
+            "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y:CURR_TASK:FIREREQ_ID  -> when there is a status update
+                       DRONE_ID:<STATE>:REQUEST:X:Y:CURR_TASK:FIREREQ_ID  -> when there is all other requests
          */
 
         /*  response types
-            "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for wait for a fire request
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK    - for saying acknowledge
+            "WAIT" in format WAIT:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID    - for wait for a fire request
+            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK:FIREREQ_ID    - for saying acknowledge
 
-             not assigned here* "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
+             not assigned here* "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK:FIREREQ_ID  - for reassigning current task and state
          */
         // TODO: handle request to proceed with the state corresponding to when this event occurs
         switch(eventRequest)
@@ -304,14 +382,17 @@ public class Scheduler {
 
                 return "ACK:" + request;
             case PAYLOAD_DEPLOY_FAILURE:
-                drone.setState("[DEPLOY FAILURE]");
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
+                drone.setState("[OFFLINE]");
+                addRequest(currTask);
+                drone.setCurrentTask(new FireRequest());
                 return "ACK:" + request;
             case DEPLOY_FAILURE_ACKNOWLEDGED:
                 // TODO :                 drone.setState("[DEPLOY FAILURE]");
                 return "ACK:" + request;
             case RETURNED_TO_BASE:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [RETURNING] *");
-                drone.setState("[RETURNING]");
+                if (!drone.getState().equals("[OFFLINE]")) {drone.setState("[RETURNING]");}
 //                return "ACK:" + request + ":COMPLETED";
                 return "ACK:" + request;
             case REFILL_COMPLETE:
@@ -340,6 +421,10 @@ public class Scheduler {
                 }
                 return "ACK:" + request;
             case DRONE_STUCK:
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
+                drone.setState("[OFFLINE]");
+                addRequest(currTask);
+                drone.setCurrentTask(new FireRequest());
                 return "ACK:" + request;
             case STUCK_RESOLVED:
                 return "ACK:" + request;
@@ -371,15 +456,18 @@ public class Scheduler {
                 return "ACK:" + request;
             case CONTINUING:
                 // Send an ack -- this drone is continuing on its old mission
-                if (!drone.getState().equals("[TRAVELING]")) { drone.setState("[TRAVELING]"); }
+                if (!drone.getState().equals("[TRAVELING]") && !drone.getState().equals("[OFFLINE]")) { drone.setState("[TRAVELING]"); }
                 return "ACK:" + request;
             case RETURN_STATUS:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == RETURN_STATUS:    drone " + droneId + " * is currently  " + drone.getState() + "*");
-                drone.setState("[RETURNING]");
+                if (!drone.getState().equals("[OFFLINE]")) {drone.setState("[RETURNING]");}
                 return "ACK:" + request;
+            case null:
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == DEFAULT:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
+                return "RESEND:" + request; // should hit when the case is garbled due to packet being corrupted
             default:
-                System.out.println("\n[SD   ]  -   switch(eventRequest) == UNKNOWN:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
-                return "ERROR: UNKNOWN drone request: " + request; // should never hit
+                System.out.println("\n[SD   ]  -   switch(eventRequest) == DEFAULT:    drone "+drone.getDroneId()+ " * NO STATE CHANGE remains at  " + drone.getState()+ "*");
+                return "RESEND:" + request; // should hit when the case is garbled due to packet being corrupted
         }
     }
 
@@ -410,10 +498,6 @@ public class Scheduler {
         // FOLLOWING LOGIC IS FOR preserving previous task for drone in case they are reassigned
         FireRequest previousTask = selectedDrone.getCurrentTask();
         selectedDrone.setCurrentTask(fireRequest);  // set the task to the new one so scheduler knows but do not set the drone state
-
-        // TODO: Instead of removing this request, need to take into account severity, and possibly
-        // TODO: throw it back at the start of the queue to be assigned to different drones
-        removeRequest(fireRequest);
 
         // FOLLOWING LOGIC IS checking if drone had previous default task and if not if that drones state is traveling        // Build request string in expected format: "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         if ( !previousTask.isDefault() && selectedDrone.getState().equals("[TRAVELING]"))
@@ -479,7 +563,7 @@ public class Scheduler {
     }
 
     /**
-     * contructor calls {@link Scheduler#parseZoneFile} to populate {@link Scheduler#zoneMap} with zone data
+     * constructor calls {@link Scheduler#parseZoneFile} to populate {@link Scheduler#zoneMap} with zone data
      * <p>initializes various member collection objects and send/receive sockets</p>
      * <p>initializes and starts all scheduler threads</p>
      */
@@ -732,7 +816,12 @@ public class Scheduler {
      */
     public synchronized void addRequest(FireRequest request) {
         requestQueue.offer(request);
+        readdedRequests.add(request);
         System.out.println("From Scheduler - receiving request from fire incident: \n" + request + "\n");
+    }
+
+    public List<FireRequest> getReaddedRequests() {
+        return readdedRequests;
     }
 
     /**
