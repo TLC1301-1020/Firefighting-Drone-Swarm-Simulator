@@ -208,4 +208,4 @@ UI (Future Iteration) - Damon, Andrew
 Project uses Junit5.8.1, JDK22
 
 ### Note
-Some issues to check for: https://docs.google.com/document/d/1yOJuDtkl1yb6xlGa3G38a8q0eshFcxU1HcMObruX3mc/edit?tab=t.0
+The issues from the previous iteration are resolved
