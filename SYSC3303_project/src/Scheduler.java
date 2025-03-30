@@ -423,7 +423,13 @@ public class Scheduler {
             case DRONE_STUCK:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
                 drone.setState("[OFFLINE]");
-                addRequest(currTask);
+                if( !currTask.isDefault() && droneState.equals("[ACTIVE][TRAVELING]") )
+                {
+                    System.out.println("\n[SD   ]  -     drone "+drone.getDroneId()+ "  is recognized as stuck and current fire request is stored to scheduler to be reassigned");
+                    addRequest(currTask);
+                }
+                else System.out.println("\n[SD   ]  -     drone "+drone.getDroneId()+ "  is recognized as stuck but the scheduler already stored its fire request");
+//                addRequest(currTask);
                 drone.setCurrentTask(new FireRequest());
                 return "ACK:" + request;
             case STUCK_RESOLVED:
