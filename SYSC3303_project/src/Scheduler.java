@@ -384,7 +384,13 @@ public class Scheduler {
             case PAYLOAD_DEPLOY_FAILURE:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
                 drone.setState("[OFFLINE]");
-                addRequest(currTask);
+                if( !currTask.isDefault() && droneState.equals("[ACTIVE][DEPLOYING]") )
+                {
+                    System.out.println("\n[SD   ]  -     drone "+drone.getDroneId()+ "  is recognized with payload deploy failure and current fire request is stored to scheduler to be reassigned");
+                    addRequest(currTask);
+                }
+                else System.out.println("\n[SD   ]  -     drone "+drone.getDroneId()+ "  is recognized as with payload deploy failure but the scheduler already stored its fire request");
+//                addRequest(currTask);
                 drone.setCurrentTask(new FireRequest());
                 return "ACK:" + request;
             case DEPLOY_FAILURE_ACKNOWLEDGED:
@@ -423,7 +429,13 @@ public class Scheduler {
             case DRONE_STUCK:
                 System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
                 drone.setState("[OFFLINE]");
-                addRequest(currTask);
+                if( !currTask.isDefault() && droneState.equals("[ACTIVE][TRAVELING]") )
+                {
+                    System.out.println("\n[SD   ]  -     drone "+drone.getDroneId()+ "  is recognized as stuck and current fire request is stored to scheduler to be reassigned");
+                    addRequest(currTask);
+                }
+                else System.out.println("\n[SD   ]  -     drone "+drone.getDroneId()+ "  is recognized as stuck but the scheduler already stored its fire request");
+//                addRequest(currTask);
                 drone.setCurrentTask(new FireRequest());
                 return "ACK:" + request;
             case STUCK_RESOLVED:
