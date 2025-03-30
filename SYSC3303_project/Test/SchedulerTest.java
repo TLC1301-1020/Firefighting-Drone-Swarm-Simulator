@@ -116,7 +116,7 @@ class SchedulerTest {
         drone.setState("[DEPLOYING]");
         drone.setCurrentTask(task);
 
-        String request = droneId + ":[DEPLOYING]:PAYLOAD_DEPLOY_FAILURE:50:40:" + task;
+        String request = droneId + ":[ACTIVE][DEPLOYING]:PAYLOAD_DEPLOY_FAILURE:50:40:" + task;
 
         // Act
         scheduler.handleDroneRequest(request);
