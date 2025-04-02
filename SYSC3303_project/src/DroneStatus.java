@@ -32,6 +32,6 @@ public class DroneStatus {
     public void setCurrentTask(FireRequest fr) { this.currentTask = fr; }
     public String toString()
     {
-        return this.droneId+":"+this.state+":"+this.x+":"+this.y;
+        return this.droneId+":"+this.state+":"+this.x+":"+this.y + ":" + this.currentTask.toString();
     }
 }

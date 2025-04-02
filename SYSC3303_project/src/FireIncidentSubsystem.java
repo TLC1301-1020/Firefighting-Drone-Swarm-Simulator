@@ -1,13 +1,12 @@
+import jdk.javadoc.doclet.Taglet;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The FireIncidentSubsystem handles fire incident requests and communicates with the Scheduler.
@@ -43,6 +42,13 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH-mm-ss");
+
+    /**
+     * ArrayList that stores FireRequests from an EventScheduler that are ready to be processed.
+     */
+    private ArrayList<FireRequest> readyToSend = new ArrayList<>();
+
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
      */
@@ -57,6 +63,55 @@ public class FireIncidentSubsystem implements Runnable {
         }
     }
 
+    /**
+     * Thread to listen to DroneSubsystem.
+     */
+    private class ListenToScheduler extends Thread {
+        @Override
+        public void run() {
+            System.out.println("\n[ FIRE<-S  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
+            while (true) {
+                String update = receiveUpdate();
+                System.out.println("\n[ FIRE<-S ]  UPDATE IS:       " + update);
+            }
+        }
+    }
+
+    /**
+     * TODO: Thread to listen to DroneSubsystem.
+     * TODO: Make a new list for requests that are ready to send ex) List<FireRequest> readyToSend
+     * TODO: Synchronize on readyToSend
+     * TODO: if there's a request in readyToSend, send it with sendIncident(firerequest.toString())
+     */
+    private class SendToScheduler extends Thread {
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    FireRequest request;
+                    synchronized (readyToSend) {
+                        while (readyToSend.isEmpty()) {
+                            System.out.println("[ STS ] - waiting for upcoming tasks.");
+                            readyToSend.wait();
+                        }
+                        //not empty list, taking the request
+                        request = readyToSend.remove(0);
+                        readyToSend.notifyAll();
+                    }
+                    //send the request
+                    if(request!=null){
+                        System.out.println("[ STS ] - sending the request: " + request);
+                        sendIncident(request.toString());
+                    }
+                } catch (InterruptedException e) {
+                    System.out.println("SendToScheduler interrupted.");
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+    }
 
     /**
      * thread function for the fire incident subsystem
@@ -67,51 +122,35 @@ public class FireIncidentSubsystem implements Runnable {
         readZoneFile(zoneFile);
         // For debugging, print the parsed zones.
         for (Zone zone : zoneMap.values()) {
-            System.out.println("Parsed zone: " + zone);
-            System.out.println(zoneMap.get(7));
+            System.out.println("[F] Parsed zone: " + zoneMap.get(zone.getZoneId()));
         }
 
         readInputFile(inputFile);
 
-//        // Send all of our requests read from file
-//        while(!tasks.isEmpty()){
-//
-//            sendIncident(tasks.remove(0).toString());
-//
-//            // This should just be an acknowledgement
-//            System.out.println(receiveUpdate());
-//
-//        }
+        // After readInputFile(), tasks stores all FireRequests in sorted order by time
+        // Send these FireRequests to our EventScheduler
+        // Pass pointer to this entity so that we can re-add tasks that are ready?
+        EventScheduler scheduler = new EventScheduler();
+        for (FireRequest fr : tasks) {
+            scheduler.addEvent(new Event(fr, fr.getTime()));
+        }
+        scheduler.start();
 
-//        sendIncident(tasks.remove(0).toString());
-//
-//            // This should just be an acknowledgement
-//        System.out.println(receiveUpdate());
+        // Create and start threads to listen to other subsystems
+        Thread receiver = new FireIncidentSubsystem.ListenToScheduler();
+        Thread sender = new FireIncidentSubsystem.SendToScheduler();
 
-        sendIncident(tasks.remove(0).toString());
+        receiver.start();
+        sender.start();
 
-        // Now we request and wait for future Scheduler updates
-//        while(!tasks.isEmpty())
-        while(true) {
-
-            String update = receiveUpdate();
-            System.out.println(" UPDATE 1 IS: " + update);
-            // Request the scheduler for updates
-
-            sendIncident("FIRE_DATA_REQUEST");
-            String update2 = receiveUpdate();
-            System.out.println(" UPDATE 2 IS: " + update2);
-
-            // This should be an update that a drone has completed a FireRequest
-//            System.out.println(receiveUpdate());
-            if( update2.contains("COMPLETED") )
-            {
-                sendIncident(tasks.remove(0).toString());
+        // Retrieve and store FireRequests that are ready to be sent from the EventScheduler
+        while (true) {
+            Event event = scheduler.getEvent();
+            synchronized (readyToSend) {
+                readyToSend.add((FireRequest) event.getEvent());
+                readyToSend.notifyAll();
             }
         }
-
-
-
     }
 
     /**
@@ -123,24 +162,53 @@ public class FireIncidentSubsystem implements Runnable {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String line;
 
+            int id = 0;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 //                String time = parts[0].trim();
-                String time = parts[0].trim().replace(":", "-");
+                String time = parts[0].trim().replaceAll(":", "-");
+
                 int zoneId = Integer.parseInt(parts[1].trim());
                 String eventType = parts[2].trim();
                 String severity = parts[3].trim();
 
-                FireRequest task = new FireRequest(time, zoneId, eventType, severity);
-                tasks.add(task);
-
-                System.out.println("Adding task: " + task);
+                FireRequest task = new FireRequest(time, zoneId, eventType, severity, String.valueOf(++id));
+                addTask(task);
             }
+            System.out.println("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**TODO: Add task to the list by timestamps
+     *
+     */
+    public void addTask(FireRequest task){
+        System.out.println(task.getTime());
+        LocalTime taskLocalTime = LocalTime.parse(task.getTime(), timeFormatter);
+        int low = 0;
+        int high = tasks.size()-1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            FireRequest midTask = tasks.get(mid);
+            //Insertion comparison
+            LocalTime midTaskTime = LocalTime.parse(midTask.getTime(), timeFormatter);
+            int comparison = midTaskTime.compareTo(taskLocalTime);
+            if (comparison < 0) {
+                low = mid + 1;
+            } else if (comparison > 0) {
+                high = mid - 1;
+            } else {
+                tasks.add(mid, task);
+                return;
+            }
+        }
+        tasks.add(low, task);
+        System.out.println("Task added: " + task);
+
+    }
     /**
      * Reads the zone information from the given CSV file and stores it in the static zoneMap.
      * Expected CSV format:
@@ -212,7 +280,7 @@ public class FireIncidentSubsystem implements Runnable {
     public String receiveUpdate() {
         try {
             // Set a timeout of 5000ms (5 seconds)
-            receiveSocket.setSoTimeout(5000);
+//            receiveSocket.setSoTimeout(5000);
             byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
             DatagramPacket receivePacket = new DatagramPacket(data, data.length);
             receiveSocket.receive(receivePacket);

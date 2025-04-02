@@ -1,10 +1,13 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.net.DatagramSocket;
+import java.util.ArrayList;
+import java.util.List;
 
 
 class DroneSubsystemTest {
     private DroneSubsystem droneSubsystem;
+    private final String faultFile = "SYSC3303_project/src/Faults.txt";
 
     @BeforeEach
     void setUp() {
@@ -59,5 +62,26 @@ class DroneSubsystemTest {
 
         assertTrue(sendSocket.isClosed());
         assertTrue(receiveSocket.isClosed());
+    }
+    @Test
+    void testReadFaults(){
+        assertTrue(droneSubsystem.getFaults().isEmpty(), "Fault list should be empty before reading.");
+
+        droneSubsystem.readFaultFile(faultFile);
+        assertFalse(droneSubsystem.getFaults().isEmpty(), "Fault list should not be empty after reading.");
+
+        ArrayList<Event> faultList = droneSubsystem.getFaults();
+        assertEquals(3, faultList.size(), "Should have 2 faults in the list.");
+
+        Event event1 = new Event("DRONE_STUCK:0","10-00-05");
+        Event event2 = new Event("NOZZLE_JAMMED:1","10-00-10");
+        Event event3 = new Event("PACKET_LOSS:1","10-00-15");
+        assertEquals(event1.getEventTime(),droneSubsystem.getFaults().get(0).getEventTime(), "The time of two events should be the same.");
+        assertEquals(event2.getEventTime(),droneSubsystem.getFaults().get(1).getEventTime(), "The time of two events should be the same.");
+        assertEquals(event3.getEventTime(),droneSubsystem.getFaults().get(2).getEventTime(), "The time of two events should be the same.");
+
+        assertEquals(event1.getEvent(),droneSubsystem.getFaults().get(0).getEvent(),"The type of fault of two events should be the same.");
+        assertEquals(event2.getEvent(),droneSubsystem.getFaults().get(1).getEvent(),"The type of fault of two events should be the same.");
+        assertEquals(event3.getEvent(),droneSubsystem.getFaults().get(2).getEvent(),"The type of fault of two events should be the same.");
     }
 }

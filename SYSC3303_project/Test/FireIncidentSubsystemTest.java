@@ -33,9 +33,9 @@ class FireIncidentSubsystemTest {
         List<FireRequest> tasks = fireSubsystem.getTasks();
         assertEquals(3, tasks.size(), "Should have 3 fire incidents");
 
-        assertEquals(new FireRequest("10-30-15", 7, "FIRE_DETECTED", "High").toString(), tasks.get(0).toString());
-        assertEquals(new FireRequest("14-10-00", 3, "FIRE_DETECTED", "Moderate").toString(), tasks.get(1).toString());
-        assertEquals(new FireRequest("14-16-03", 2, "FIRE_DETECTED", "Moderate").toString(), tasks.get(2).toString());
+        assertEquals(new FireRequest("10-30-15", 4, "FIRE_DETECTED", "High", "1").toString(), tasks.get(0).toString());
+        assertEquals(new FireRequest("14-10-00", 3, "FIRE_DETECTED", "Moderate", "3").toString(), tasks.get(1).toString());
+        assertEquals(new FireRequest("14-16-03", 2, "FIRE_DETECTED", "Moderate", "2").toString(), tasks.get(2).toString());
     }
 
     // Ensure zones are correctly parsed and stored
@@ -45,29 +45,41 @@ class FireIncidentSubsystemTest {
         fireSubsystem.readZoneFile(zoneFile);
 
         assertFalse(FireIncidentSubsystem.zoneMap.isEmpty(), "Zone map should be populated");
-        assertEquals(3, FireIncidentSubsystem.zoneMap.size(), "Should contain 3 zones");
+        assertEquals(5, FireIncidentSubsystem.zoneMap.size(), "Should contain 5 zones");
 
-        Zone zone7 = FireIncidentSubsystem.zoneMap.get(7);
-        Zone zone3 = FireIncidentSubsystem.zoneMap.get(3);
+        Zone zone1 = FireIncidentSubsystem.zoneMap.get(1);
         Zone zone2 = FireIncidentSubsystem.zoneMap.get(2);
+        Zone zone3 = FireIncidentSubsystem.zoneMap.get(3);
+        Zone zone4 = FireIncidentSubsystem.zoneMap.get(4);
+        Zone zone5 = FireIncidentSubsystem.zoneMap.get(5);
 
-        assertNotNull(zone7);
-        assertEquals(0, zone7.getStartX());
-        assertEquals(0, zone7.getStartY());
-        assertEquals(700, zone7.getEndX());
-        assertEquals(600, zone7.getEndY());
-
-        assertNotNull(zone3);
-        assertEquals(0, zone3.getStartX());
-        assertEquals(600, zone3.getStartY());
-        assertEquals(650, zone3.getEndX());
-        assertEquals(1500, zone3.getEndY());
-
+        assertNotNull(zone1);
         assertNotNull(zone2);
-        assertEquals(650, zone2.getStartX());
-        assertEquals(1500, zone2.getStartY());
-        assertEquals(800, zone2.getEndX());
-        assertEquals(1800, zone2.getEndY());
+        assertNotNull(zone3);
+        assertNotNull(zone4);
+        assertNotNull(zone5);
+
+        assertEquals(0, zone1.getStartX());
+        assertEquals(0, zone1.getStartY());
+        assertEquals(0, zone2.getStartX());
+        assertEquals(600, zone2.getStartY());
+        assertEquals(0, zone3.getStartX());
+        assertEquals(1500, zone3.getStartY());
+        assertEquals(700, zone4.getStartX());
+        assertEquals(0, zone4.getStartY());
+        assertEquals(650, zone5.getStartX());
+        assertEquals(600, zone5.getStartY());
+
+        assertEquals(700, zone1.getEndX());
+        assertEquals(600, zone1.getEndY());
+        assertEquals(650, zone2.getEndX());
+        assertEquals(1500, zone2.getEndY());
+        assertEquals(1000, zone3.getEndX());
+        assertEquals(1700, zone3.getEndY());
+        assertEquals(1000, zone4.getEndX());
+        assertEquals(600, zone4.getEndY());
+        assertEquals(1000, zone5.getEndX());
+        assertEquals(1500, zone5.getEndY());
     }
 
     // Ensure sendIncident() does not throw an exception
@@ -77,11 +89,12 @@ class FireIncidentSubsystemTest {
         assertDoesNotThrow(() -> fireSubsystem.sendIncident(message), "sendIncident should not throw an exception");
     }
 
-    // Ensure receiveUpdate() handles timeouts correctly
-    @Test
-    void testReceiveUpdateTimeout() {
-        assertEquals("No updates available", fireSubsystem.receiveUpdate(), "Should return timeout message");
-    }
+// no longer times out (caused issues)
+//    // Ensure receiveUpdate() handles timeouts correctly
+//    @Test
+//    void testReceiveUpdateTimeout() {
+//        assertEquals("No updates available", fireSubsystem.receiveUpdate(), "Should return timeout message");
+//    }
 
     // Ensure getTasks() returns the expected tasks
     @Test
@@ -96,4 +109,23 @@ class FireIncidentSubsystemTest {
         assertNotNull(fireSubsystem.getSendSocket(), "Send socket should be initialized");
         assertNotNull(fireSubsystem.getReceiveSocket(), "Receive socket should be initialized");
     }
+
+    // Checks the order of the tasks, should be in timestamp order
+    @Test
+    void testAddTasksInOrder(){
+        // FireIncidentSubsystem fis = new FireIncidentSubsystem();
+        //the order should be req2,req1,req3
+        FireRequest req1 = new FireRequest("10-30-15", 1, "Fire", "High", "1");
+        FireRequest req2 = new FireRequest("10-15-45", 2, "Fire", "Low", "2");
+        FireRequest req3 = new FireRequest("12-25-45", 2, "Fire", "Low", "3");
+        fireSubsystem.addTask(req1);
+        fireSubsystem.addTask(req2);
+        fireSubsystem.addTask(req3);
+
+        Assertions.assertEquals(req1,fireSubsystem.getTasks().get(1),"This should be the second request in the task list.");
+        Assertions.assertEquals(req2,fireSubsystem.getTasks().get(0), "This should be the first request in the task list.");
+        Assertions.assertEquals(req3,fireSubsystem.getTasks().get(2), "This should be the third request in the task list.");
+    }
+
 }
+
