@@ -3,7 +3,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * {@code Scheduler} class coordinates fire incident handling by acting as the central controller
@@ -52,6 +54,9 @@ public class Scheduler {
     private DatagramSocket fireReceiveSocket, droneReceiveSocket, fireSendSocket, droneSendSocket;
     private final ConcurrentLinkedQueue<DroneAssignment> pendingAssignments = new ConcurrentLinkedQueue<>();
     private final List<FireRequest> readdedRequests = new ArrayList<>();
+
+    private BlockingQueue<DroneUI.UIUpdate> sharedQueue;
+
     /**
      * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of scheduler threads running */
     private volatile boolean running = true;
@@ -579,7 +584,14 @@ public class Scheduler {
      * <p>initializes various member collection objects and send/receive sockets</p>
      * <p>initializes and starts all scheduler threads</p>
      */
+
+    /**
+     * constructor calls {@link Scheduler#parseZoneFile} to populate {@link Scheduler#zoneMap} with zone data
+     * <p>initializes various member collection objects and send/receive sockets</p>
+     * <p>initializes and starts all scheduler threads</p>
+     */
     public Scheduler() {
+        this.sharedQueue = null;
         this.drones = new HashMap<>();
         this.requestQueue = new LinkedList<>();
         this.reassignedDrones = new ArrayList<>();
@@ -605,6 +617,42 @@ public class Scheduler {
         Thread droneHandler = new listenToDrone();
         Thread fireHandler = new listenToFire();
 
+        droneHandler.start();
+        fireHandler.start();
+
+        // Start the background thread that processes pending fire requests
+        new Thread(new ProcessPendingRequests()).start();
+    }
+
+    public Scheduler(BlockingQueue<DroneUI.UIUpdate> sharedQueue) {
+        this.sharedQueue = sharedQueue;
+        this.drones = new HashMap<>();
+        this.requestQueue = new LinkedList<>();
+        this.reassignedDrones = new ArrayList<>();
+//        this.currentState = new Idle();
+
+        // Parse the zone file to populate zoneMap
+        parseZoneFile("SYSC3303_project/src/zone_file.csv");
+        // Print out the zones for debugging
+        for (Zone zone : zoneMap.values()) {
+            System.out.println("Parsed zone: " + zone);
+        }
+
+        try {
+            fireSendSocket = new DatagramSocket();
+            droneSendSocket = new DatagramSocket();
+            fireReceiveSocket = new DatagramSocket(FIRE_TO_SCHEDULER_PORT);
+            droneReceiveSocket = new DatagramSocket(DRONE_TO_SCHEDULER_PORT);
+        } catch (SocketException e) {
+            System.err.println(e);
+        }
+
+        // Create and start threads to listen to other subsystems
+        Thread droneHandler = new listenToDrone();
+        Thread fireHandler = new listenToFire();
+        Thread uiHandler = new UIRelayThread();
+
+        uiHandler.start();
         droneHandler.start();
         fireHandler.start();
 
@@ -901,6 +949,49 @@ public class Scheduler {
      * @param args CLI arguments.
      */
     public static void main(String[] args) {
-        Scheduler s = new Scheduler();
+        BlockingQueue<DroneUI.UIUpdate> dummyQueue = new LinkedBlockingQueue<>();
+        Scheduler s = new Scheduler(dummyQueue);
     }
+
+    private class UIRelayThread extends Thread {
+        @Override
+        public void run() {
+            while (running) {
+                try {
+                    Thread.sleep(500); // Update interval
+
+                    // 1. Convert internal DroneStatus to UI-compatible DroneStatus
+                    List<DroneUI.DroneStatus> droneStatusList = new ArrayList<>();
+                    for (DroneStatus ds : drones.values()) {
+                        droneStatusList.add(new DroneUI.DroneStatus(
+                                ds.getDroneId(),
+                                ds.getX(),
+                                ds.getY(),
+                                ds.getCurrentTask().getSeverity()
+                        ));
+                    }
+
+                    // 2. Convert active fire requests to UI-compatible Fire objects
+                    List<DroneUI.Fire> activeFires = new ArrayList<>();
+                    synchronized (requestQueue) {
+                        for (FireRequest fr : requestQueue) {
+                            activeFires.add(new DroneUI.Fire(fr.getId(), fr.getSeverity(), fr.getZoneId()));
+                        }
+                    }
+
+                    // 3. Placeholder for faults (not yet implemented)
+                    List<DroneUI.Fault> faults = new ArrayList<>();
+
+                    // 4. Send update to UI
+                    DroneUI.UIUpdate update = new DroneUI.UIUpdate(droneStatusList, activeFires, faults);
+                    sharedQueue.put(update);
+
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+    }
+
 }
