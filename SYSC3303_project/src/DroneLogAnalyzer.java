@@ -122,17 +122,26 @@ public class DroneLogAnalyzer {
             //TODO: Calculate metrics for drone logs
             //drone array will have all the logs for drone (doesn't matter the id - threadType)
 
-            //TODO: Calculate metrics for subsystem logs
-            //subsystem array will have to split the logs based on the type
-            //run thread
-            System.out.println("============ Subsystem ============");
-            subsystemAverageLatency();
+
+            System.out.println("============ Subsystem - run ============");
+            subsystemLatency();
             subsystemThroughput();
             subsystemUtilization();
+            subsystemResponseTime();
+            System.out.println("============ Subsystem - ListeningToScheduler ============");
+            //TODO: LTSResponseTime()
+            //TODO: LTSUtilization()
+            //TODO: LTSThroughput()
+            //TODO: LTSLatency()
+            System.out.println("============ Subsystem - ProcessFault ============");
+            //TODO: PSResponseTime()
+            //TODO: PSUtilization()
+            //TODO: PSThroughput()
+            //TODO: PSLatency()
         }
     }
 
-    public static void subsystemAverageLatency(){
+    public static void subsystemLatency(){
         long totalLatency = 0;
         int requestCount = 0;
         LogEntry previousWaiting = null;
@@ -174,33 +183,27 @@ public class DroneLogAnalyzer {
         double totalWaiting = 0;
         LocalTime lastReceived = null;
         LocalTime lastWaiting = null;
-
         boolean received = false;
         boolean waiting = false;
 
         for (LogEntry log : subsystemLogs) {
             String event = log.getEvent();
-
             if (event.contains("Received")) {
-
                 if (waiting) {
                     Duration waitingDuration = Duration.between(lastWaiting, log.getTimestamp());
                     totalWaiting += waitingDuration.toMillis() / 1000.0;
                     waiting = false;
                 }
-
                 lastReceived = log.getTimestamp();
                 received = true;
 
             } else if (event.contains("Waiting")) {
-
                 if (received) {
                     if (!waiting) {
                         Duration workingDuration = Duration.between(lastReceived, log.getTimestamp());
                         totalWorking += workingDuration.toMillis() / 1000.0;
                         received = false;
                     }
-
                     lastWaiting = log.getTimestamp();
                     waiting = true;
                 }
@@ -213,11 +216,27 @@ public class DroneLogAnalyzer {
             System.out.printf("Utilization: %.2f\n", utilization);
         }
     }
+    public static void subsystemResponseTime() {
+        double responseTimes = 0;
+        int requestCount = 0;
+        LocalTime requestStart = null;
+        for (LogEntry log : subsystemLogs) {
+            String event = log.getEvent();
+            if (event.contains("Received")) {
+                requestStart = log.getTimestamp();
+            } else if (requestStart != null && event.contains("Waiting")) {
+                Duration responseDuration = Duration.between(requestStart, log.getTimestamp());
+                requestCount++;
+                responseTimes += responseDuration.toMillis() / 1000.0;
+                requestStart = null;
+            }
+        }
+        System.out.printf("Response Time: %.2fs\n", responseTimes/requestCount);
+    }
 
 
     public static double calculateTotalTime() {
         if (startPoint != null && endPoint != null) {
-
             Duration duration = Duration.between(startPoint, endPoint);
             return duration.toMillis() / 1000.0;
         } else {
