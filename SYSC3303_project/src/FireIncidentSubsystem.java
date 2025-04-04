@@ -48,6 +48,9 @@ public class FireIncidentSubsystem implements Runnable {
      * ArrayList that stores FireRequests from an EventScheduler that are ready to be processed.
      */
     private ArrayList<FireRequest> readyToSend = new ArrayList<>();
+    private final List<String> expectedCompletions = Collections.synchronizedList(new ArrayList<>());
+    private final List<String> receivedCompletions = Collections.synchronizedList(new ArrayList<>());
+    private static final String COMPLETED_SUFFIX = ":COMPLETED";
 
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
@@ -73,6 +76,24 @@ public class FireIncidentSubsystem implements Runnable {
             while (true) {
                 String update = receiveUpdate();
                 System.out.println("\n[ FIRE<-S ]  UPDATE IS:       " + update);
+                if (update.endsWith(COMPLETED_SUFFIX)) {
+                    String fullId = update.replace(COMPLETED_SUFFIX, "").trim();
+                    int idx = fullId.indexOf("id=");
+                    if (idx != -1) {
+                        String idPart = fullId.substring(idx + 3);
+                        idPart = idPart.replaceAll("[^0-9A-Z]", ""); // extract e.g. "2A", "3B"
+
+                        if (!receivedCompletions.contains(idPart)) {
+                            receivedCompletions.add(idPart);
+                            System.out.println("Adding to received Completions: " + idPart);
+                        }
+
+                        if (receivedCompletions.containsAll(expectedCompletions)) {
+                            System.out.println("[ FIRE ] All fire requests completed. Sending SHUTDOWN.");
+                            sendIncident("SHUTDOWN");
+                        }
+                    }
+                }
             }
         }
     }
@@ -147,7 +168,9 @@ public class FireIncidentSubsystem implements Runnable {
         while (true) {
             Event event = scheduler.getEvent();
             synchronized (readyToSend) {
-                readyToSend.add((FireRequest) event.getEvent());
+                FireRequest fr = (FireRequest) event.getEvent();
+                readyToSend.add(fr);
+                //pendingRequestIds.add(fr.getId());
                 readyToSend.notifyAll();
             }
         }
@@ -172,7 +195,20 @@ public class FireIncidentSubsystem implements Runnable {
                 String eventType = parts[2].trim();
                 String severity = parts[3].trim();
 
-                FireRequest task = new FireRequest(time, zoneId, eventType, severity, String.valueOf(++id));
+                int copies = switch (severity) {
+                    case "High" -> 3;
+                    case "Moderate" -> 2;
+                    case "Low" -> 1;
+                    default -> 1;
+                };
+                String baseId = String.valueOf(++id);
+                String[] suffixes = {"A", "B", "C"};
+                for (int i = 0; i < copies; i++) {
+                    expectedCompletions.add(baseId + suffixes[i]);
+                    System.out.println("Adding to expected Completions: " + baseId + suffixes[i]);
+                }
+
+                FireRequest task = new FireRequest(time, zoneId, eventType, severity, baseId);
                 addTask(task);
             }
             System.out.println("\n");
