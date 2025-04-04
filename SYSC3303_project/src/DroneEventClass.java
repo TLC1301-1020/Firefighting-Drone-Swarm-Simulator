@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class DroneEventClass {
@@ -9,7 +10,7 @@ public class DroneEventClass {
     private final String message;
 
     public DroneEventClass(String level, String component, String threadTag, String message) {
-        this.timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+        this.timestamp = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"));
         this.level = level;
         this.component = component;
         this.threadTag = threadTag;

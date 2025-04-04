@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.regex.Pattern;
  * It reads log entries from event_log.txt
  */
 public class DroneLogAnalyzer {
-    //TODO CHANGE THIS IF NEEDED
     private static final String LOG_FILE = "drone_event_log.txt";
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
@@ -22,55 +22,9 @@ public class DroneLogAnalyzer {
     private static final List<LogEntry> processFaultLogs = new ArrayList<>();
     private static final List<LogEntry> schedulerListenerLogs = new ArrayList<>();
     private static final List<LogEntry> subsystemLogs = new ArrayList<>();
-
-    /**
-     * Reads and analyzes log entries
-     * If no log file is found, a message is displayed
-     */
-    public static void analyzeLogs() {
-        readLogs();  // Read and parse the log entries
-        if (droneLogs.isEmpty() && subsystemLogs.isEmpty()) {
-            System.out.println("No previous log file found.");
-            return;
-        }
-        //TODO: Calculate metrics for drone logs
-        //drone array will have all the logs for drone (doesn't matter the id - threadType)
-
-        //TODO: Calculate metrics for subsystem logs
-        //subsystem array will have to split the logs based on the
-    }
-
-    /**
-     * Reads log entries from the event log file and converts them into lists of LogEntry objects
-     * Based on component type (drone or subsystem)
-     */
-    private static void readLogs() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(LOG_FILE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                LogEntry logEntry = LogEntry.parse(line);
-                if (logEntry != null) {
-                    //TODO: CHANGE component name based on what name being stored
-
-                    // Separate the logs based on the component type
-                    if (logEntry.getComponent().equals("Drone")) {
-                        droneLogs.add(logEntry);
-                    } else if (logEntry.getComponent().equals("Subsystem")) {
-                        if(logEntry.getThreadType().equals("SchedulerListener")){
-                            droneLogs.add(logEntry);
-                        }else if(logEntry.getThreadType().equals("processFaults")){
-                            processFaultLogs.add(logEntry);
-                        }else{
-                            subsystemLogs.add(logEntry);
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    // Time stamp for starting and ending
+    private static LocalTime startPoint;
+    private static LocalTime endPoint;
 
     /**
      * Represents a log entry with a timestamp, component, and event code
@@ -88,47 +42,165 @@ public class DroneLogAnalyzer {
          * @return A LogEntry object if parsing is successful, otherwise null
          */
         static LogEntry parse(String logLine) {
-            Pattern pattern = Pattern.compile("\\[(.*?)\\] \\[(.*?)\\] \\[(.*?)\\] \\[(.*?)\\]");
+            Pattern pattern = Pattern.compile("\\[(.*?)\\] \\[(.*?)\\] \\[(.*?)\\] \\[(.*?)\\] (.*)");
             Matcher matcher = pattern.matcher(logLine);
 
             if (matcher.matches()) {
-                LocalTime timestamp = LocalTime.parse(matcher.group(1), formatter);
-                String component = matcher.group(2);
-                String threadType = matcher.group(3);
-                String event = matcher.group(4);
+                String timestampStr = matcher.group(1).trim(); // Remove the brackets around the timestamp
+                LocalTime timestamp = LocalTime.parse(timestampStr, formatter);
+                String component = matcher.group(3);
+                String threadType = matcher.group(4);
+                String event = matcher.group(5);
 
-                return new LogEntry(timestamp, component, threadType, event);
+                // Update startPoint and endPoint
+                if (startPoint == null) {
+                    startPoint = timestamp; // Set start point only once
+                }
+                endPoint = timestamp; // Always update the end point
+
+                // Create a LogEntry and add it to the list
+                LogEntry entry = new LogEntry(timestamp, component, threadType, event);
+                return entry;
             }
             // Return null if the log line doesn't match the expected format
             return null;
         }
-
         // Constructor to initialize LogEntry object
         LogEntry(LocalTime timestamp, String component,String threadType, String event) {
             this.timestamp = timestamp;
             this.component = component;
             this.threadType = threadType;
-
             this.event = event;
         }
-
         //getters
-        public String getComponent() {
-            return component;
+        public String getComponent() {return component;}
+        public LocalTime getTimestamp() {return timestamp;}
+        public String getThreadType() {return threadType;}
+        public String getEvent() {return event;}
+    }
+    /**
+     * Reads log entries from the event log file and converts them into lists of LogEntry objects
+     * Based on component type (drone or subsystem)
+     */
+    private static void readLogs() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(LOG_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                LogEntry logEntry = LogEntry.parse(line);
+                if (logEntry != null) {
+                    // Separate the logs based on the component type
+                   if (logEntry.getComponent().contains("DroneSubsystem")) {
+                        //listening to scheduler
+                        if(logEntry.getThreadType().contains("ListeningToScheduler")){
+                            schedulerListenerLogs.add(logEntry);
+                        //faults
+                        }else if(logEntry.getThreadType().contains("ProcessFaults")){
+                            processFaultLogs.add(logEntry);
+                        //run
+                        }else{
+                            subsystemLogs.add(logEntry);
+                        }
+                    }else if(logEntry.getComponent().contains("Drone")) {
+                        droneLogs.add(logEntry);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+    /**
+     * Reads and analyzes log entries
+     * If no log file is found, a message is displayed
+     */
+    public static void analyzeLogs() {
+        readLogs();  // Read and parse the log entries
+        if (droneLogs.isEmpty() && subsystemLogs.isEmpty()) {
+            System.out.println("No previous log file found.");
+            return;
+        }else{
+            //TODO: Calculate metrics for drone logs
+            //drone array will have all the logs for drone (doesn't matter the id - threadType)
 
-        public LocalTime getTimestamp() {
-            return timestamp;
-        }
-
-        public String getThreadType() {
-            return threadType;
-        }
-
-        public String getEvent() {
-            return event;
+            //TODO: Calculate metrics for subsystem logs
+            //subsystem array will have to split the logs based on the type
+            //run thread
+            System.out.println("============ Subsystem ============");
+            subsystemAverageLatency();
+            subsystemThroughput();
+            subsystemUtilization();
         }
     }
 
+    public static void subsystemAverageLatency(){
+        long totalLatency = 0;
+        int requestCount = 0;
+        LogEntry previousWaiting = null;
+        for(LogEntry log: subsystemLogs){
+            if(log.event.contains("Waiting")){
+                previousWaiting = log;
+            }
+            if(log.event.contains("Received")){
+                if (previousWaiting != null){
+                    totalLatency += Duration.between(previousWaiting.getTimestamp(), log.getTimestamp()).toMillis();
+                    requestCount++;
+                    previousWaiting = null;
+                }
+            }
+        }
+        totalLatency = totalLatency/requestCount;
+        System.out.printf("Average latency: %.2f ms\n", (double) totalLatency);
+    }
+
+    public static void subsystemThroughput(){
+        int requestCount = 0;
+        LogEntry previousWaiting = null;
+        for(LogEntry log: subsystemLogs){
+            if(log.event.contains("Waiting")){
+                previousWaiting = log;
+            }
+            if(log.event.contains("Received")){
+                if (previousWaiting != null){
+                    requestCount++;
+                    previousWaiting = null;
+                }
+            }
+        }
+        double throughput = requestCount/calculateTotalTime();
+        System.out.printf("Throughput: %.2f per second\n", throughput);
+    }
+    public static void subsystemUtilization(){
+        double totalWorking = 0;
+        double totalRunning = calculateTotalTime();
+        LocalTime lastReceived = null;
+        boolean received = false;
+        for(LogEntry log : subsystemLogs){
+            if(log.getEvent().contains("Received") && !received){
+                lastReceived = log.getTimestamp();
+                received = true;
+            }else if (log.getEvent().contains("Waiting") && received){
+                Duration dur = Duration.between(lastReceived, log.getTimestamp());
+                totalWorking += dur.toMillis() / 1000.0;
+                received = false;
+            }
+        }
+        double util = totalWorking / totalRunning;
+        System.out.printf("Utilization: %.2f\n", util);
+    }
+
+    public static double calculateTotalTime() {
+        if (startPoint != null && endPoint != null) {
+            // Calculate the duration between startPoint and endPoint
+            Duration duration = Duration.between(startPoint, endPoint);
+            // Return the duration in seconds as a double
+            return duration.toMillis() / 1000.0;
+        } else {
+            return 0.0;
+        }
+    }
+
+    public static void main(String[] args){
+        analyzeLogs();
+    }
 
 }

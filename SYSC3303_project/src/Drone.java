@@ -426,10 +426,11 @@ public class Drone extends Thread
             // adds the request to the router host
             this.droneSubsystem.addRequest( request );
 
-            DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Notified and received a Scheduler response");
 
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
+
+            DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Received a Scheduler response");
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
 
             // First check to see if Scheduler needs a resend of last request

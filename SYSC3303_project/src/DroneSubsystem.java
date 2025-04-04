@@ -306,7 +306,7 @@ public class DroneSubsystem implements Runnable {
         while (running) {
             // Check request queue - communication from drones
             String request = getRequest();
-            DroneEventLogger.getInstance().info("DroneSubsystem", "Run", "Notified and received a Drone request, sending to Scheduler");
+            DroneEventLogger.getInstance().info("DroneSubsystem", "Run", "Received a Drone request, sending to Scheduler");
             System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                                         " + request);
 
             // Artificial delay added here to slow things down
@@ -396,9 +396,6 @@ public class DroneSubsystem implements Runnable {
         return new String(data,0,len);
     }
 
-    /**
-     * TODO: read fault input file
-     * */
     public void readFaultFile(String inputFile){
 
         // Read in faults from file in the example form "10:00:00,DRONE_STUCK:0"
