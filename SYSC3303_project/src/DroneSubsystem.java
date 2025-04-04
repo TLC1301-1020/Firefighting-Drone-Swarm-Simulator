@@ -110,6 +110,7 @@ public class DroneSubsystem implements Runnable {
             while (this.requestQueue.isEmpty())
             {
                 try {
+                    DroneEventLogger.getInstance().info("DroneSubsystem", "Run", "Waiting for a Drone request");
                     this.requestQueue.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -154,6 +155,7 @@ public class DroneSubsystem implements Runnable {
         synchronized (this.responseQueue) {
             while (!this.responseQueue.containsKey(droneId) || this.responseQueue.get(droneId).isEmpty() ) {
                 try {
+                    DroneEventLogger.getInstance().info("Drone", String.valueOf(droneId), "Waiting for Scheduler response");
                     this.responseQueue.wait();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -218,6 +220,8 @@ public class DroneSubsystem implements Runnable {
                 String response = receivePacket();
                 System.out.println("[ S->DSS ] startListeningToScheduler thread received RESPONSE :     " + response);
 
+                DroneEventLogger.getInstance().info("DroneSubsystem", "ListeningToScheduler", "Response received from scheduler: " + response);
+
                 handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
             }
         });
@@ -234,7 +238,9 @@ public class DroneSubsystem implements Runnable {
 
             while (running) {
                 // Block until a fault is ready to process
+                DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Waiting for new Drone faults");
                 String fault = (String)scheduler.getEvent().getEvent();
+                DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Drone fault received, injecting");
                 String[] parts = fault.split(":");
 
                 int droneId = -1;
@@ -300,6 +306,7 @@ public class DroneSubsystem implements Runnable {
         while (running) {
             // Check request queue - communication from drones
             String request = getRequest();
+            DroneEventLogger.getInstance().info("DroneSubsystem", "Run", "Notified and received a Drone request, sending to Scheduler");
             System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                                         " + request);
 
             // Artificial delay added here to slow things down
