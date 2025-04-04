@@ -9,7 +9,7 @@ public class SchedulerEventClass {
     private final String message;
 
     public SchedulerEventClass(String level, String component, String threadTag, String message) {
-        this.timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+        this.timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"));
         this.level = level;
         this.component = component;
         this.threadTag = threadTag;

@@ -7,7 +7,7 @@ import java.util.regex.*;
 
 public class SchedulerLogAnalyzer {
     private static final String LOG_FILE = "scheduler_event_log.txt";
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
     public static void analyzeLogs() {
         //TODO: Uncomment analyzeLogs() in Scheduler -> main()
