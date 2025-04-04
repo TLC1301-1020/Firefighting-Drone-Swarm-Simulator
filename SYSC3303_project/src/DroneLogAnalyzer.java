@@ -169,30 +169,56 @@ public class DroneLogAnalyzer {
         double throughput = requestCount/calculateTotalTime();
         System.out.printf("Throughput: %.2f per second\n", throughput);
     }
-    public static void subsystemUtilization(){
+    public static void subsystemUtilization() {
         double totalWorking = 0;
-        double totalRunning = calculateTotalTime();
+        double totalWaiting = 0;
         LocalTime lastReceived = null;
+        LocalTime lastWaiting = null;
+
         boolean received = false;
-        for(LogEntry log : subsystemLogs){
-            if(log.getEvent().contains("Received") && !received){
+        boolean waiting = false;
+
+        for (LogEntry log : subsystemLogs) {
+            String event = log.getEvent();
+
+            if (event.contains("Received")) {
+
+                if (waiting) {
+                    Duration waitingDuration = Duration.between(lastWaiting, log.getTimestamp());
+                    totalWaiting += waitingDuration.toMillis() / 1000.0;
+                    waiting = false;
+                }
+
                 lastReceived = log.getTimestamp();
                 received = true;
-            }else if (log.getEvent().contains("Waiting") && received){
-                Duration dur = Duration.between(lastReceived, log.getTimestamp());
-                totalWorking += dur.toMillis() / 1000.0;
-                received = false;
+
+            } else if (event.contains("Waiting")) {
+
+                if (received) {
+                    if (!waiting) {
+                        Duration workingDuration = Duration.between(lastReceived, log.getTimestamp());
+                        totalWorking += workingDuration.toMillis() / 1000.0;
+                        received = false;
+                    }
+
+                    lastWaiting = log.getTimestamp();
+                    waiting = true;
+                }
             }
         }
-        double util = totalWorking / totalRunning;
-        System.out.printf("Utilization: %.2f\n", util);
+        if (totalWaiting == 0) {
+            System.out.println("No waiting time recorded, utilization cannot be calculated.");
+        } else {
+            double utilization = totalWorking / totalWaiting;
+            System.out.printf("Utilization: %.2f\n", utilization);
+        }
     }
+
 
     public static double calculateTotalTime() {
         if (startPoint != null && endPoint != null) {
-            // Calculate the duration between startPoint and endPoint
+
             Duration duration = Duration.between(startPoint, endPoint);
-            // Return the duration in seconds as a double
             return duration.toMillis() / 1000.0;
         } else {
             return 0.0;
