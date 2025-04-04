@@ -46,7 +46,7 @@ public class SchedulerLogAnalyzer {
                     String message = matcher.group(5);
 
                     parsedEntries.add(new ParsedLogEntry(
-                            LocalDateTime.parse(timestamp, formatter),
+                            LocalTime.parse(timestamp, formatter),
                             level, component, threadTag, message
                     ));
                 }
@@ -60,13 +60,13 @@ public class SchedulerLogAnalyzer {
 
     // Helper class to store parsed events
     private static class ParsedLogEntry {
-        private final LocalDateTime timestamp;
+        private final LocalTime timestamp;
         private final String level;
         private final String component;
         private final String threadTag;
         private final String message;
 
-        public ParsedLogEntry(LocalDateTime timestamp, String level, String component, String threadTag, String message) {
+        public ParsedLogEntry(LocalTime timestamp, String level, String component, String threadTag, String message) {
             this.timestamp = timestamp;
             this.level = level;
             this.component = component;
@@ -80,7 +80,7 @@ public class SchedulerLogAnalyzer {
         }
 
         // Getters here for future filtering/analysis
-        public LocalDateTime getTimestamp() { return timestamp; }
+        public LocalTime getTimestamp() { return timestamp; }
         public String getLevel() { return level; }
         public String getComponent() { return component; }
         public String getThreadTag() { return threadTag; }
