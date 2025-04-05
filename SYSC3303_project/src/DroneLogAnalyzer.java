@@ -78,6 +78,7 @@ public class DroneLogAnalyzer {
      * Based on component type (drone or subsystem)
      */
     public static void readLogs(String file) {
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -117,11 +118,13 @@ public class DroneLogAnalyzer {
         if (droneLogs.isEmpty() && subsystemLogs.isEmpty()) {
             System.out.println("No previous log file found.");
         }else{
-            sortDrones();
             System.out.println("=================== Drones ===================");
+
+            sortDrones();
             droneMetrics();
 
             System.out.println("=================== Subsystem - run ===================\n");
+
             lifetime = calculateTotalTime(subsystemLogs);
             responseTime(subsystemLogs,"Waiting","Received");
             throughput(subsystemLogs,lifetime,"Waiting","Received");
@@ -129,13 +132,14 @@ public class DroneLogAnalyzer {
             utilization(subsystemLogs,lifetime, "Waiting", "Received");
 
             System.out.println("\n============ Subsystem - ListeningToScheduler ============\n");
-            lifetime = calculateTotalTime(schedulerListenerLogs);
 
+            lifetime = calculateTotalTime(schedulerListenerLogs);
             responseTime(schedulerListenerLogs,"received","handled");
             throughput((schedulerListenerLogs),lifetime,"received","handled");
             utilization(schedulerListenerLogs,lifetime,"received","handled");
 
             System.out.println("\n============ Subsystem - ProcessFault ============\n");
+
             lifetime = calculateTotalTime(processFaultLogs);
             responseTime(processFaultLogs,"Waiting","Received");
             throughput(processFaultLogs,lifetime,"Waiting", "Received");
