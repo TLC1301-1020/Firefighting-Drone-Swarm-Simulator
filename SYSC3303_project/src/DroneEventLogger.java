@@ -74,4 +74,9 @@ public class DroneEventLogger {
             e.printStackTrace();
         }
     }
+
+    List<DroneEventClass> getEventBuffer() {
+        return eventBuffer;
+    }
+
 }

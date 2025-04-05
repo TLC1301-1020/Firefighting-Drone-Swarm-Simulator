@@ -140,6 +140,7 @@ public class DroneSubsystem implements Runnable {
             responses.add(response);
 
             this.responseQueue.put(droneId, responses);
+            DroneEventLogger.getInstance().info("DroneSubsystem", "ListeningToScheduler", "Response handled.");
 //            System.out.println( "\n [ DSS ]  response added" );
             this.responseQueue.notifyAll();
         }
@@ -240,7 +241,6 @@ public class DroneSubsystem implements Runnable {
                 // Block until a fault is ready to process
                 DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Waiting for new Drone faults");
                 String fault = (String)scheduler.getEvent().getEvent();
-                DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Received Drone fault, injecting");
                 String[] parts = fault.split(":");
 
                 int droneId = -1;
@@ -249,7 +249,7 @@ public class DroneSubsystem implements Runnable {
                     System.out.println("ERROR: Invalid int parsing processFaults");
                     return;
                 }
-
+                DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Received Drone fault, injecting");
                 Drone drone = drones.get(droneId);
 
                 if (drone != null) {

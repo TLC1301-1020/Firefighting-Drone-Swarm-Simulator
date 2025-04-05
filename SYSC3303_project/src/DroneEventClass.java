@@ -1,4 +1,3 @@
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,5 +19,17 @@ public class DroneEventClass {
     @Override
     public String toString() {
         return String.format("[%s] [%s] [%s] [%s] %s", timestamp, level, component, threadTag, message);
+    }
+    public String getLevel(){
+        return level;
+    }
+    public String getComponent(){
+        return component;
+    }
+    public String getThreadTag(){
+        return threadTag;
+    }
+    public String getMessage(){
+        return message;
     }
 }

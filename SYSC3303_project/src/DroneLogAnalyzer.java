@@ -8,11 +8,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*  2025 04 05
-    TODO:   Listening to Scheduler metrics
-            //TODO: LTSResponseTime()
-            //TODO: LTSUtilization()
-            //TODO: LTSThroughput()
+/*
     TODO:   Test methods (?)
     TODO:   Javadoc
  */
@@ -32,10 +28,8 @@ public class DroneLogAnalyzer {
     private static final List<LogEntry> schedulerListenerLogs = new ArrayList<>();
     private static final List<LogEntry> subsystemLogs = new ArrayList<>();
 
-    // Time stamp for starting and ending
-    private static LocalTime startPoint;
-    private static LocalTime endPoint;
     private static int droneTotal = 0;
+    private static double lifetime;
     /**
      * Represents a log entry with a timestamp, component, and event code
      * A method to parse log lines into LogEntry objects
@@ -45,7 +39,6 @@ public class DroneLogAnalyzer {
         private String component;
         private String event;
         private String threadType;
-
         /**
          * Parses a log line and creates a LogEntry object.
          * @param logLine The raw log line to parse
@@ -61,12 +54,6 @@ public class DroneLogAnalyzer {
                 String component = matcher.group(3);
                 String threadType = matcher.group(4);
                 String event = matcher.group(5);
-
-                // Update startPoint and endPoint
-                if (startPoint == null) {
-                    startPoint = timestamp;
-                }
-                endPoint = timestamp;
 
                 // Create a LogEntry and add it to the list
                 LogEntry entry = new LogEntry(timestamp, component, threadType, event);
@@ -93,8 +80,8 @@ public class DroneLogAnalyzer {
      * Reads log entries from the event log file and converts them into lists of LogEntry objects
      * Based on component type (drone or subsystem)
      */
-    private static void readLogs() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(LOG_FILE))) {
+    public static void readLogs(String file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 LogEntry logEntry = LogEntry.parse(line);
@@ -129,29 +116,40 @@ public class DroneLogAnalyzer {
      * If no log file is found, a message is displayed
      */
     public static void analyzeLogs() {
-        readLogs();  // Read and parse the log entries
+        readLogs(LOG_FILE);  // Read and parse the log entries
         if (droneLogs.isEmpty() && subsystemLogs.isEmpty()) {
             System.out.println("No previous log file found.");
         }else{
             sortDrones();
             System.out.println("=================== Drones ===================");
             droneMetrics();
+
             System.out.println("=================== Subsystem - run ===================\n");
-            responseTime(subsystemLogs);
-            throughput(subsystemLogs,calculateTotalTime(subsystemLogs));
+            lifetime = calculateTotalTime(subsystemLogs);
+            responseTime(subsystemLogs,"Waiting","Received");
+            throughput(subsystemLogs,lifetime,"Waiting","Received");
             subsystemLatency();
-            utilization(subsystemLogs,calculateTotalTime(subsystemLogs));
+            utilization(subsystemLogs,lifetime, "Waiting", "Received");
+
             System.out.println("\n============ Subsystem - ListeningToScheduler ============\n");
-            //TODO
-            System.out.println("============ Subsystem - ProcessFault ============\n");
-            responseTime(processFaultLogs);
-            throughput(processFaultLogs,calculateTotalTime(processFaultLogs));
-            utilization(processFaultLogs,calculateTotalTime(processFaultLogs));
+            lifetime = calculateTotalTime(schedulerListenerLogs);
+
+            responseTime(schedulerListenerLogs,"received","handled");
+            throughput((schedulerListenerLogs),lifetime,"received","handled");
+            utilization(schedulerListenerLogs,lifetime,"received","handled");
+
+            System.out.println("\n============ Subsystem - ProcessFault ============\n");
+            lifetime = calculateTotalTime(processFaultLogs);
+            responseTime(processFaultLogs,"Waiting","Received");
+            throughput(processFaultLogs,lifetime,"Waiting", "Received");
+            utilization(processFaultLogs,lifetime,"Waiting", "Received");
         }
     }
 
-    //TODO: Haven't check if the output is right
     public static double droneRunTime(List<LogEntry> drone){
+        if(drone.isEmpty()){
+            return 0.0;
+        }
         LocalTime start = null;
         double totalTime = 0;
         int countTask = 0;
@@ -175,7 +173,10 @@ public class DroneLogAnalyzer {
         return totalTime;
     }
 
-    public static void droneUtilization(List<LogEntry> drone, double lifetime){
+    public static double droneUtilization(List<LogEntry> drone, double lifetime){
+        if (lifetime <= 0 || drone.isEmpty()) {
+            return 0.0;
+        }
         double workTime = 0;
         LocalTime workStart = null;
 
@@ -190,14 +191,18 @@ public class DroneLogAnalyzer {
         }
         double utilization = workTime / lifetime;
 
-        if (utilization == 0) {
+        if (utilization <= 0) {
             System.out.println("Utilization: Not available");
         } else {
             System.out.printf("Utilization: %.4f\n", utilization);
         }
+        return utilization;
     }
     //Subsystem metrics
-    public static void subsystemLatency(){
+    public static double subsystemLatency(){
+        if(subsystemLogs.isEmpty()){
+            return 0;
+        }
         double totalLatency = 0;
         int requestCount = 0;
         LogEntry previousWaiting = null;
@@ -214,48 +219,62 @@ public class DroneLogAnalyzer {
             }
         }
         totalLatency = totalLatency/requestCount;
-        System.out.printf("Average Latency: %.4fs\n", (double) totalLatency);
+        if(totalLatency < 0){
+            System.out.println("Error data.");
+            return 0;
+        }else{
+            System.out.printf("Average Latency: %.4fs\n", totalLatency);
+        }
+        return totalLatency;
     }
 
     //shared methods for calculating the metrics
     //throughput: Units completed / total time
-    public static void throughput(List<LogEntry> logs, double time){
+    public static double throughput(List<LogEntry> logs, double time, String x, String y){
+        if(x.isEmpty() || y.isEmpty() || logs.isEmpty() || time <= 0){
+            return 0;
+        }
         int requestCount = 0;
+        double throughput;
         LogEntry previousWaiting = null;
         for(LogEntry log: logs){
-            if(log.event.contains("Waiting")){
+            if(log.event.contains(x)){
                 previousWaiting = log;
             }
-            if(log.event.contains("Received")){
+            if(log.event.contains(y)){
                 if (previousWaiting != null){
                     requestCount++;
                     previousWaiting = null;
                 }
             }
         }
-        if(time == 0){
+        throughput = requestCount/time;
+        if(throughput <= 0){
             System.out.println("No Throughput result available.");
+            return 0;
         }else{
-
-            double throughput = requestCount/time;
             System.out.printf("Throughput: %.2f/s\n", throughput);
         }
+        return throughput;
 
     }
 
-    //utilization: busy time / waiting time
-    public static void utilization(List<LogEntry> logs, double lifetime) {
+    //utilization: busy time / lifetime
+    public static double utilization(List<LogEntry> logs, double lifetime,String x, String y) {
+        if(logs.isEmpty() || lifetime <= 0 || x.isEmpty() || y.isEmpty()){
+            return 0;
+        }
         double totalWorking = 0;
         LocalTime lastReceived = null;
         boolean received = false;
 
         for (LogEntry log : logs) {
             String event = log.getEvent();
-            if (event.contains("Received")) {
+            if (event.contains(x)) {
                 lastReceived = log.getTimestamp();
                 received = true;
 
-            } else if (event.contains("Waiting")) {
+            } else if (event.contains(y)) {
                 if (received) {
                         Duration workingDuration = Duration.between(lastReceived, log.getTimestamp());
                         totalWorking += workingDuration.toMillis() / 1000.0;
@@ -264,22 +283,25 @@ public class DroneLogAnalyzer {
 
             }
         }
-
         double utilization = totalWorking / lifetime;
+        if(utilization < 0){
+            System.out.println("Error in data.");
+            return 0.0;
+        }
         System.out.printf("Utilization: %.4f\n", utilization);
-
+        return utilization;
     }
     //average response time: total response time / # of request
-    public static void responseTime(List<LogEntry> logs) {
+    public static void responseTime(List<LogEntry> logs,String x, String y) {
         double responseTimes = 0;
         int requestCount = 0;
         LocalTime requestStart = null;
 
         for (LogEntry log : logs) {
             String event = log.getEvent();
-            if (event.contains("Received")) {
+            if (event.contains(x)) {
                 requestStart = log.getTimestamp();
-            } else if (requestStart != null && event.contains("Waiting")) {
+            } else if (requestStart != null && event.contains(y)) {
                 responseTimes += Duration.between(requestStart, log.getTimestamp()).toMillis() / 1000.0;
                 requestCount++;
                 requestStart = null;
@@ -290,14 +312,27 @@ public class DroneLogAnalyzer {
 
     //overall lifetime
     public static double calculateTotalTime(List<LogEntry> logs) {
+        if(logs.isEmpty()){
+            System.out.println("Empty log.");
+            return 0;
+        }
+        double lifetime = 0;
+        LocalTime startPoint;
+        LocalTime endPoint;
         startPoint = logs.getFirst().getTimestamp();
         endPoint = logs.getLast().getTimestamp();
+
         if (startPoint != null && endPoint != null) {
-            Duration duration = Duration.between(startPoint, endPoint);
-            return duration.toMillis() / 1000.0;
-        } else {
-            return 0.0;
+            lifetime = Duration.between(startPoint, endPoint).toMillis() / 1000.0;
+            if (lifetime < 0) {
+                System.out.println("Error in timestamp.");
+                return 0.0;
+            }
+            System.out.println("Start time: " + startPoint);
+            System.out.println("End time: " + endPoint);
+            System.out.printf("Lifetime: %.4fs\n \n", lifetime);
         }
+        return lifetime;
     }
 
     public static void sortDrones() {
@@ -315,18 +350,37 @@ public class DroneLogAnalyzer {
 
     public static void droneMetrics(){
         for(String key: drones.keySet()){
-            responseTime(drones.get(key));
+            System.out.println(" Drone - " + key);
+            double lifetime = calculateTotalTime(drones.get(key));
+            responseTime(drones.get(key),"Waiting", "Received");
             double time = droneRunTime(drones.get(key));
             if(time != 0) {
-                throughput(drones.get(key),time);
+                throughput(drones.get(key),time,"Waiting", "Received");
             }else{
                 System.out.println("Throughput: Not available");
             }
-            droneUtilization(drones.get(key),calculateTotalTime(drones.get(key)));
-            System.out.println();
+            droneUtilization(drones.get(key),lifetime);
+            System.out.println("--------------------------------");
         }
-
+        System.out.println();
     }
+
+    public static List<LogEntry> getDroneLogs(){
+        return droneLogs;
+    }
+    public static List<LogEntry> getProcessFaultLogs(){
+        return processFaultLogs;
+    }
+    public static List<LogEntry> getSchedulerListenerLogs(){
+        return schedulerListenerLogs;
+    }
+    public static HashMap<String, List<LogEntry>> getDrones(){
+        return drones;
+    }
+    public static List<LogEntry> getSubsystemLogs(){
+        return subsystemLogs;
+    }
+
     public static void main(String[] args){
         analyzeLogs();
     }
