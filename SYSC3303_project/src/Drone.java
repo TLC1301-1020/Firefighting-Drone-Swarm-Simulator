@@ -53,6 +53,7 @@ public class Drone extends Thread
      * Booleans to determine whether this Drone should encounter a respective fault
      */
     private boolean isStuck = false;
+    private Object jammedLock = new Object();
     private boolean isJammed = false;
     private boolean packetLoss = false;
 
@@ -238,9 +239,15 @@ public class Drone extends Thread
         {
             System.out.println("[ DRONE ]      Drone " + this.droneId + ": FAULT DROPPING PAYLOAD - EMPTY PAYLOAD");
             // fault
+            setJammedFault();
         }
         while (this.payloadCount>0)
         {
+            if (checkJammedFault())
+            {
+                System.out.println("[ DRONE ]      Drone " + this.droneId + ": FAULT DROPPING PAYLOAD - JAMMED FAULT");
+                return;
+            }
             // check for fault (stuck?)
             System.out.println("[ DRONE ]      Drone " + this.droneId + ": DROPPING PAYLOAD #" +this.payloadCount);
             this.payloadCount--;
@@ -543,10 +550,26 @@ public class Drone extends Thread
     }
 
     /**
-     * Set the isJammed boolean.
+     * Set the isJammed boolean using thread safe jammedLock object
      */
     public void setJammedFault() {
-        this.isJammed = true;
+        synchronized (jammedLock)
+        {
+            this.isJammed = true;
+        }
+    }
+
+    /**
+     * checks the isJammed boolean using thread safe jammedLock object
+     */
+    public boolean checkJammedFault()
+    {
+        boolean value = false;
+        synchronized (jammedLock)
+        {
+            value = this.isJammed;
+        }
+        return value;
     }
 
     /**
