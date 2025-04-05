@@ -240,7 +240,7 @@ public class DroneSubsystem implements Runnable {
                 // Block until a fault is ready to process
                 DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Waiting for new Drone faults");
                 String fault = (String)scheduler.getEvent().getEvent();
-                DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Drone fault received, injecting");
+                DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Received Drone fault, injecting");
                 String[] parts = fault.split(":");
 
                 int droneId = -1;
