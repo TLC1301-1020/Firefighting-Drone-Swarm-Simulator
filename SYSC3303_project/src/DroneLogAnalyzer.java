@@ -8,10 +8,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
-    TODO:   Test methods (?)
-    TODO:   Javadoc
- */
+
 /**
  * Analyze event logs and calculate the metrics
  * It reads log entries from event_log.txt
@@ -145,7 +142,11 @@ public class DroneLogAnalyzer {
             utilization(processFaultLogs,lifetime,"Waiting", "Received");
         }
     }
-
+    /**
+     * Calculates total runtime for completed drone tasks.
+     * @param drone list of log entries for one drone
+     * @return total runtime in seconds
+     */
     public static double droneRunTime(List<LogEntry> drone){
         if(drone.isEmpty()){
             return 0.0;
@@ -172,7 +173,12 @@ public class DroneLogAnalyzer {
         }
         return totalTime;
     }
-
+    /**
+     * Calculates the drone's utilization as the ratio of work time to lifetime.
+     * @param drone list of log entries for one drone
+     * @param lifetime the total lifetime of the drone in seconds
+     * @return the utilization as a ratio (work time / lifetime)
+     */
     public static double droneUtilization(List<LogEntry> drone, double lifetime){
         if (lifetime <= 0 || drone.isEmpty()) {
             return 0.0;
@@ -198,7 +204,10 @@ public class DroneLogAnalyzer {
         }
         return utilization;
     }
-    //Subsystem metrics
+    /**
+     * Calculates the average latency between "Waiting" and "Received" events in subsystem logs.
+     * @return the average latency in seconds, or 0 if no valid data
+     */
     public static double subsystemLatency(){
         if(subsystemLogs.isEmpty()){
             return 0;
@@ -228,8 +237,14 @@ public class DroneLogAnalyzer {
         return totalLatency;
     }
 
-    //shared methods for calculating the metrics
-    //throughput: Units completed / total time
+    /**
+     * Calculates the throughput as the number of completed requests per unit of time.
+     * @param logs list of log entries
+     * @param time the time period in seconds
+     * @param x event type for start of request
+     * @param y event type for end of request
+     * @return the throughput (requests per second)
+     */
     public static double throughput(List<LogEntry> logs, double time, String x, String y){
         if(x.isEmpty() || y.isEmpty() || logs.isEmpty() || time <= 0){
             return 0;
@@ -258,8 +273,14 @@ public class DroneLogAnalyzer {
         return throughput;
 
     }
-
-    //utilization: busy time / lifetime
+    /**
+     * Calculates the utilization as the ratio of total working time to lifetime.
+     * @param logs list of log entries
+     * @param lifetime the total lifetime in seconds
+     * @param x event type indicating the start of work
+     * @param y event type indicating the end of work
+     * @return the utilization as a ratio (working time / lifetime)
+     */
     public static double utilization(List<LogEntry> logs, double lifetime,String x, String y) {
         if(logs.isEmpty() || lifetime <= 0 || x.isEmpty() || y.isEmpty()){
             return 0;
@@ -291,7 +312,13 @@ public class DroneLogAnalyzer {
         System.out.printf("Utilization: %.4f\n", utilization);
         return utilization;
     }
-    //average response time: total response time / # of request
+    /**
+     * Calculates the average response time between two events.
+     * @param logs list of log entries
+     * @param x event type for the start of the request
+     * @param y event type for the end of the request
+     * @return the average response time in seconds
+     */
     public static double responseTime(List<LogEntry> logs,String x, String y) {
         if(logs.isEmpty() || x.isEmpty() || y.isEmpty()){
             System.out.println("Response Time: not available");
@@ -316,7 +343,11 @@ public class DroneLogAnalyzer {
         return responseTimes;
     }
 
-    //overall lifetime
+    /**
+     * Calculates the total time between the first and last log entries.
+     * @param logs list of log entries
+     * @return the total time in seconds between the first and last timestamp
+     */
     public static double calculateTotalTime(List<LogEntry> logs) {
         if(logs.isEmpty()){
             System.out.println("Lifetime: not available");
@@ -340,7 +371,9 @@ public class DroneLogAnalyzer {
         }
         return lifetime;
     }
-
+    /**
+     * Sorts the log entries into separate lists based on the thread type and stores them in the `drones` map.
+     */
     public static void sortDrones() {
         for (LogEntry log : droneLogs) {
             String threadType = log.getThreadType();
@@ -353,7 +386,9 @@ public class DroneLogAnalyzer {
             }
         }
     }
-
+    /**
+     * Calculates and prints various metrics (lifetime, response time, run time, throughput, utilization) for each drone.
+     */
     public static void droneMetrics(){
         for(String key: drones.keySet()){
             System.out.println(" Drone - " + key);
@@ -370,19 +405,33 @@ public class DroneLogAnalyzer {
         }
         System.out.println();
     }
-
+    /**
+     * @return the list of drone logs
+     */
     public static List<LogEntry> getDroneLogs(){
         return droneLogs;
     }
+    /**
+     * @return the list of process fault logs
+     */
     public static List<LogEntry> getProcessFaultLogs(){
         return processFaultLogs;
     }
+    /**
+     * @return the list of scheduler listener logs
+     */
     public static List<LogEntry> getSchedulerListenerLogs(){
         return schedulerListenerLogs;
     }
+    /**
+     * @return the map of drones, each associated with a list of log entries
+     */
     public static HashMap<String, List<LogEntry>> getDrones(){
         return drones;
     }
+    /**
+     * @return the list of subsystem logs
+     */
     public static List<LogEntry> getSubsystemLogs(){
         return subsystemLogs;
     }
