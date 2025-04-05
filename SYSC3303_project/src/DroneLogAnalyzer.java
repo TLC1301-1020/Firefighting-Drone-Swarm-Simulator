@@ -87,7 +87,7 @@ public class DroneLogAnalyzer {
                 LogEntry logEntry = LogEntry.parse(line);
                 if (logEntry != null) {
                     // Separate the logs based on the component type
-                   if (logEntry.getComponent().contains("DroneSubsystem")) {
+                    if (logEntry.getComponent().contains("DroneSubsystem")) {
 
                         if(logEntry.getThreadType().contains("ListeningToScheduler")){
                             schedulerListenerLogs.add(logEntry);
@@ -101,7 +101,7 @@ public class DroneLogAnalyzer {
                     }else if(logEntry.getComponent().contains("Drone")) {
                         //update number of drones if needed
                         if(Integer.parseInt(logEntry.getThreadType()) > droneTotal) droneTotal = Integer.parseInt(logEntry.getThreadType());
-                       droneLogs.add(logEntry);
+                        droneLogs.add(logEntry);
                     }
                 }
                 //drone starts from 0
@@ -276,9 +276,9 @@ public class DroneLogAnalyzer {
 
             } else if (event.contains(y)) {
                 if (received) {
-                        Duration workingDuration = Duration.between(lastReceived, log.getTimestamp());
-                        totalWorking += workingDuration.toMillis() / 1000.0;
-                        received = false;
+                    Duration workingDuration = Duration.between(lastReceived, log.getTimestamp());
+                    totalWorking += workingDuration.toMillis() / 1000.0;
+                    received = false;
                 }
 
             }
@@ -292,7 +292,11 @@ public class DroneLogAnalyzer {
         return utilization;
     }
     //average response time: total response time / # of request
-    public static void responseTime(List<LogEntry> logs,String x, String y) {
+    public static double responseTime(List<LogEntry> logs,String x, String y) {
+        if(logs.isEmpty() || x.isEmpty() || y.isEmpty()){
+            System.out.println("Response Time: not available");
+            return 0;
+        }
         double responseTimes = 0;
         int requestCount = 0;
         LocalTime requestStart = null;
@@ -307,13 +311,15 @@ public class DroneLogAnalyzer {
                 requestStart = null;
             }
         }
+        responseTimes = responseTimes/requestCount;
         System.out.printf("Response Time: %.4fs\n", responseTimes/requestCount);
+        return responseTimes;
     }
 
     //overall lifetime
     public static double calculateTotalTime(List<LogEntry> logs) {
         if(logs.isEmpty()){
-            System.out.println("Empty log.");
+            System.out.println("Lifetime: not available");
             return 0;
         }
         double lifetime = 0;
