@@ -127,6 +127,65 @@ public class DroneLogAnalyzerTest {
             throw new RuntimeException(e);
         }
     }
+    @Test
+    public void TestAverageDeploy(){
+        try {
+            Object log1, log2;
+            double deployTime;
+            Class<?> logEntryClass = Class.forName("DroneLogAnalyzer$LogEntry");
+            Constructor<?> constructor = logEntryClass.getDeclaredConstructor(LocalTime.class, String.class, String.class, String.class);
+            constructor.setAccessible(true);
+            log1 = constructor.newInstance(
+                    LocalTime.parse("12:34:56.000", formatter),
+                    "Drone",
+                    "0",
+                    "Deploying"
+            );
+            log2 = constructor.newInstance(
+                    LocalTime.parse("12:34:57.000", formatter),
+                    "Drone",
+                    "0",
+                    "Deployment of payload complete"
+            );
+            logs.add(log1);
+            logs.add(log2);
+            deployTime = (double) DroneLogAnalyzer.class
+                    .getMethod("averageDeploy", List.class)
+                    .invoke(null, logs);
+            Assertions.assertEquals(1, deployTime);
+            logs.clear();
+            //wrong order event
+            log1 = constructor.newInstance(
+                    LocalTime.parse("12:34:58.000", formatter),
+                    "Drone",
+                    "0",
+                    "Deploying"
+            );
+            log2 = constructor.newInstance(
+                    LocalTime.parse("12:34:57.000", formatter),
+                    "Drone",
+                    "0",
+                    "Deployment of payload complete"
+            );
+            logs.add(log1);
+            logs.add(log2);
+            deployTime = (double) DroneLogAnalyzer.class
+                    .getMethod("averageDeploy", List.class)
+                    .invoke(null, logs);
+            Assertions.assertEquals(0, deployTime);
+            logs.clear();
+
+            //no log
+            deployTime = (double) DroneLogAnalyzer.class
+                    .getMethod("averageDeploy", List.class)
+                    .invoke(null, logs);
+            Assertions.assertEquals(0, deployTime);
+
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     /**
      * Tests the drone runtime calculation based on log entries.
      * Verifies the runtime for different scenarios: valid runtime, zero runtime, and invalid runtime (negative).

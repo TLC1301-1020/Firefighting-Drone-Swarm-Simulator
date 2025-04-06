@@ -208,6 +208,43 @@ public class DroneLogAnalyzer {
         }
         return utilization;
     }
+
+    //check average deploy time for the drone
+    public static double averageDeploy(List<LogEntry> logs){
+        if(logs.isEmpty()){
+            System.out.println("Average Deploy Time: Not available");
+            return 0;
+        }
+
+        double totalDeployTime = 0;
+        LocalTime deployStart = null;
+        LocalTime deployEnd = null;
+        int count = 0;
+        for(LogEntry log: logs){
+            //new deploying event
+            if (log.getEvent().contains("Deploying"))  {
+                deployStart = log.getTimestamp();
+            }else if(log.getEvent().contains("payload complete")){
+                if(deployStart != null){
+                    deployEnd = log.getTimestamp();
+                    totalDeployTime += Duration.between(deployStart,deployEnd).toMillis() / 1000.0;
+                    deployStart = null;
+                    deployEnd = null;
+                    count++;
+                }
+            }
+        }
+        if(count <= 0 || totalDeployTime <= 0){
+            System.out.println("Total Task Completed: " + 0);
+            System.out.println("Average Deploy Time: not available");
+            return 0;
+        }
+        totalDeployTime = totalDeployTime/count;
+        System.out.println("Total Task Completed: " + count);
+        System.out.printf("Average Deploy Time: %.4fs\n", totalDeployTime);
+        return totalDeployTime;
+
+    }
     /**
      * Calculates the average latency between "Waiting" and "Received" events in subsystem logs.
      * @return the average latency in seconds, or 0 if no valid data
@@ -233,7 +270,7 @@ public class DroneLogAnalyzer {
         }
         totalLatency = totalLatency/requestCount;
         if(totalLatency < 0){
-            System.out.println("Error data.");
+            System.out.println("Average Latency: not available");
             return 0;
         }else{
             System.out.printf("Average Latency: %.4fs\n", totalLatency);
@@ -269,7 +306,7 @@ public class DroneLogAnalyzer {
         }
         throughput = requestCount/time;
         if(throughput <= 0){
-            System.out.println("No Throughput result available.");
+            System.out.println("Throughput: not available");
             return 0;
         }else{
             System.out.printf("Throughput: %.2f/s\n", throughput);
@@ -305,12 +342,11 @@ public class DroneLogAnalyzer {
                     totalWorking += workingDuration.toMillis() / 1000.0;
                     received = false;
                 }
-
             }
         }
         double utilization = totalWorking / lifetime;
         if(utilization < 0){
-            System.out.println("Error in data.");
+            System.out.println("Utilization: not available");
             return 0.0;
         }
         System.out.printf("Utilization: %.4f\n", utilization);
@@ -394,9 +430,18 @@ public class DroneLogAnalyzer {
      * Calculates and prints various metrics (lifetime, response time, run time, throughput, utilization) for each drone.
      */
     public static void droneMetrics(){
+        double total = 0;
+        int count = 0;
+        double average = 0;
         for(String key: drones.keySet()){
             System.out.println(" Drone - " + key);
             double lifetime = calculateTotalTime(drones.get(key));
+            droneUtilization(drones.get(key),lifetime);
+            average = averageDeploy(drones.get(key));
+            if(average > 0){
+                total += average;
+                count++;
+            }
             responseTime(drones.get(key),"Waiting", "Received");
             double time = droneRunTime(drones.get(key));
             if(time != 0) {
@@ -404,9 +449,9 @@ public class DroneLogAnalyzer {
             }else{
                 System.out.println("Throughput: Not available");
             }
-            droneUtilization(drones.get(key),lifetime);
             System.out.println("--------------------------------");
         }
+        System.out.println("All Drones - Average Deployment Time: " + total/count + "s");
         System.out.println();
     }
     /**
