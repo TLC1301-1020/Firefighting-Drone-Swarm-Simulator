@@ -17,6 +17,7 @@ class DroneUIApp {
         if (zones.isEmpty()) {
             zones = getDefaultZones();
         }
+        assignZoneCharacters(zones);
 
         // Start the UI component thread
         Thread uiThread = new Thread(new UIComponent(sharedQueue, zones, SCALE_METERS));
@@ -36,6 +37,7 @@ class DroneUIApp {
         int startY;
         int endX;
         int endY;
+        char zoneChar;
 
         public Zone(int zoneId, int startX, int startY, int endX, int endY) {
             this.zoneId = zoneId;
@@ -47,7 +49,7 @@ class DroneUIApp {
 
         @Override
         public String toString() {
-            return String.format("Zone %d: (%d,%d) to (%d,%d)", zoneId, startX, startY, endX, endY);
+            return String.format("Zone %d -> %c", zoneId, zoneChar);
         }
     }
 
@@ -170,9 +172,30 @@ class DroneUIApp {
             // Create a 2D array to represent the grid cells
             String[][] grid = new String[gridHeight][gridWidth];
             // Initialize grid cells with a dot
+
+            for (int row = 0; row < gridHeight; row++) {
+                for (int col = 0; col < gridWidth; col++) {
+                    // Compute the center of the cell
+                    int centerX = col * scale + scale / 2;
+                    int centerY = row * scale + scale / 2;
+                    String cellVal = " . ";  // Default value
+
+                    // Check each zone to see if the cell center is within the zone's boundaries.
+                    for (Zone zone : zones) {
+                        if (centerX >= zone.startX && centerX <= zone.endX &&
+                                centerY >= zone.startY && centerY <= zone.endY) {
+                            cellVal = " " + zone.zoneChar + " ";
+                            break; // Assumes zones do not overlap.
+                        }
+                    }
+                    grid[row][col] = cellVal;
+                }
+            }
+
+            /*
             for (int i = 0; i < gridHeight; i++) {
                 Arrays.fill(grid[i], " . ");
-            }
+            }*/
             // Place drones on the grid
             // If multiple drones are in the same cell display an asterisk
             Map<String, String> cellMap = new HashMap<>();
@@ -407,4 +430,16 @@ class DroneUIApp {
         defaultZones.add(new Zone(2, 650, 1500, 800, 1800));
         return defaultZones;
     }
+    private static void assignZoneCharacters(List<Zone> zones) {
+        char[] allowedChars = {'A','B','C','D','E','F','G','H','I','J'};
+        List<Character> available = new ArrayList<>();
+        for (char c : allowedChars) {
+            available.add(c);
+        }
+        Collections.shuffle(available);
+        for (int i = 0; i < zones.size() && i < available.size(); i++) {
+            zones.get(i).zoneChar = available.get(i);
+        }
+    }
+
 }

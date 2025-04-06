@@ -4,9 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.io.FileWriter;
 
 /**
  * The FireIncidentSubsystem handles fire incident requests and communicates with the Scheduler.
@@ -48,6 +52,9 @@ public class FireIncidentSubsystem implements Runnable {
      * ArrayList that stores FireRequests from an EventScheduler that are ready to be processed.
      */
     private ArrayList<FireRequest> readyToSend = new ArrayList<>();
+
+    //Logger
+    private static final LoggerDaemon logger = new LoggerDaemon();
 
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
@@ -91,9 +98,12 @@ public class FireIncidentSubsystem implements Runnable {
                 try {
                     FireRequest request;
                     synchronized (readyToSend) {
-                        while (readyToSend.isEmpty()) {
-                            System.out.println("[ STS ] - waiting for upcoming tasks.");
-                            readyToSend.wait();
+                        if (readyToSend.isEmpty()) {
+                            logger.log("STS Idle Start", "Waiting for tasks");
+                            while (readyToSend.isEmpty()) {
+                                readyToSend.wait();
+                            }
+                            logger.log("STS Idle End", "Task available");
                         }
                         //not empty list, taking the request
                         request = readyToSend.remove(0);
@@ -101,10 +111,12 @@ public class FireIncidentSubsystem implements Runnable {
                     }
                     //send the request
                     if(request!=null){
+                        logger.log("Sending Incident", request.toString());
                         System.out.println("[ STS ] - sending the request: " + request);
                         sendIncident(request.toString());
                     }
                 } catch (InterruptedException e) {
+                    logger.log("STS Interrupted", "Thread interrupted");
                     System.out.println("SendToScheduler interrupted.");
                     Thread.currentThread().interrupt();
                     break;
@@ -206,6 +218,8 @@ public class FireIncidentSubsystem implements Runnable {
             }
         }
         tasks.add(low, task);
+        //logging
+        logger.log("Task added", task.toString());
         System.out.println("Task added: " + task);
 
     }
@@ -257,6 +271,7 @@ public class FireIncidentSubsystem implements Runnable {
      * Extracts the next available fire request, formats the data, and sends it via a UDP packet.
      */
     public void sendIncident(String request){
+        logger.log("Sending Incident", request);
         byte msg[] = request.toString().getBytes();
         DatagramPacket packet;
 
@@ -284,10 +299,16 @@ public class FireIncidentSubsystem implements Runnable {
             byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
             DatagramPacket receivePacket = new DatagramPacket(data, data.length);
             receiveSocket.receive(receivePacket);
-            return new String(data, 0, receivePacket.getLength());
+            String update = new String(data, 0, receivePacket.getLength());
+            //logging
+            logger.log("Received Update", update);
+            return update;
         } catch (SocketTimeoutException e) {
+            //logging
+            logger.log("Update Timeout", "No updates available");
             return "No updates available";
         } catch (IOException e) {
+            logger.log("Receive Error", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -331,5 +352,48 @@ public class FireIncidentSubsystem implements Runnable {
 
     public DatagramSocket getReceiveSocket() {
         return receiveSocket;
+    }
+}
+
+
+class LoggerDaemon implements Runnable {
+    private final BlockingQueue<String> logQueue = new LinkedBlockingQueue<>();
+    private volatile boolean running = true;
+    private final String logFileName = "firesubsystem_logs.txt";
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+
+    public LoggerDaemon() {
+        Thread thread = new Thread(this);
+        thread.setDaemon(true); // Daemon thread so it doesn't block JVM exit
+        thread.start();
+    }
+
+    // Log an event with its action and data.
+    public void log(String action, String data) {
+        String timestamp = LocalDateTime.now().format(formatter);
+        String logEntry = timestamp + " - " + action + " - " + data;
+        logQueue.add(logEntry);
+    }
+
+    @Override
+    public void run() {
+        try (FileWriter writer = new FileWriter(logFileName, true)) {
+            while (running || !logQueue.isEmpty()) {
+                String logEntry = logQueue.poll();
+                if (logEntry != null) {
+                    writer.write(logEntry + "\n");
+                    writer.flush();
+                } else {
+                    // Sleep briefly if no messages are available
+                    Thread.sleep(50);
+                }
+            }
+        } catch (IOException | InterruptedException e) {
+            System.err.println("LoggerDaemon encountered an error: " + e.getMessage());
+        }
+    }
+
+    public void shutdown() {
+        running = false;
     }
 }
