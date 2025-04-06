@@ -233,6 +233,7 @@ public class SchedulerLogAnalyzer {
         System.out.printf("                            BusyTime: %.4f s\n\n", busyTimeSD);
 
         System.out.printf("                         Utilization: %.4f\n", utilizationSD);
+        System.out.printf("                        Utilization%%: %.2f %%\n", utilizationSD*100.0000);
         System.out.printf("Total Communication events w. Drones: %s\n", rtbtSD.size());
         System.out.printf("               Average Response Time: %.4f s\n", avgResponseSD);
 
@@ -272,6 +273,7 @@ public class SchedulerLogAnalyzer {
         System.out.printf("                            BusyTime: %.4f s\n\n", busyTimeSF);
 
         System.out.printf("                         Utilization: %.4f\n", utilizationSF);
+        System.out.printf("                        Utilization%%: %.2f %%\n", utilizationSF*100.0000);
         System.out.printf("  Total Communication events w. FISS: %s\n", countFireRequests);
         System.out.printf("               Average Response Time: %.4f s\n", avgResponseSF);
 
@@ -307,6 +309,7 @@ public class SchedulerLogAnalyzer {
         System.out.printf("         # of Unsuccessful Drone Assignments : %s\n\n", countFailedAssignments);
 
         System.out.printf("                         Utilization: %.4f\n", utilizationSP);
+        System.out.printf("                        Utilization%%: %.2f %%\n", utilizationSP*100.000);
         System.out.printf("               Average Response Time: %.4f s\n", avgResponseSP);
 
         double[] output = {lifeTimeSP, busyTimeSP, utilizationSP, avgResponseSP};
