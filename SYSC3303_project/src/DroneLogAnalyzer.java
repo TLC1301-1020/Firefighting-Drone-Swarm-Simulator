@@ -167,7 +167,6 @@ public class DroneLogAnalyzer {
 
             responseTime(subsystemLogs,"Waiting","Received");
             throughput(subsystemLogs,programLife,"Waiting","Received");
-            subsystemLatency();
             utilization(subsystemLogs,programLife, "Waiting", "Received");
 
             System.out.println("\n============ Subsystem - ListeningToScheduler ============\n");
@@ -295,40 +294,7 @@ public class DroneLogAnalyzer {
         return totalDeployTime;
 
     }
-    /**
-     * Calculates the average latency for subsystem logs, based on "Waiting" and "Received" events.
-     * Latency is computed as the time between a "Waiting" event and the corresponding "Received" event.
-     *
-     * @return The average latency in seconds. If no valid events are found, returns 0.
-     */
-    public static double subsystemLatency(){
-        if(subsystemLogs.isEmpty()){
-            return 0;
-        }
-        double totalLatency = 0;
-        int requestCount = 0;
-        LogEntry previousWaiting = null;
-        for(LogEntry log: subsystemLogs){
-            if(log.event.contains("Waiting")){
-                previousWaiting = log;
-            }
-            if(log.event.contains("Received")){
-                if (previousWaiting != null){
-                    totalLatency += Duration.between(previousWaiting.getTimestamp(), log.getTimestamp()).toMillis() / 1000.0;
-                    requestCount++;
-                    previousWaiting = null;
-                }
-            }
-        }
-        totalLatency = totalLatency/requestCount;
-        if(totalLatency < 0){
-            System.out.println("Average Latency: not available");
-            return 0;
-        }else{
-            System.out.printf("Average Latency: %.4fs\n", totalLatency);
-        }
-        return totalLatency;
-    }
+
 
     /**
      * Calculates the throughput based on logs, time, and specified event types.
