@@ -375,6 +375,7 @@ public class Scheduler {
             return "ERROR: Invalid location value: " + items[3] + "," + items[4];
         }
         // update location of drone
+        drone.updateBattery(x, y);
         drone.setLocation(x, y);
         /* request types
             "STATUS"   DRONE_ID:<STATE>:STATUS:X:Y:CURR_TASK:FIREREQ_ID  -> when there is a status update
@@ -387,7 +388,9 @@ public class Scheduler {
 
              not assigned here* "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK:FIREREQ_ID  - for reassigning current task and state
          */
-        // TODO: handle request to proceed with the state corresponding to when this event occurs
+        if (drone.getState().contains("TRAVELING") || drone.getState().contains("RETURNING")) {
+            System.out.println("\nDrone " + droneId + " battery level: " + drone.getBatteryLevel());
+        }
         switch(eventRequest)
         {
             case NEW_FIRE_REQUEST:
@@ -461,6 +464,7 @@ public class Scheduler {
                     //System.out.println(responseToDrone+ ":COMPLETED \n\n\n");
                     drone.setCurrentTask(new FireRequest());
                 }
+                drone.chargeBattery();
                 return "ACK:" + request;
             case DRONE_STUCK:
                 //System.out.println("\n[SD   ]  -   switch(eventRequest) == "+eventRequest+":    drone "+drone.getDroneId()+ " * state change " + drone.getState()+ " -> [OFFLINE] *");
