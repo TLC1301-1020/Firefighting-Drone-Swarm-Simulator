@@ -17,6 +17,7 @@ class DroneUIApp {
         if (zones.isEmpty()) {
             zones = getDefaultZones();
         }
+        assignZoneCharacters(zones);
 
         // Start the UI component thread
         Thread uiThread = new Thread(new UIComponent(sharedQueue, zones, SCALE_METERS));
@@ -36,6 +37,7 @@ class DroneUIApp {
         int startY;
         int endX;
         int endY;
+        char zoneChar;
 
         public Zone(int zoneId, int startX, int startY, int endX, int endY) {
             this.zoneId = zoneId;
@@ -47,7 +49,7 @@ class DroneUIApp {
 
         @Override
         public String toString() {
-            return String.format("Zone %d: (%d,%d) to (%d,%d)", zoneId, startX, startY, endX, endY);
+            return String.format("Zone %d -> %c", zoneId, zoneChar);
         }
     }
 
@@ -173,6 +175,28 @@ class DroneUIApp {
             for (int i = 0; i < gridHeight; i++) {
                 Arrays.fill(grid[i], " . ");
             }
+
+            for (Zone zone : zones) {
+                // Find all 4 corners of the zone
+                int colStart = (int)Math.floor((double) zone.startX / scale);
+                int rowStart = (int)Math.floor((double) zone.startY / scale);
+                int colEnd = (int)Math.floor((double) zone.endX / scale);
+                int rowEnd = (int)Math.floor((double) zone.endY / scale);
+
+                if (rowStart >= 0 && rowStart < gridHeight && colStart >= 0 && colStart < gridWidth) {
+                    grid[rowStart][colStart] = addZoneChar(grid[rowStart][colStart], zone.zoneChar);
+                }
+                if (rowStart >= 0 && rowStart < gridHeight && colEnd >= 0 && colEnd < gridWidth) {
+                    grid[rowStart][colEnd] = addZoneChar(grid[rowStart][colEnd], zone.zoneChar);
+                }
+                if (rowEnd >= 0 && rowEnd < gridHeight && colStart >= 0 && colStart < gridWidth) {
+                    grid[rowEnd][colStart] = addZoneChar(grid[rowEnd][colStart], zone.zoneChar);
+                }
+                if (rowEnd >= 0 && rowEnd < gridHeight && colEnd >= 0 && colEnd < gridWidth) {
+                    grid[rowEnd][colEnd] = addZoneChar(grid[rowEnd][colEnd], zone.zoneChar);
+                }
+            }
+
             // Place drones on the grid
             // If multiple drones are in the same cell display an asterisk
             Map<String, String> cellMap = new HashMap<>();
@@ -191,7 +215,7 @@ class DroneUIApp {
                 if (cellMap.containsKey(key)) {
                     cellMap.put(key, " * ");
                 } else {
-                    cellMap.put(key, String.format("%3d", drone.droneId));
+                    cellMap.put(key, String.format("%2d ", drone.droneId));
                 }
             }
             // Update grid cells from the map
@@ -235,7 +259,7 @@ class DroneUIApp {
             System.out.println();
 
             // 5. Print Stats Section
-            System.out.println(String.format("Stats: Zones: %d | Active Drones: %d", zones.size(), update.droneStatuses.size()));
+            System.out.println(String.format("Stats: Zones: %d | Active Drones: %d", zones.size(), update.droneStatuses.size() - update.faults.size()));
             System.out.println();
         }
 
@@ -248,12 +272,28 @@ class DroneUIApp {
             return false;
         }
 
+
         /**
          * Clears the console using ANSI escape codes (trying to keep it clean)
          */
         private void clearScreen() {
             System.out.print("\033[H\033[2J");
             System.out.flush();
+        }
+
+        private String addZoneChar(String current, char newChar) {
+            String trimmed = current.trim();
+            if (trimmed.equals(".")) {
+                trimmed = "";
+            }
+            trimmed += newChar;
+            while (trimmed.length() < 3) {
+                trimmed += " ";
+            }
+            if (trimmed.length() > 3) {
+                trimmed = trimmed.substring(0, 3);
+            }
+            return trimmed;
         }
     }
 
@@ -406,5 +446,17 @@ class DroneUIApp {
         defaultZones.add(new Zone(3, 0, 600, 650, 1500));
         defaultZones.add(new Zone(2, 650, 1500, 800, 1800));
         return defaultZones;
+    }
+
+    private static void assignZoneCharacters(List<Zone> zones) {
+        char[] allowedChars = {'A','B','C','D','E','F','G','H','I','J'};
+        List<Character> available = new ArrayList<>();
+        for (char c : allowedChars) {
+            available.add(c);
+        }
+        Collections.shuffle(available);
+        for (int i = 0; i < zones.size() && i < available.size(); i++) {
+            zones.get(i).zoneChar = available.get(i);
+        }
     }
 }

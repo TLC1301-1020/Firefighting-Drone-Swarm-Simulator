@@ -928,6 +928,10 @@ public class Scheduler {
                         String severity = d.getCurrentTask().getSeverity();
                         if (d.getCurrentTask().isDefault()) severity = "";
                         uiDrones.add(new DroneUIApp.DroneStatus(d.getDroneId(), d.getX(), d.getY(), severity));
+
+                        if(!d.getCurrentTask().isDefault()) {
+                            uiFires.add(new DroneUIApp.Fire(d.getCurrentTask().getId(), d.getCurrentTask().getSeverity(), d.getCurrentTask().getZoneId()));
+                        }
                     }
 
                     // Collect active fires (queue + assigned)
