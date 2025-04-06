@@ -16,6 +16,12 @@ public class SchedulerLogAnalyzer {
     private static int countCompletedFireRequests = 0;
     private static int countFireRequestCreated = 0;
     private static int countFireRequests = 0;
+    private static int countSuccessfulDroneAssignments = 0;
+    private static int countReassignmentsOptimum = 0;
+    private static int countReassignmentsFaults = 0;
+    private static int countFaults = 0;
+    private static int countFailedAssignments = 0;
+
 
     public static void analyzeLogs() {
         //TODO: Uncomment analyzeLogs() in Scheduler -> main()
@@ -29,9 +35,9 @@ public class SchedulerLogAnalyzer {
         for (ParsedLogEntry entry : entries) {
             System.out.println(entry);
         }
-        SchedulerLogAnalyzer.responseTimesByThread.put("SD",new ArrayList<>());
-        SchedulerLogAnalyzer.responseTimesByThread.put("SP",new ArrayList<>());
-        SchedulerLogAnalyzer.responseTimesByThread.put("SF",new ArrayList<>());
+
+        List<Double> rtbtSD = new ArrayList<>();
+        List<Double> rtbtSP = new ArrayList<>();
 
         // hash maps to store all entries
         Map<Integer, ParsedLogEntry> lastSDMap = new HashMap<>();
@@ -42,7 +48,8 @@ public class SchedulerLogAnalyzer {
         ParsedLogEntry firstSDLog = null;
         ParsedLogEntry lastSDLog = null;
 
-        ParsedLogEntry firstSFLog = null;
+        ParsedLogEntry firstSPLog = null;
+
         ParsedLogEntry lastSFLog = null;
 
         ParsedLogEntry firstSchedulerLog = null;
@@ -50,6 +57,7 @@ public class SchedulerLogAnalyzer {
         ParsedLogEntry firstFireIncident = null;
 
         boolean firstFireStored = false;
+        boolean firstAssignmentMade = false;
 
         for( ParsedLogEntry entry : entries )
         {
@@ -70,31 +78,51 @@ public class SchedulerLogAnalyzer {
                     if( entry.message.contains("Notifying FireIncidentSubsystem of task completion:") ) countCompletedFireRequests++;
 
                     // store logs based on contents for metrics
-                    if ( entry.message.equals("Listening to DroneSubsystem...") ) firstSDLog = entry;
+                    if ( entry.level.equals("ERROR") )  countFaults++;
+                    else if ( entry.message.contains("Task is being reassigned") ) countReassignmentsFaults++;
+                    else if ( entry.message.equals("Listening to DroneSubsystem...") ) firstSDLog = entry;
                     else if( entry.message.contains("Received drone message:") )
                     {
                         int id = getDroneId( entry.message );
-//                        System.out.println( id + " found in SD RECEIVED message: " + entry.message + "\n");
                         if (id!=-1) lastSDMap.put(id, entry);
                     }
                     else if ( entry.message.contains("Responding to drone with:") )
                     {
                         int id = getDroneId( entry.message );
-//                        System.out.println( id + " found in SD RESPONSE message: " + entry.message + "\n");
                         if (id!=-1)
                         {   // add the calculated response time for this thread by drone id based off prev added entry for the drone/scheduler communication
                             ParsedLogEntry lastEntry = lastSDMap.get(id);
-                            List<Double> rtbt = responseTimesByThread.remove("SD");
-                            rtbt.add(calculateTimeDuration( lastEntry, entry ));
-                            responseTimesByThread.put("SD", rtbt);
+                            rtbtSD.add(calculateTimeDuration( lastEntry, entry ));
                         }
                     }
                     lastSDLog = entry;
                     break;
                 case "SP":
                     // SP thread for all Scheduler internal processing of fire requests assignments to drones
-                    if ( entry.message.contains("Added FireRequest:") ) countFireRequestCreated++;
-
+                    if ( entry.message.contains("Attempting assignment:") )
+                    {
+                        // when a fire request is attempting assignment to any available drone
+                        String message = entry.message;
+                        String[] items = message.split("id=");
+                        lastSPMap.put(items[1].substring(0,2), entry); // add the last
+                        if(!firstAssignmentMade)
+                        {
+                            firstSPLog = entry;
+                            firstAssignmentMade=true;
+                        }
+                    }
+                    else if ( entry.message.contains("this fire request:") )
+                    {
+                        // when a fire request is successfully assigned to an available drone
+                        countSuccessfulDroneAssignments++;
+                        String message = entry.message;
+                        String[] items = message.split("id=");
+                        ParsedLogEntry prevSPLog = lastSPMap.remove(items[1].substring(0,2)); // add the last
+                        double rtSP = calculateTimeDuration(prevSPLog,entry);
+                        rtbtSP.add(rtSP);
+                    }
+                    else if ( entry.message.contains("Reassigning previous task:") ) countReassignmentsOptimum++;
+                    else if ( entry.message.contains("No available drone for request:") ) countFailedAssignments++;
                     break;
                 case "SF":
                     // SF thread for all Scheduler<->FireIncidentSubsystem communication
@@ -109,19 +137,25 @@ public class SchedulerLogAnalyzer {
                         }
                         String message = entry.message;
                         String[] items = message.split("id=");
+                        String numValue = items[1].trim();
                         Integer fRID = -1;
-                        try{fRID = Integer.valueOf(items[1]); } catch (NumberFormatException e) {}
+                        try{fRID = Integer.valueOf(numValue.charAt(0)); } catch (NumberFormatException e) {}
                         if(fRID!=1) firstSFMap.put(fRID, entry); // add the last
                     }
                     else if ( entry.message.contains("Added FireRequest:") )
                     {
                         countFireRequestCreated++;
+                    }
+                    else if (entry.message.contains("Sending to FireIncident Subsystem Scheduler Acknowledged Fire Request:"))
+                    {
+                        lastSFLog = entry;
                         String message = entry.message;
                         String[] items = message.split("id=");
                         Integer fRID = -1;
                         try{fRID = Integer.valueOf(items[1].charAt(0)); } catch (NumberFormatException e) {}
                         if(fRID!=1) lastSFMap.put(fRID, entry); // add the last
                     }
+                    else if ( entry.message.equals("Received Shutdown Message From Fire: SHUTDOWN") ) lastSFLog = entry;
                     break;
                 case "MAIN":
                     // scheduler initialized and all threads completed event logs
@@ -132,45 +166,14 @@ public class SchedulerLogAnalyzer {
                     break;
             }
         }
+        SchedulerLogAnalyzer.responseTimesByThread.put("SD",rtbtSD);
+        SchedulerLogAnalyzer.responseTimesByThread.put("SP",rtbtSP);
+        SchedulerLogAnalyzer.responseTimesByThread.put("SF",new ArrayList<>());
 
         calcSDMetrics(firstSDLog, lastSDLog);
-//        calcSPMetrics();
-        calcSFMetrics(firstFireIncident, firstSFMap, lastSFMap);
+        calcSPMetrics(firstSPLog, lastSFLog, lastSPMap);
+        calcSFMetrics(firstFireIncident, lastSFLog, firstSFMap, lastSFMap);
         calcGeneralMetrics(firstSchedulerLog, lastSchedulerLog, firstFireIncident);
-    }
-
-    /**
-        METRICS SF: Data for making/adding, then pass fire requests to Scheduler processing queue when first received fire incident
-     */
-    private static void calcSFMetrics(ParsedLogEntry firstFireIncident, Map<Integer, ParsedLogEntry> firstSFMap, Map<Integer, ParsedLogEntry> lastSFMap)
-    {
-        List<Double> rTSF = SchedulerLogAnalyzer.responseTimesByThread.remove("SF");
-
-        double busyTimeSF = 0.000;
-        // iterate through keys in firstSFMap to get ids of fire requests
-        for (Integer fireId : firstSFMap.keySet())
-        {
-            ParsedLogEntry firstEntry = firstSFMap.get(fireId);
-            ParsedLogEntry lastEntry = lastSFMap.get(fireId);
-            double responseTimeSF = calculateTimeDuration(firstEntry,lastEntry);
-            rTSF.add(responseTimeSF);
-            busyTimeSF+=responseTimeSF;
-        }
-        double lifeTimeSF = calculateTimeDuration( firstFireIncident, lastFireIncident );
-        double avgResponseSF = busyTimeSF/( (double)rTSF.size() );
-        double utilizationSF = (busyTimeSF / lifeTimeSD);
-
-        System.out.println("\n-----------------------------------------------------");
-        System.out.println(" * Scheduler Thread - SF - For FireIncidentSubsystem (FISS) <-> Scheduler Communication * ");
-        System.out.println("                          Start Time: " + firstSFLog.timestamp);
-        System.out.println("                            End Time: " + lastSFLog.timestamp);
-        System.out.printf("                            Lifetime: %.4f s\n", lifeTimeSF);
-        System.out.printf("                            BusyTime: %.4f s\n\n", busyTimeSF);
-
-        System.out.printf("                         Utilization: %.4f\n", utilizationSF);
-        System.out.printf("  Total Communication events w. FISS: %s\n", rTSF.size());
-        System.out.printf("               Average Response Time: %.4f s\n\n", avgResponseSF);
-        System.out.println("-----------------------------------------------------");
     }
 
     /**
@@ -185,7 +188,7 @@ public class SchedulerLogAnalyzer {
         double avgResponseSD = busyTimeSD/( (double)rtbtSD.size() );
         double utilizationSD = (busyTimeSD / lifeTimeSD);
 
-        System.out.println("\n-----------------------------------------------------");
+        System.out.println("\n==================================================================");
         System.out.println(" * Scheduler Thread - SD - For Drone <-> Scheduler Communication * ");
         System.out.println("                          Start Time: " + firstSDLog.timestamp);
         System.out.println("                            End Time: " + lastSDLog.timestamp);
@@ -194,9 +197,74 @@ public class SchedulerLogAnalyzer {
 
         System.out.printf("                         Utilization: %.4f\n", utilizationSD);
         System.out.printf("Total Communication events w. Drones: %s\n", rtbtSD.size());
-        System.out.printf("               Average Response Time: %.4f s\n\n", avgResponseSD);
-        System.out.println("-----------------------------------------------------");
+        System.out.printf("               Average Response Time: %.4f s\n", avgResponseSD);
+    }
 
+    /**
+     METRICS SF: Data for making/adding, then pass fire requests to Scheduler processing queue when first received fire incident
+     */
+    private static void calcSFMetrics(ParsedLogEntry firstFireIncident,
+                                      ParsedLogEntry lastSFLog,
+                                      Map<Integer, ParsedLogEntry> firstSFMap,
+                                      Map<Integer, ParsedLogEntry> lastSFMap)
+    {
+        List<Double> rTSF = SchedulerLogAnalyzer.responseTimesByThread.remove("SF");
+
+        double busyTimeSF = 0.000;
+        // iterate through keys in firstSFMap to get ids of fire requests
+        for (Integer fireId : firstSFMap.keySet())
+        {
+            ParsedLogEntry firstEntry = firstSFMap.get(fireId);
+            ParsedLogEntry lastEntry = lastSFMap.get(fireId);
+            double responseTimeSF = calculateTimeDuration(firstEntry,lastEntry);
+            rTSF.add(responseTimeSF);
+            busyTimeSF+=responseTimeSF;
+        }
+        double lifeTimeSF = calculateTimeDuration( firstFireIncident, lastSFLog );
+        double avgResponseSF = busyTimeSF/( (double)rTSF.size() );
+        double utilizationSF = (busyTimeSF / lifeTimeSF);
+
+        System.out.println("\n==================================================================");
+        System.out.println(" * Scheduler Thread - SF - For FireIncidentSubsystem (FISS) <-> Scheduler Communication * ");
+        System.out.println("        First Fire Incident Received: " + firstFireIncident.timestamp);
+        System.out.println("                            End Time: " + lastSFLog.timestamp);
+        System.out.printf("                            Lifetime: %.4f s\n", lifeTimeSF);
+        System.out.printf("                            BusyTime: %.4f s\n\n", busyTimeSF);
+
+        System.out.printf("                         Utilization: %.4f\n", utilizationSF);
+        System.out.printf("  Total Communication events w. FISS: %s\n", countFireRequests);
+        System.out.printf("               Average Response Time: %.4f s\n", avgResponseSF);
+    }
+
+    /**
+     METRICS SP: Data for assigning fire requests to drones
+     */
+    private static void calcSPMetrics(ParsedLogEntry firstSPLog,
+                                      ParsedLogEntry lastSPLog,
+                                      Map<String, ParsedLogEntry> lastSPMap)
+    {
+        List<Double> rtbtSP = SchedulerLogAnalyzer.responseTimesByThread.remove("SP");
+
+        double busyTimeSP = 0.000;
+        for ( Double rt : rtbtSP ) busyTimeSP+=rt;
+        double lifeTimeSP = calculateTimeDuration( firstSPLog, lastSPLog );
+        double avgResponseSP = busyTimeSP/( (double)rtbtSP.size() );
+        double utilizationSP = (busyTimeSP / lifeTimeSP);
+
+        System.out.println("\n==================================================================");
+        System.out.println(" * Scheduler Thread - SP - For assigning fire requests to drones * ");
+        System.out.println("         First Fire Request Received: " + firstSPLog.timestamp);
+        System.out.println("                            End Time: " + lastSPLog.timestamp);
+        System.out.printf("                            Lifetime: %.4f s\n", lifeTimeSP);
+        System.out.printf("                            BusyTime: %.4f s\n\n", busyTimeSP);
+
+        System.out.printf("           # of Successful Drone Assignments : %s\n", countSuccessfulDroneAssignments);
+        System.out.printf("# of Drone Reassignments from path Optimizing: %s\n", countReassignmentsOptimum);
+        System.out.printf("         # of Drone Reassignments from faults: %s\n", countReassignmentsFaults);
+        System.out.printf("         # of Unsuccessful Drone Assignments : %s\n\n", countFailedAssignments);
+
+        System.out.printf("                         Utilization: %.4f\n", utilizationSP);
+        System.out.printf("               Average Response Time: %.4f s\n", avgResponseSP);
     }
 
     /**
@@ -209,7 +277,7 @@ public class SchedulerLogAnalyzer {
         double lifeTimeScheduler = calculateTimeDuration(firstSchedulerLog, lastSchedulerLog);
         double lifeTimeServicingFires = calculateTimeDuration(firstFireIncident, lastSchedulerLog);
 
-        System.out.println("\n-----------------------------------------------------");
+        System.out.println("\n==================================================================");
         System.out.println(" * Scheduler General Metrics * ");
         System.out.println("                          Start Time: " + firstSchedulerLog.timestamp);
         System.out.println("                            End Time: " + lastSchedulerLog.timestamp);
@@ -218,8 +286,8 @@ public class SchedulerLogAnalyzer {
         System.out.printf("       Total Fire Incidents Sent to Scheduler: %s\n", countFireRequests);
         System.out.printf(" #of Drone Missions Required to Service Fires: %s\n", countFireRequestCreated);
         System.out.printf("                 #of Drone Missions Completed: %s\n", countCompletedFireRequests);
+        System.out.printf("                             #of Drone Faults: %s\n", countFaults);
         System.out.printf("        Fires Serviced With Drones Throughput: %.4f /s\n", (double)countFireRequests/lifeTimeServicingFires);
-        System.out.println("-----------------------------------------------------");
     }
 
 
