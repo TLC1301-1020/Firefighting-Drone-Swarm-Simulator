@@ -1008,7 +1008,7 @@ public class Scheduler {
         }
 
         SchedulerEventLogger.getInstance().info("Main", "MAIN", "All threads have finished. Log file ready for analysis.");
-        SchedulerLogAnalyzer.analyzeLogs();
+//        SchedulerLogAnalyzer.analyzeLogs();
 
     }
 }
