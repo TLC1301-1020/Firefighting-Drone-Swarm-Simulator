@@ -76,7 +76,7 @@ public class DroneLogAnalyzer {
             this.threadType = threadType;
             this.event = event;
         }
-        //getters
+        //Getters
         public String getComponent() {return component;}
         public LocalTime getTimestamp() {return timestamp;}
         public String getThreadType() {return threadType;}
@@ -223,12 +223,13 @@ public class DroneLogAnalyzer {
         for(LogEntry log: drone){
             if(log.getEvent().contains("Assigned") && workStart == null){
                 workStart = log.getTimestamp();
-
-            }else if(log.getEvent().contains("Arrived back at base") && workStart != null){
+            //TODO: remove FAULT condition if failed to complete task does not count as a part of busy time
+            }else if((log.getEvent().contains("Arrived back at base")  || log.getEvent().contains("complete") || log.getEvent().contains("FAULT")) && workStart != null){
                 workTime += Duration.between(workStart, log.getTimestamp()).toMillis() / 1000.0;
                 workStart = null;
             }
         }
+
         double utilization = workTime / lifetime;
 
         if (utilization <= 0) {
@@ -389,6 +390,7 @@ public class DroneLogAnalyzer {
                 }
             }
         }
+
         double utilization = totalWorking / lifetime;
         if(utilization < 0){
             System.out.println("Utilization: not available");
@@ -424,6 +426,10 @@ public class DroneLogAnalyzer {
                 requestCount++;
                 requestStart = null;
             }
+        }
+        if(responseTimes <= 0 || requestCount == 0){
+            System.out.println("Response Time: not available");
+            return 0;
         }
         responseTimes = responseTimes/requestCount;
         System.out.printf("Response Time: %.4fs\n", responseTimes/requestCount);
@@ -492,6 +498,7 @@ public class DroneLogAnalyzer {
         double total = 0;
         int count = 0;
         double average = 0;
+
         for(String key: drones.keySet()){
             System.out.println(" Drone - " + key);
             double lifetime = calculateTotalTime(drones.get(key));
@@ -501,6 +508,7 @@ public class DroneLogAnalyzer {
                 total += average;
                 count++;
             }
+
             responseTime(drones.get(key),"Waiting", "Received");
             double time = droneRunTime(drones.get(key));
             if(time != 0) {
