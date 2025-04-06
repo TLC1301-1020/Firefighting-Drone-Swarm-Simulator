@@ -10,8 +10,9 @@ import java.util.regex.Pattern;
 
 
 /**
- * Analyze event logs and calculate the metrics
- * It reads log entries from event_log.txt
+ * A utility class for analyzing drone log data.
+ * This class contains methods for parsing log entries and organizing them by component type.
+ * It stores logs in separate categories such as drone, process fault, scheduler listener, and subsystem logs.
  */
 public class DroneLogAnalyzer {
     private static final String LOG_FILE = "drone_event_log.txt";
@@ -28,8 +29,8 @@ public class DroneLogAnalyzer {
     private static int droneTotal = 0;
     private static double lifetime;
     /**
-     * Represents a log entry with a timestamp, component, and event code
-     * A method to parse log lines into LogEntry objects
+     * Represents a log entry with a timestamp, component, and event code.
+     * This class provides a method to parse log lines into LogEntry objects.
      */
     private static class LogEntry {
         private LocalTime timestamp;
@@ -38,6 +39,7 @@ public class DroneLogAnalyzer {
         private String threadType;
         /**
          * Parses a log line and creates a LogEntry object.
+         *
          * @param logLine The raw log line to parse
          * @return A LogEntry object if parsing is successful, otherwise null
          */
@@ -60,7 +62,14 @@ public class DroneLogAnalyzer {
             return null;
         }
 
-
+        /**
+         * Constructs a new LogEntry object.
+         *
+         * @param timestamp The timestamp of the log entry
+         * @param component The component from which the log entry originated
+         * @param threadType The type of the thread generating the log
+         * @param event The event associated with this log entry
+         */
         LogEntry(LocalTime timestamp, String component,String threadType, String event) {
             this.timestamp = timestamp;
             this.component = component;
@@ -74,8 +83,17 @@ public class DroneLogAnalyzer {
         public String getEvent() {return event;}
     }
     /**
-     * Reads log entries from the event log file and converts them into lists of LogEntry objects
-     * Based on component type (drone or subsystem)
+     * Reads the log file and parses each line into a {@link LogEntry} object.
+     * Depending on the component and thread type of the log entry, the logs are separated into different categories:
+     * <ul>
+     *     <li>Scheduler listener logs</li>
+     *     <li>Process fault logs</li>
+     *     <li>Subsystem logs</li>
+     *     <li>Drone logs</li>
+     * </ul>
+     * The method also updates the total number of drones based on the thread type in the logs.
+     *
+     * @param file The log file to read and process.
      */
     public static void readLogs(String file) {
 
@@ -110,8 +128,15 @@ public class DroneLogAnalyzer {
         }
     }
     /**
-     * Reads and analyzes log entries
-     * If no log file is found, a message is displayed
+     * Analyzes and processes logs by reading the log file and categorizing log entries.
+     * The method performs several metrics calculations and outputs:
+     * <ul>
+     *     <li>Drones logs: Sorted and metrics are calculated</li>
+     *     <li>Subsystem logs: Metrics such as lifetime, response time, throughput, latency, and utilization</li>
+     *     <li>Scheduler listener logs: Metrics including lifetime, response time, throughput, and utilization</li>
+     *     <li>Process fault logs: Metrics including lifetime, response time, throughput, and utilization</li>
+     * </ul>
+     * It outputs the results for each category and handles situations when no logs are found.
      */
     public static void analyzeLogs() {
         readLogs(LOG_FILE);  // Read and parse the log entries
@@ -147,9 +172,12 @@ public class DroneLogAnalyzer {
         }
     }
     /**
-     * Calculates total runtime for completed drone tasks.
-     * @param drone list of log entries for one drone
-     * @return total runtime in seconds
+     * Calculates the total and average running time of drones based on log entries.
+     * The method considers logs with "Assigned" and "Arrived back at base" events to calculate the total running time
+     * for each task and the average running time per task.
+     *
+     * @param drone A list of LogEntry objects representing drone logs.
+     * @return The total running time of all tasks in seconds. If no valid logs are found, returns 0.0.
      */
     public static double droneRunTime(List<LogEntry> drone){
         if(drone.isEmpty()){
@@ -178,10 +206,12 @@ public class DroneLogAnalyzer {
         return totalTime;
     }
     /**
-     * Calculates the drone's utilization as the ratio of work time to lifetime.
-     * @param drone list of log entries for one drone
-     * @param lifetime the total lifetime of the drone in seconds
-     * @return the utilization as a ratio (work time / lifetime)
+     * Calculates the utilization of drones based on their work time and the total lifetime.
+     * Utilization is calculated as the ratio of work time to lifetime.
+     *
+     * @param drone A list of LogEntry objects representing drone logs.
+     * @param lifetime The total lifetime of the drone in seconds.
+     * @return The utilization of the drone as a decimal fraction. If no valid logs or lifetime are provided, returns 0.0.
      */
     public static double droneUtilization(List<LogEntry> drone, double lifetime){
         if (lifetime <= 0 || drone.isEmpty()) {
@@ -210,12 +240,14 @@ public class DroneLogAnalyzer {
     }
 
     /**
-     * Calculates the average deployment time from the list of logs.
-     * "Deploying" marks the start, and "payload complete" marks the end.
+     * Calculates the average deployment time based on the log entries.
+     * A deployment is considered as starting with a "Deploying" event and completing with a "payload complete" event.
+     * The method computes the total deployment time and returns the average time for completed deployments.
      *
-     * @param logs List of {@link LogEntry} containing deployment events.
-     * @return Average deployment time in seconds, or 0 if no deployments are found.
-     */    public static double averageDeploy(List<LogEntry> logs){
+     * @param logs A list of LogEntry objects representing the logs to analyze.
+     * @return The average deployment time in seconds. If no valid deployments are found, returns 0.
+     */
+    public static double averageDeploy(List<LogEntry> logs){
         if(logs.isEmpty()){
             System.out.println("Average Deploy Time: Not available");
             return 0;
@@ -251,8 +283,10 @@ public class DroneLogAnalyzer {
 
     }
     /**
-     * Calculates the average latency between "Waiting" and "Received" events in subsystem logs.
-     * @return the average latency in seconds, or 0 if no valid data
+     * Calculates the average latency for subsystem logs, based on "Waiting" and "Received" events.
+     * Latency is computed as the time between a "Waiting" event and the corresponding "Received" event.
+     *
+     * @return The average latency in seconds. If no valid events are found, returns 0.
      */
     public static double subsystemLatency(){
         if(subsystemLogs.isEmpty()){
@@ -284,12 +318,15 @@ public class DroneLogAnalyzer {
     }
 
     /**
-     * Calculates the throughput as the number of completed requests per unit of time.
-     * @param logs list of log entries
-     * @param time the time period in seconds
-     * @param x event type for start of request
-     * @param y event type for end of request
-     * @return the throughput (requests per second)
+     * Calculates the throughput based on logs, time, and specified event types.
+     * Throughput is computed as the number of completed requests per unit of time,
+     * based on the occurrences of the specified events (x and y) in the logs.
+     *
+     * @param logs The list of logs containing event data.
+     * @param time The total time in seconds over which throughput is calculated.
+     * @param x The event type indicating the start of a request.
+     * @param y The event type indicating the completion of a request.
+     * @return The calculated throughput (requests per second), or 0 if no valid data is found.
      */
     public static double throughput(List<LogEntry> logs, double time, String x, String y){
         if(x.isEmpty() || y.isEmpty() || logs.isEmpty() || time <= 0){
@@ -320,12 +357,15 @@ public class DroneLogAnalyzer {
 
     }
     /**
-     * Calculates the utilization as the ratio of total working time to lifetime.
-     * @param logs list of log entries
-     * @param lifetime the total lifetime in seconds
-     * @param x event type indicating the start of work
-     * @param y event type indicating the end of work
-     * @return the utilization as a ratio (working time / lifetime)
+     * Calculates the utilization based on logs, lifetime, and specified event types.
+     * Utilization is the ratio of total working time to the given lifetime, determined
+     * by the occurrences of the specified events (x and y) in the logs.
+     *
+     * @param logs The list of logs containing event data.
+     * @param lifetime The total lifetime in seconds over which utilization is calculated.
+     * @param x The event type indicating the start of a working period.
+     * @param y The event type indicating the end of a working period.
+     * @return The calculated utilization (working time / lifetime), or 0 if no valid data is found.
      */
     public static double utilization(List<LogEntry> logs, double lifetime,String x, String y) {
         if(logs.isEmpty() || lifetime <= 0 || x.isEmpty() || y.isEmpty()){
@@ -358,11 +398,13 @@ public class DroneLogAnalyzer {
         return utilization;
     }
     /**
-     * Calculates the average response time between two events.
-     * @param logs list of log entries
-     * @param x event type for the start of the request
-     * @param y event type for the end of the request
-     * @return the average response time in seconds
+     * Calculates the average response time based on logs, using the specified event types.
+     * Response time is calculated as the duration between the start event (x) and the end event (y) for each request.
+     *
+     * @param logs The list of logs containing event data.
+     * @param x The event type indicating the start of a request.
+     * @param y The event type indicating the end of a request.
+     * @return The calculated average response time in seconds, or 0 if no valid data is found.
      */
     public static double responseTime(List<LogEntry> logs,String x, String y) {
         if(logs.isEmpty() || x.isEmpty() || y.isEmpty()){
@@ -389,9 +431,11 @@ public class DroneLogAnalyzer {
     }
 
     /**
-     * Calculates the total time between the first and last log entries.
-     * @param logs list of log entries
-     * @return the total time in seconds between the first and last timestamp
+     * Calculates the total lifetime based on the first and last log entry timestamps.
+     * The lifetime is the duration between the first and last log entries in seconds.
+     *
+     * @param logs The list of log entries.
+     * @return The calculated total lifetime in seconds, or 0 if no valid logs are found or an error occurs.
      */
     public static double calculateTotalTime(List<LogEntry> logs) {
         if(logs.isEmpty()){
@@ -417,7 +461,9 @@ public class DroneLogAnalyzer {
         return lifetime;
     }
     /**
-     * Sorts the log entries into separate lists based on the thread type and stores them in the `drones` map.
+     * Sorts the drone log entries into separate lists based on the thread type.
+     * The logs are organized by the thread type,
+     * each thread type has its own list of log entries in the `drones` HashMap.
      */
     public static void sortDrones() {
         for (LogEntry log : droneLogs) {
@@ -432,7 +478,15 @@ public class DroneLogAnalyzer {
         }
     }
     /**
-     * Calculates and prints various metrics (lifetime, response time, run time, throughput, utilization) for each drone.
+     * Analyzes and prints various metrics for each drone, including:
+     * - Lifetime of each drone
+     * - Drone utilization
+     * - Average deployment time
+     * - Response time
+     * - Run time
+     * - Throughput
+     *
+     * It calculates the overall average deployment time for all drones and displays the results.
      */
     public static void droneMetrics(){
         double total = 0;
@@ -459,6 +513,8 @@ public class DroneLogAnalyzer {
         System.out.println("All Drones - Average Deployment Time: " + total/count + "s");
         System.out.println();
     }
+
+    //Getters
     /**
      * @return the list of drone logs
      */
