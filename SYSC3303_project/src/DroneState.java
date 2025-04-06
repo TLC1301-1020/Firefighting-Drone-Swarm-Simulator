@@ -361,6 +361,7 @@ class DroneFaultDeploy implements DroneState {
         if (event.equals( DroneEvent.PAYLOAD_DEPLOY_FAILURE )) {
             System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is returning to base following a deployment failure");
             drone.setState( new DroneActive(new DroneReturn()) );
+            drone.returnTravel(); // drone returns
         }
         else if ( event.equals( DroneEvent.PERMISSION_TO_DROP ) ) {
             // given instruction to drop payload again
@@ -379,5 +380,3 @@ class DroneFaultDeploy implements DroneState {
         return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
     }
 }
-
-

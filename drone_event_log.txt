@@ -1,0 +1,1648 @@
+[16:22:14.646] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:14.700] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:14.805] [INFO] [Drone] [0] Received a Scheduler response
+[16:22:20.956] [INFO] [Drone] [0] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}
+[16:22:20.959] [INFO] [Drone] [0] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:22:20.968] [INFO] [Drone] [0] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:21.235] [INFO] [Drone] [0] Received a Scheduler response
+[16:22:21.344] [INFO] [Drone] [0] Received a Scheduler response
+[16:22:21.347] [INFO] [Drone] [0] State Change: [ACTIVE][TRAVELING]->[FAULT][STUCK]
+[16:22:21.447] [INFO] [Drone] [2] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1C}
+[16:22:21.447] [INFO] [Drone] [2] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:22:21.447] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:21.551] [INFO] [Drone] [0] Received a Scheduler response
+[16:22:21.656] [INFO] [Drone] [1] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1B}
+[16:22:21.656] [INFO] [Drone] [1] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:22:21.656] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:21.760] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:21.866] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:21.972] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:21.972] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:21.973] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:22.075] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:22.179] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:22.285] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:22.286] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:22.286] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:22.391] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:22.391] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:22.391] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:22.495] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:22.596] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:22.699] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:22.700] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:22.700] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:22.805] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:22.806] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:22.806] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:22.908] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:23.012] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:23.117] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:23.117] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:23.117] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:23.222] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:23.222] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:23.223] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:23.326] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:23.430] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:23.535] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:23.536] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:23.536] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:23.639] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:23.639] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:23.639] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:23.744] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:23.846] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:23.953] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:23.953] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:23.953] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:24.055] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:24.056] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:24.056] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:24.160] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:24.265] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:24.367] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:24.367] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:24.367] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:24.471] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:24.472] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:24.472] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:24.578] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:24.684] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:24.788] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:24.789] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:24.789] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:24.890] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:24.891] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:24.891] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:24.995] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:25.095] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:25.200] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:25.200] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:25.200] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:25.305] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:25.305] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:25.305] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:25.409] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:25.513] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:25.614] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:25.614] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:25.614] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:25.717] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:25.718] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:25.718] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:25.822] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:25.927] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:26.029] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:26.029] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:26.029] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:26.133] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:26.133] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:26.133] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:26.234] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:26.337] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:26.441] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:26.441] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:26.441] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:26.545] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:26.546] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:26.546] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:26.649] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:26.754] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:26.859] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:26.859] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:26.859] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:26.962] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:26.962] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:26.963] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:27.065] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:27.170] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:27.274] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:27.274] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:27.274] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:27.375] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:27.376] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:27.376] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:27.479] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:27.585] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:27.688] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:27.688] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:27.689] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:27.792] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:27.793] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:27.793] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:27.895] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:28.000] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:28.104] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:28.105] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:28.105] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:28.208] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:28.208] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:28.208] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:28.313] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:28.418] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:28.523] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:28.524] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:28.524] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:28.627] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:28.627] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:28.627] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:28.730] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:28.834] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:28.934] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:28.934] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:28.934] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:29.042] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:29.043] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:29.043] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:29.144] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:29.249] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:29.353] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:29.353] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:29.353] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:29.457] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:29.458] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:29.458] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:29.561] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:29.669] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:29.773] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:29.774] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:29.774] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:29.877] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:29.878] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:29.878] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:29.983] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:30.087] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:30.192] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:30.193] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:30.193] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:30.297] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:30.298] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:30.298] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:30.399] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:30.504] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:30.608] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:30.608] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:30.608] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:30.708] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:30.708] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:30.708] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:30.808] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:30.909] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:31.012] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:31.013] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:31.013] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:31.113] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:31.113] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:31.113] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:31.214] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:31.319] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:31.420] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:31.420] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:31.421] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:31.525] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:31.525] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:31.525] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:31.628] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:31.733] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:31.838] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:31.838] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:31.839] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:31.943] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:31.943] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:31.944] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:32.047] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:32.153] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:32.254] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:32.255] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:32.255] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:32.357] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:32.358] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:32.358] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:32.463] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:32.568] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:32.673] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:32.673] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:32.673] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:32.775] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:32.775] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:32.775] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:32.880] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:32.981] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:33.083] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:33.083] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:33.083] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:33.188] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:33.188] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:33.188] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:33.291] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:33.394] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:33.498] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:33.499] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:33.499] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:33.602] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:33.602] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:33.602] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:33.708] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:33.810] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:33.914] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:33.914] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:33.914] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:34.018] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:34.018] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:34.018] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:34.089] [INFO] [Drone] [2] Arrived at zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:34.122] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:34.225] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:34.228] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[16:22:34.229] [INFO] [Drone] [2] Opening payload doors
+[16:22:34.240] [INFO] [Drone] [2] Deploying payload
+[16:22:34.328] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:34.328] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:34.328] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:34.401] [INFO] [Drone] [1] Arrived at zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:34.507] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:34.508] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[16:22:34.508] [INFO] [Drone] [1] Opening payload doors
+[16:22:34.518] [INFO] [Drone] [1] Deploying payload
+[16:22:34.518] [INFO] [Drone] [1] Opening payload doors
+[16:22:34.575] [INFO] [Drone] [2] Deployment of payload complete
+[16:22:34.576] [INFO] [Drone] [2] Opening payload doors
+[16:22:34.633] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:34.635] [INFO] [Drone] [1] State Change: [ACTIVE][DEPLOYING]->[FAULT][DEPLOY FAILURE]
+[16:22:34.742] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:34.743] [INFO] [Drone] [2] State Change: [ACTIVE][DEPLOYING]->[ACTIVE][RETURNING]
+[16:22:34.749] [INFO] [Drone] [2] Beginning travel to base
+[16:22:34.843] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:34.844] [INFO] [Drone] [1] State Change: [FAULT][DEPLOY FAILURE]->[ACTIVE][RETURNING]
+[16:22:34.844] [INFO] [Drone] [1] Beginning travel to base
+[16:22:34.947] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:34.948] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:34.949] [INFO] [Drone] [2] Beginning travel to base
+[16:22:35.049] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:35.049] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.049] [INFO] [Drone] [1] Beginning travel to base
+[16:22:35.152] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:35.152] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.152] [INFO] [Drone] [2] Beginning travel to base
+[16:22:35.257] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:35.258] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.258] [INFO] [Drone] [1] Beginning travel to base
+[16:22:35.358] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:35.358] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.358] [INFO] [Drone] [2] Beginning travel to base
+[16:22:35.461] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:35.461] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.461] [INFO] [Drone] [1] Beginning travel to base
+[16:22:35.565] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:35.565] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.565] [INFO] [Drone] [2] Beginning travel to base
+[16:22:35.669] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:35.670] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.670] [INFO] [Drone] [1] Beginning travel to base
+[16:22:35.774] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:35.774] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.775] [INFO] [Drone] [2] Beginning travel to base
+[16:22:35.876] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:35.876] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.876] [INFO] [Drone] [1] Beginning travel to base
+[16:22:35.978] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:35.978] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:35.978] [INFO] [Drone] [2] Beginning travel to base
+[16:22:36.081] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:36.081] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.082] [INFO] [Drone] [1] Beginning travel to base
+[16:22:36.186] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:36.186] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.186] [INFO] [Drone] [2] Beginning travel to base
+[16:22:36.289] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:36.289] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.289] [INFO] [Drone] [1] Beginning travel to base
+[16:22:36.392] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:36.392] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.392] [INFO] [Drone] [2] Beginning travel to base
+[16:22:36.493] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:36.493] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.493] [INFO] [Drone] [1] Beginning travel to base
+[16:22:36.596] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:36.597] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.597] [INFO] [Drone] [2] Beginning travel to base
+[16:22:36.700] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:36.700] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.700] [INFO] [Drone] [1] Beginning travel to base
+[16:22:36.802] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:36.802] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.802] [INFO] [Drone] [2] Beginning travel to base
+[16:22:36.906] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:36.906] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:36.906] [INFO] [Drone] [1] Beginning travel to base
+[16:22:37.011] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:37.011] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.011] [INFO] [Drone] [2] Beginning travel to base
+[16:22:37.112] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:37.113] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.113] [INFO] [Drone] [1] Beginning travel to base
+[16:22:37.214] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:37.215] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.215] [INFO] [Drone] [2] Beginning travel to base
+[16:22:37.319] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:37.319] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.319] [INFO] [Drone] [1] Beginning travel to base
+[16:22:37.421] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:37.421] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.422] [INFO] [Drone] [2] Beginning travel to base
+[16:22:37.525] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:37.525] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.525] [INFO] [Drone] [1] Beginning travel to base
+[16:22:37.629] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:37.630] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.630] [INFO] [Drone] [2] Beginning travel to base
+[16:22:37.734] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:37.735] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.735] [INFO] [Drone] [1] Beginning travel to base
+[16:22:37.839] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:37.840] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.840] [INFO] [Drone] [2] Beginning travel to base
+[16:22:37.943] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:37.943] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:37.944] [INFO] [Drone] [1] Beginning travel to base
+[16:22:38.047] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:38.047] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.047] [INFO] [Drone] [2] Beginning travel to base
+[16:22:38.152] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:38.152] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.152] [INFO] [Drone] [1] Beginning travel to base
+[16:22:38.256] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:38.256] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.257] [INFO] [Drone] [2] Beginning travel to base
+[16:22:38.362] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:38.363] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.363] [INFO] [Drone] [1] Beginning travel to base
+[16:22:38.463] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:38.463] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.463] [INFO] [Drone] [2] Beginning travel to base
+[16:22:38.568] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:38.569] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.569] [INFO] [Drone] [1] Beginning travel to base
+[16:22:38.673] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:38.673] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.673] [INFO] [Drone] [2] Beginning travel to base
+[16:22:38.778] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:38.778] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.778] [INFO] [Drone] [1] Beginning travel to base
+[16:22:38.879] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:38.880] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.880] [INFO] [Drone] [2] Beginning travel to base
+[16:22:38.983] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:38.983] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:38.983] [INFO] [Drone] [1] Beginning travel to base
+[16:22:39.086] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:39.087] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.087] [INFO] [Drone] [2] Beginning travel to base
+[16:22:39.190] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:39.191] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.191] [INFO] [Drone] [1] Beginning travel to base
+[16:22:39.293] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:39.293] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.293] [INFO] [Drone] [2] Beginning travel to base
+[16:22:39.399] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:39.399] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.399] [INFO] [Drone] [1] Beginning travel to base
+[16:22:39.501] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:39.501] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.501] [INFO] [Drone] [2] Beginning travel to base
+[16:22:39.604] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:39.605] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.605] [INFO] [Drone] [1] Beginning travel to base
+[16:22:39.710] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:39.711] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.711] [INFO] [Drone] [2] Beginning travel to base
+[16:22:39.818] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:39.819] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.819] [INFO] [Drone] [1] Beginning travel to base
+[16:22:39.922] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:39.923] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:39.923] [INFO] [Drone] [2] Beginning travel to base
+[16:22:40.027] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:40.028] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.028] [INFO] [Drone] [1] Beginning travel to base
+[16:22:40.127] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:40.128] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.128] [INFO] [Drone] [2] Beginning travel to base
+[16:22:40.232] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:40.232] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.232] [INFO] [Drone] [1] Beginning travel to base
+[16:22:40.332] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:40.332] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.333] [INFO] [Drone] [2] Beginning travel to base
+[16:22:40.437] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:40.438] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.438] [INFO] [Drone] [1] Beginning travel to base
+[16:22:40.540] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:40.540] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.541] [INFO] [Drone] [2] Beginning travel to base
+[16:22:40.646] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:40.646] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.646] [INFO] [Drone] [1] Beginning travel to base
+[16:22:40.750] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:40.750] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.750] [INFO] [Drone] [2] Beginning travel to base
+[16:22:40.852] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:40.852] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.852] [INFO] [Drone] [1] Beginning travel to base
+[16:22:40.956] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:40.956] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:40.956] [INFO] [Drone] [2] Beginning travel to base
+[16:22:40.961] [INFO] [Drone] [2] Arrived back at base
+[16:22:41.058] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:41.058] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:41.058] [INFO] [Drone] [1] Beginning travel to base
+[16:22:41.063] [INFO] [Drone] [1] Arrived back at base
+[16:22:41.163] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:41.164] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[REFILLING]
+[16:22:41.164] [INFO] [Drone] [2] Refilling payload
+[16:22:41.189] [INFO] [Drone] [2] Payload refilled
+[16:22:41.265] [INFO] [Drone] [1] Received a Scheduler response
+[16:22:41.370] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:41.371] [INFO] [Drone] [2] Assigned Task: FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[16:22:41.371] [INFO] [Drone] [2] State Change: [REFILLING]->[IDLE]
+[16:22:41.476] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:42.085] [INFO] [Drone] [2] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1B}
+[16:22:42.085] [INFO] [Drone] [2] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:22:42.085] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:42.260] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:42.365] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:42.365] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:42.365] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:42.554] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:42.657] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:42.657] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:42.657] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:42.842] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:42.943] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:42.944] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:42.944] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:43.123] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:43.231] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:43.231] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:43.231] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:43.411] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:43.514] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:43.514] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:43.514] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:43.692] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:43.797] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:43.798] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:43.798] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:43.977] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.083] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.084] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:44.084] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:44.265] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.366] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.366] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:44.366] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:44.541] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.642] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.642] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:44.642] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:44.812] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.919] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:44.919] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:44.919] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:45.115] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:45.220] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:45.221] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:45.221] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:45.398] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:45.502] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:45.503] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:45.503] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:45.683] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:45.791] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:45.792] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:45.792] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:45.970] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.077] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.077] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:46.077] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:46.260] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.366] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.366] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:46.366] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:46.545] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.648] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.648] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:46.648] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:46.828] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.931] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:46.931] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:46.931] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:47.111] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:47.213] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:47.213] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:47.213] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:47.392] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:47.498] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:47.499] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:47.499] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:47.678] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:47.784] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:47.784] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:47.784] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:47.958] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.062] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.063] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:48.063] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:48.243] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.350] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.350] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:48.350] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:48.532] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.638] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.638] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:48.638] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:48.817] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.919] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:48.919] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:48.919] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:49.099] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:49.204] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:49.204] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:49.204] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:49.389] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:49.493] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:49.493] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:49.493] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:49.672] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:49.773] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:49.773] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:49.773] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:49.956] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:50.059] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:50.059] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:50.059] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:50.232] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:50.334] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:50.335] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:50.335] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:50.512] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:50.617] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:50.618] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:50.618] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:50.689] [INFO] [Drone] [2] Arrived at zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:50.793] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:50.794] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[16:22:50.794] [INFO] [Drone] [2] Opening payload doors
+[16:22:50.805] [INFO] [Drone] [2] Deploying payload
+[16:22:51.137] [INFO] [Drone] [2] Deployment of payload complete
+[16:22:51.137] [INFO] [Drone] [2] Opening payload doors
+[16:22:51.252] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:51.252] [INFO] [Drone] [2] State Change: [ACTIVE][DEPLOYING]->[ACTIVE][RETURNING]
+[16:22:51.253] [INFO] [Drone] [2] Beginning travel to base
+[16:22:51.431] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:51.432] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:51.432] [INFO] [Drone] [2] Beginning travel to base
+[16:22:51.607] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:51.608] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:51.608] [INFO] [Drone] [2] Beginning travel to base
+[16:22:51.786] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:51.787] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:51.787] [INFO] [Drone] [2] Beginning travel to base
+[16:22:51.964] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:51.964] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:51.964] [INFO] [Drone] [2] Beginning travel to base
+[16:22:52.142] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:52.142] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:52.142] [INFO] [Drone] [2] Beginning travel to base
+[16:22:52.321] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:52.322] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:52.322] [INFO] [Drone] [2] Beginning travel to base
+[16:22:52.500] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:52.501] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:52.501] [INFO] [Drone] [2] Beginning travel to base
+[16:22:52.682] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:52.682] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:52.683] [INFO] [Drone] [2] Beginning travel to base
+[16:22:52.863] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:52.863] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:52.864] [INFO] [Drone] [2] Beginning travel to base
+[16:22:53.042] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:53.042] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:53.042] [INFO] [Drone] [2] Beginning travel to base
+[16:22:53.219] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:53.219] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:53.219] [INFO] [Drone] [2] Beginning travel to base
+[16:22:53.399] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:53.399] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:53.399] [INFO] [Drone] [2] Beginning travel to base
+[16:22:53.578] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:53.578] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:53.578] [INFO] [Drone] [2] Beginning travel to base
+[16:22:53.756] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:53.757] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:53.757] [INFO] [Drone] [2] Beginning travel to base
+[16:22:53.934] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:53.934] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:53.934] [INFO] [Drone] [2] Beginning travel to base
+[16:22:54.114] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:54.114] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:54.114] [INFO] [Drone] [2] Beginning travel to base
+[16:22:54.295] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:54.295] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:54.295] [INFO] [Drone] [2] Beginning travel to base
+[16:22:54.477] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:54.477] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:54.477] [INFO] [Drone] [2] Beginning travel to base
+[16:22:54.657] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:54.658] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:54.658] [INFO] [Drone] [2] Beginning travel to base
+[16:22:54.837] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:54.837] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:54.837] [INFO] [Drone] [2] Beginning travel to base
+[16:22:55.021] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:55.021] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:55.021] [INFO] [Drone] [2] Beginning travel to base
+[16:22:55.199] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:55.199] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:55.200] [INFO] [Drone] [2] Beginning travel to base
+[16:22:55.381] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:55.381] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:55.381] [INFO] [Drone] [2] Beginning travel to base
+[16:22:55.562] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:55.562] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:55.562] [INFO] [Drone] [2] Beginning travel to base
+[16:22:55.742] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:55.742] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:55.742] [INFO] [Drone] [2] Beginning travel to base
+[16:22:55.922] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:55.922] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:55.922] [INFO] [Drone] [2] Beginning travel to base
+[16:22:56.103] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:56.103] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:56.103] [INFO] [Drone] [2] Beginning travel to base
+[16:22:56.285] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:56.285] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:56.285] [INFO] [Drone] [2] Beginning travel to base
+[16:22:56.465] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:56.465] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:56.465] [INFO] [Drone] [2] Beginning travel to base
+[16:22:56.645] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:56.645] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:22:56.645] [INFO] [Drone] [2] Beginning travel to base
+[16:22:56.650] [INFO] [Drone] [2] Arrived back at base
+[16:22:56.756] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:56.756] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[REFILLING]
+[16:22:56.756] [INFO] [Drone] [2] Refilling payload
+[16:22:56.779] [INFO] [Drone] [2] Payload refilled
+[16:22:56.885] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:56.885] [INFO] [Drone] [2] Assigned Task: FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[16:22:56.885] [INFO] [Drone] [2] State Change: [REFILLING]->[IDLE]
+[16:22:56.987] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:57.594] [INFO] [Drone] [2] Assigned Task: FireRequest{time=14-16-03, zone=2, event=FIRE_DETECTED, severity=Moderate, id=2A}
+[16:22:57.594] [INFO] [Drone] [2] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:22:57.594] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:22:57.774] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:57.879] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:57.880] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:57.880] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:22:58.059] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:58.059] [INFO] [Drone] [2] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}
+[16:22:58.069] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:58.069] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:58.250] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:58.356] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:58.356] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:58.356] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:58.538] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:58.645] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:58.645] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:58.645] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:58.827] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:58.933] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:58.933] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:58.933] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:59.114] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:59.218] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:59.218] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:59.218] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:59.398] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:59.504] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:59.504] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:59.504] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:59.680] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:59.786] [INFO] [Drone] [2] Received a Scheduler response
+[16:22:59.786] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:22:59.786] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:22:59.964] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.075] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.075] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:00.075] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:00.253] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.355] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.355] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:00.355] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:00.534] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.640] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.640] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:00.640] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:00.815] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.917] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:00.917] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:00.917] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:01.096] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:01.201] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:01.201] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:01.201] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:01.380] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:01.485] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:01.485] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:01.485] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:01.664] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:01.769] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:01.769] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:01.769] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:01.950] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.056] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.056] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:02.056] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:02.233] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.339] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.339] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:02.339] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:02.520] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.622] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.622] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:02.622] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:02.803] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.905] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:02.905] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:02.905] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:03.085] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:03.190] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:03.190] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:03.190] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:03.369] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:03.473] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:03.473] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:03.473] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:03.653] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:03.758] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:03.758] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:03.758] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:03.934] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.037] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.037] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:04.037] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:04.215] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.320] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.320] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:04.320] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:04.495] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.604] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.604] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:04.604] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:04.782] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.883] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:04.884] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:04.884] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:05.065] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:05.176] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:05.176] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:05.176] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:05.353] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:05.455] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:05.455] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:05.455] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:05.636] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:05.739] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:05.740] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:05.740] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:05.920] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:06.026] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:06.026] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:06.026] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:06.100] [INFO] [Drone] [2] Arrived at zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[16:23:06.206] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:06.206] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[16:23:06.206] [INFO] [Drone] [2] Opening payload doors
+[16:23:06.217] [INFO] [Drone] [2] Deploying payload
+[16:23:06.552] [INFO] [Drone] [2] Deployment of payload complete
+[16:23:06.552] [INFO] [Drone] [2] Opening payload doors
+[16:23:06.669] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:06.669] [INFO] [Drone] [2] State Change: [ACTIVE][DEPLOYING]->[ACTIVE][RETURNING]
+[16:23:06.669] [INFO] [Drone] [2] Beginning travel to base
+[16:23:06.850] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:06.851] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:06.851] [INFO] [Drone] [2] Beginning travel to base
+[16:23:07.029] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:07.030] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:07.030] [INFO] [Drone] [2] Beginning travel to base
+[16:23:07.208] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:07.208] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:07.208] [INFO] [Drone] [2] Beginning travel to base
+[16:23:07.383] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:07.383] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:07.383] [INFO] [Drone] [2] Beginning travel to base
+[16:23:07.559] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:07.559] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:07.559] [INFO] [Drone] [2] Beginning travel to base
+[16:23:07.733] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:07.733] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:07.733] [INFO] [Drone] [2] Beginning travel to base
+[16:23:07.908] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:07.908] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:07.908] [INFO] [Drone] [2] Beginning travel to base
+[16:23:08.087] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:08.087] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:08.087] [INFO] [Drone] [2] Beginning travel to base
+[16:23:08.265] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:08.265] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:08.265] [INFO] [Drone] [2] Beginning travel to base
+[16:23:08.445] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:08.445] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:08.446] [INFO] [Drone] [2] Beginning travel to base
+[16:23:08.623] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:08.623] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:08.623] [INFO] [Drone] [2] Beginning travel to base
+[16:23:08.804] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:08.804] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:08.804] [INFO] [Drone] [2] Beginning travel to base
+[16:23:08.984] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:08.984] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:08.984] [INFO] [Drone] [2] Beginning travel to base
+[16:23:09.162] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:09.163] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:09.163] [INFO] [Drone] [2] Beginning travel to base
+[16:23:09.342] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:09.342] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:09.342] [INFO] [Drone] [2] Beginning travel to base
+[16:23:09.521] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:09.521] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:09.521] [INFO] [Drone] [2] Beginning travel to base
+[16:23:09.704] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:09.704] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:09.704] [INFO] [Drone] [2] Beginning travel to base
+[16:23:09.880] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:09.880] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:09.880] [INFO] [Drone] [2] Beginning travel to base
+[16:23:10.058] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:10.058] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:10.058] [INFO] [Drone] [2] Beginning travel to base
+[16:23:10.243] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:10.243] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:10.243] [INFO] [Drone] [2] Beginning travel to base
+[16:23:10.417] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:10.417] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:10.417] [INFO] [Drone] [2] Beginning travel to base
+[16:23:10.593] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:10.593] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:10.593] [INFO] [Drone] [2] Beginning travel to base
+[16:23:10.774] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:10.774] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:10.774] [INFO] [Drone] [2] Beginning travel to base
+[16:23:10.953] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:10.953] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:10.954] [INFO] [Drone] [2] Beginning travel to base
+[16:23:11.132] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:11.133] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:11.133] [INFO] [Drone] [2] Beginning travel to base
+[16:23:11.312] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:11.313] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:11.313] [INFO] [Drone] [2] Beginning travel to base
+[16:23:11.490] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:11.490] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:11.490] [INFO] [Drone] [2] Beginning travel to base
+[16:23:11.670] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:11.670] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:11.670] [INFO] [Drone] [2] Beginning travel to base
+[16:23:11.849] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:11.850] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:11.850] [INFO] [Drone] [2] Beginning travel to base
+[16:23:12.028] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:12.028] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:12.028] [INFO] [Drone] [2] Beginning travel to base
+[16:23:12.034] [INFO] [Drone] [2] Arrived back at base
+[16:23:12.139] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:12.140] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[REFILLING]
+[16:23:12.140] [INFO] [Drone] [2] Refilling payload
+[16:23:12.160] [INFO] [Drone] [2] Payload refilled
+[16:23:12.267] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:12.267] [INFO] [Drone] [2] Assigned Task: FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[16:23:12.267] [INFO] [Drone] [2] State Change: [REFILLING]->[IDLE]
+[16:23:12.374] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:12.983] [INFO] [Drone] [2] Assigned Task: FireRequest{time=14-10-00, zone=3, event=FIRE_DETECTED, severity=Moderate, id=3B}
+[16:23:12.983] [INFO] [Drone] [2] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:23:12.983] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:13.163] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:13.163] [INFO] [Drone] [2] Assigned Task: FireRequest{time=14-16-03, zone=2, event=FIRE_DETECTED, severity=Moderate, id=2A}
+[16:23:13.163] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:13.164] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:13.345] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:13.451] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:13.452] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:13.452] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:13.630] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:13.734] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:13.734] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:13.734] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:13.914] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.019] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.019] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:14.020] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:14.198] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.304] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.304] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:14.304] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:14.479] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.582] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.583] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:14.583] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:14.764] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.868] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:14.869] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:14.869] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:15.044] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.147] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.148] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:15.148] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:15.323] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.429] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.430] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:15.430] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:15.606] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.711] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.711] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:15.712] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:15.888] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.993] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:15.993] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:15.993] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:16.174] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:16.278] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:16.279] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:16.279] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:16.457] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:16.563] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:16.563] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:16.563] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:16.764] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:16.866] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:16.866] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:16.867] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:17.038] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.143] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.143] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:17.143] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:17.320] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.421] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.421] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:17.421] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:17.601] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.703] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.704] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:17.704] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:17.881] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.986] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:17.986] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:17.986] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:18.162] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:18.264] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:18.264] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:18.264] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:18.435] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:18.536] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:18.536] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:18.536] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:18.713] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:18.818] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:18.818] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:18.818] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:18.987] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.093] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.093] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:19.093] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:19.262] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.363] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.363] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:19.363] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:19.529] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.631] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.631] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:19.631] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:19.801] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.902] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:19.902] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:19.902] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:20.073] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:20.177] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:20.177] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:20.177] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:20.350] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:20.454] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:20.454] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:20.454] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:20.621] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:20.722] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:20.722] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:20.722] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:20.897] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.001] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.001] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:21.001] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:21.177] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.280] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.281] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:21.281] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:21.456] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.561] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.562] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:21.562] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:21.775] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.880] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:21.880] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:21.880] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:22.056] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:22.161] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:22.162] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:22.162] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:22.338] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:22.444] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:22.444] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:22.444] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:22.618] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:22.723] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:22.723] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:22.723] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:22.897] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:23.001] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:23.002] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:23.002] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:23.074] [INFO] [Drone] [2] Arrived at zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:23.177] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:23.178] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[16:23:23.178] [INFO] [Drone] [2] Opening payload doors
+[16:23:23.190] [INFO] [Drone] [2] Deploying payload
+[16:23:23.522] [INFO] [Drone] [2] Deployment of payload complete
+[16:23:23.522] [INFO] [Drone] [2] Opening payload doors
+[16:23:23.634] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:23.634] [INFO] [Drone] [2] State Change: [ACTIVE][DEPLOYING]->[ACTIVE][RETURNING]
+[16:23:23.634] [INFO] [Drone] [2] Beginning travel to base
+[16:23:23.814] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:23.814] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:23.814] [INFO] [Drone] [2] Beginning travel to base
+[16:23:23.993] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:23.993] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:23.993] [INFO] [Drone] [2] Beginning travel to base
+[16:23:24.169] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:24.169] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:24.169] [INFO] [Drone] [2] Beginning travel to base
+[16:23:24.345] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:24.345] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:24.346] [INFO] [Drone] [2] Beginning travel to base
+[16:23:24.524] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:24.524] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:24.524] [INFO] [Drone] [2] Beginning travel to base
+[16:23:24.701] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:24.701] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:24.701] [INFO] [Drone] [2] Beginning travel to base
+[16:23:24.878] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:24.878] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:24.878] [INFO] [Drone] [2] Beginning travel to base
+[16:23:25.053] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:25.053] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:25.053] [INFO] [Drone] [2] Beginning travel to base
+[16:23:25.226] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:25.226] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:25.226] [INFO] [Drone] [2] Beginning travel to base
+[16:23:25.403] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:25.403] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:25.403] [INFO] [Drone] [2] Beginning travel to base
+[16:23:25.580] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:25.580] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:25.580] [INFO] [Drone] [2] Beginning travel to base
+[16:23:25.752] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:25.752] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:25.752] [INFO] [Drone] [2] Beginning travel to base
+[16:23:25.925] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:25.925] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:25.925] [INFO] [Drone] [2] Beginning travel to base
+[16:23:26.102] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:26.102] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:26.102] [INFO] [Drone] [2] Beginning travel to base
+[16:23:26.276] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:26.276] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:26.276] [INFO] [Drone] [2] Beginning travel to base
+[16:23:26.452] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:26.453] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:26.453] [INFO] [Drone] [2] Beginning travel to base
+[16:23:26.633] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:26.633] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:26.633] [INFO] [Drone] [2] Beginning travel to base
+[16:23:26.811] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:26.811] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:26.811] [INFO] [Drone] [2] Beginning travel to base
+[16:23:26.987] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:26.987] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:26.987] [INFO] [Drone] [2] Beginning travel to base
+[16:23:27.160] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:27.160] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:27.160] [INFO] [Drone] [2] Beginning travel to base
+[16:23:27.335] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:27.335] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:27.335] [INFO] [Drone] [2] Beginning travel to base
+[16:23:27.512] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:27.512] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:27.512] [INFO] [Drone] [2] Beginning travel to base
+[16:23:27.684] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:27.684] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:27.684] [INFO] [Drone] [2] Beginning travel to base
+[16:23:27.862] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:27.862] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:27.862] [INFO] [Drone] [2] Beginning travel to base
+[16:23:28.037] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:28.037] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:28.037] [INFO] [Drone] [2] Beginning travel to base
+[16:23:28.215] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:28.215] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:28.215] [INFO] [Drone] [2] Beginning travel to base
+[16:23:28.393] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:28.393] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:28.393] [INFO] [Drone] [2] Beginning travel to base
+[16:23:28.571] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:28.571] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:28.571] [INFO] [Drone] [2] Beginning travel to base
+[16:23:28.748] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:28.748] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:28.748] [INFO] [Drone] [2] Beginning travel to base
+[16:23:28.921] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:28.921] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:28.921] [INFO] [Drone] [2] Beginning travel to base
+[16:23:29.100] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:29.100] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:29.100] [INFO] [Drone] [2] Beginning travel to base
+[16:23:29.279] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:29.279] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:29.279] [INFO] [Drone] [2] Beginning travel to base
+[16:23:29.456] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:29.457] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:29.457] [INFO] [Drone] [2] Beginning travel to base
+[16:23:29.634] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:29.634] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:29.634] [INFO] [Drone] [2] Beginning travel to base
+[16:23:29.815] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:29.815] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:29.815] [INFO] [Drone] [2] Beginning travel to base
+[16:23:29.989] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:29.989] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:29.989] [INFO] [Drone] [2] Beginning travel to base
+[16:23:30.038] [INFO] [Drone] [2] Arrived back at base
+[16:23:30.143] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:30.144] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[REFILLING]
+[16:23:30.144] [INFO] [Drone] [2] Refilling payload
+[16:23:30.166] [INFO] [Drone] [2] Payload refilled
+[16:23:30.272] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:30.272] [INFO] [Drone] [2] Assigned Task: FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[16:23:30.272] [INFO] [Drone] [2] State Change: [REFILLING]->[IDLE]
+[16:23:30.373] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:30.983] [INFO] [Drone] [2] Assigned Task: FireRequest{time=14-10-00, zone=3, event=FIRE_DETECTED, severity=Moderate, id=3B}
+[16:23:30.983] [INFO] [Drone] [2] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:23:30.983] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:31.162] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:31.266] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:31.267] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:31.267] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:31.440] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:31.440] [INFO] [Drone] [2] Assigned Task: FireRequest{time=14-16-03, zone=2, event=FIRE_DETECTED, severity=Moderate, id=2B}
+[16:23:31.441] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:31.441] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:31.615] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:31.719] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:31.719] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:31.719] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:31.893] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:31.998] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:31.998] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:31.998] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:32.174] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:32.276] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:32.276] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:32.276] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:32.452] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:32.556] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:32.556] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:32.556] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:32.733] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:32.834] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:32.834] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:32.834] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:33.014] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.118] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.119] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:33.119] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:33.294] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.399] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.399] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:33.399] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:33.577] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.679] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.679] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:33.679] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:33.858] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.963] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:33.963] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:33.963] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:34.137] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:34.239] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:34.239] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:34.239] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:34.414] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:34.519] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:34.519] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:34.519] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:34.691] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:34.796] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:34.796] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:34.796] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:34.972] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.079] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.079] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:35.079] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:35.255] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.359] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.359] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:35.359] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:35.536] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.639] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.639] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:35.639] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:35.818] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.922] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:35.922] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:35.922] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:36.099] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:36.201] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:36.201] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:36.201] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:36.375] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:36.481] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:36.481] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:36.481] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:36.658] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:36.760] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:36.760] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:36.760] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:36.936] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.039] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.039] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:37.039] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:37.214] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.316] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.316] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:37.316] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:37.487] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.588] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.588] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:37.588] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:37.765] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.870] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:37.870] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:37.870] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:38.050] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:38.155] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:38.155] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:38.155] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:38.333] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:38.437] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:38.437] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:38.437] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:38.617] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:38.720] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:38.720] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:38.720] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:38.896] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.002] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.002] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:39.002] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:39.181] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.287] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.287] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:39.287] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:39.465] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.565] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.565] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:39.566] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:39.740] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.845] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:39.846] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:39.846] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:40.023] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.130] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.130] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:40.130] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:40.308] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.413] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.413] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:40.413] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:40.590] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.695] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.695] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:40.695] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:40.869] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.972] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:40.972] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:40.972] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:41.044] [INFO] [Drone] [2] Arrived at zone Zone{zoneId=2, start=(0,600), end=(650,1500)}
+[16:23:41.149] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:41.149] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[16:23:41.149] [INFO] [Drone] [2] Opening payload doors
+[16:23:41.159] [INFO] [Drone] [2] Deploying payload
+[16:23:41.492] [INFO] [Drone] [2] Deployment of payload complete
+[16:23:41.492] [INFO] [Drone] [2] Opening payload doors
+[16:23:41.607] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:41.607] [INFO] [Drone] [2] State Change: [ACTIVE][DEPLOYING]->[ACTIVE][RETURNING]
+[16:23:41.607] [INFO] [Drone] [2] Beginning travel to base
+[16:23:41.783] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:41.783] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:41.783] [INFO] [Drone] [2] Beginning travel to base
+[16:23:41.958] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:41.958] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:41.958] [INFO] [Drone] [2] Beginning travel to base
+[16:23:42.135] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:42.135] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:42.135] [INFO] [Drone] [2] Beginning travel to base
+[16:23:42.311] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:42.312] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:42.312] [INFO] [Drone] [2] Beginning travel to base
+[16:23:42.487] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:42.487] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:42.487] [INFO] [Drone] [2] Beginning travel to base
+[16:23:42.661] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:42.661] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:42.661] [INFO] [Drone] [2] Beginning travel to base
+[16:23:42.839] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:42.839] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:42.839] [INFO] [Drone] [2] Beginning travel to base
+[16:23:43.019] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:43.019] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:43.019] [INFO] [Drone] [2] Beginning travel to base
+[16:23:43.197] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:43.197] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:43.197] [INFO] [Drone] [2] Beginning travel to base
+[16:23:43.375] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:43.375] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:43.375] [INFO] [Drone] [2] Beginning travel to base
+[16:23:43.556] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:43.556] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:43.556] [INFO] [Drone] [2] Beginning travel to base
+[16:23:43.734] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:43.735] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:43.735] [INFO] [Drone] [2] Beginning travel to base
+[16:23:43.917] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:43.917] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:43.917] [INFO] [Drone] [2] Beginning travel to base
+[16:23:44.096] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:44.096] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:44.096] [INFO] [Drone] [2] Beginning travel to base
+[16:23:44.273] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:44.274] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:44.274] [INFO] [Drone] [2] Beginning travel to base
+[16:23:44.447] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:44.447] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:44.447] [INFO] [Drone] [2] Beginning travel to base
+[16:23:44.625] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:44.625] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:44.625] [INFO] [Drone] [2] Beginning travel to base
+[16:23:44.803] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:44.803] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:44.803] [INFO] [Drone] [2] Beginning travel to base
+[16:23:44.981] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:44.981] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:44.981] [INFO] [Drone] [2] Beginning travel to base
+[16:23:45.161] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:45.161] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:45.161] [INFO] [Drone] [2] Beginning travel to base
+[16:23:45.341] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:45.341] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:45.341] [INFO] [Drone] [2] Beginning travel to base
+[16:23:45.517] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:45.517] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:45.517] [INFO] [Drone] [2] Beginning travel to base
+[16:23:45.693] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:45.693] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:45.693] [INFO] [Drone] [2] Beginning travel to base
+[16:23:45.868] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:45.869] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:45.869] [INFO] [Drone] [2] Beginning travel to base
+[16:23:46.046] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:46.046] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:46.046] [INFO] [Drone] [2] Beginning travel to base
+[16:23:46.230] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:46.230] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:46.230] [INFO] [Drone] [2] Beginning travel to base
+[16:23:46.411] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:46.411] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:46.411] [INFO] [Drone] [2] Beginning travel to base
+[16:23:46.586] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:46.586] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:46.586] [INFO] [Drone] [2] Beginning travel to base
+[16:23:46.765] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:46.765] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:46.765] [INFO] [Drone] [2] Beginning travel to base
+[16:23:46.941] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:46.941] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:46.941] [INFO] [Drone] [2] Beginning travel to base
+[16:23:47.118] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:47.118] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:47.118] [INFO] [Drone] [2] Beginning travel to base
+[16:23:47.293] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:47.293] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:47.293] [INFO] [Drone] [2] Beginning travel to base
+[16:23:47.471] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:47.471] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:47.471] [INFO] [Drone] [2] Beginning travel to base
+[16:23:47.648] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:47.649] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:47.649] [INFO] [Drone] [2] Beginning travel to base
+[16:23:47.829] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:47.829] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:47.829] [INFO] [Drone] [2] Beginning travel to base
+[16:23:48.010] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:48.010] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[16:23:48.010] [INFO] [Drone] [2] Beginning travel to base
+[16:23:48.059] [INFO] [Drone] [2] Arrived back at base
+[16:23:48.161] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:48.161] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[REFILLING]
+[16:23:48.161] [INFO] [Drone] [2] Refilling payload
+[16:23:48.185] [INFO] [Drone] [2] Payload refilled
+[16:23:48.290] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:48.290] [INFO] [Drone] [2] Assigned Task: FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[16:23:48.290] [INFO] [Drone] [2] State Change: [REFILLING]->[IDLE]
+[16:23:48.396] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:49.005] [INFO] [Drone] [2] Assigned Task: FireRequest{time=14-10-00, zone=3, event=FIRE_DETECTED, severity=Moderate, id=3B}
+[16:23:49.005] [INFO] [Drone] [2] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[16:23:49.005] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:49.183] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:49.285] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:49.285] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:49.285] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:49.463] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:49.566] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:49.566] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:49.566] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:49.741] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:49.843] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:49.843] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:49.843] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:50.020] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.125] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.125] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:50.125] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:50.305] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.409] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.409] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:50.409] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:50.581] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.683] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.683] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:50.683] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:50.860] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.966] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:50.966] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:50.966] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:51.137] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:51.241] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:51.241] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:51.241] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:51.416] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:51.521] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:51.521] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:51.521] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:51.695] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:51.799] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:51.799] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:51.799] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:51.973] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.077] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.077] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:52.077] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:52.258] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.364] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.364] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:52.364] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:52.544] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.650] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.650] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:52.650] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:52.831] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.933] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:52.933] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:52.933] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:53.114] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:53.220] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:53.220] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:53.220] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:53.393] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:53.498] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:53.498] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:53.498] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:53.671] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:53.775] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:53.775] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:53.775] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:53.949] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.053] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.053] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:54.053] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:54.227] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.333] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.333] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:54.333] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:54.515] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.618] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.618] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:54.618] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:54.799] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.904] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:54.905] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:54.905] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:55.085] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:55.187] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:55.188] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:55.188] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:55.370] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:55.475] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:55.475] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:55.475] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:55.655] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:55.760] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:55.760] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:55.760] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:55.938] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.043] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.043] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:56.043] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:56.217] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.321] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.321] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:56.321] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:56.496] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.600] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.600] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:56.600] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:56.780] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.885] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:56.886] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:56.886] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:57.061] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:57.165] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:57.165] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:57.165] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:57.343] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:57.445] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:57.445] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:57.445] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:57.623] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:57.728] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:57.728] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:57.728] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:57.906] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.012] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.012] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:58.012] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:58.188] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.291] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.291] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:58.291] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:58.466] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.572] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.572] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:58.572] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:58.745] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.850] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:58.850] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:58.850] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:59.024] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.127] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.128] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:59.128] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:59.303] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.407] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.407] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:59.407] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:59.583] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.685] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.685] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:59.685] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:23:59.863] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.965] [INFO] [Drone] [2] Received a Scheduler response
+[16:23:59.966] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:23:59.966] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:24:00.141] [INFO] [Drone] [2] Received a Scheduler response
+[16:24:00.247] [INFO] [Drone] [2] Received a Scheduler response
+[16:24:00.247] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:24:00.247] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}
+[16:24:00.428] [INFO] [Drone] [2] Received a Scheduler response
+[16:24:00.532] [INFO] [Drone] [2] Received a Scheduler response
+[16:24:00.532] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[16:24:00.533] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=3, start=(0,1500), end=(1000,1700)}

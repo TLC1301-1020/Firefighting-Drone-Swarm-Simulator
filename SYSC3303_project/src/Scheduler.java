@@ -604,12 +604,17 @@ public class Scheduler {
         // Create and start threads to listen to other subsystems
         Thread droneHandler = new listenToDrone();
         Thread fireHandler = new listenToFire();
+        Thread uiPusher = new UIUpdatePusher();
+
 
         droneHandler.start();
         fireHandler.start();
 
         // Start the background thread that processes pending fire requests
         new Thread(new ProcessPendingRequests()).start();
+
+        uiPusher.start();
+
     }
 
     /** sets the state of the scheduler
@@ -903,4 +908,75 @@ public class Scheduler {
     public static void main(String[] args) {
         Scheduler s = new Scheduler();
     }
+
+    private class UIUpdatePusher extends Thread {
+        private final int UI_RECEIVER_PORT = 6000;
+
+        @Override
+        public void run() {
+            System.out.println("[ UI ]  -   UIUpdatePusher thread started  -   ");
+            try (DatagramSocket socket = new DatagramSocket()) {
+                while (running) {
+                    Thread.sleep(2000);  // send updates every 2000 ms
+
+                    List<DroneUIApp.DroneStatus> uiDrones = new ArrayList<>();
+                    List<DroneUIApp.Fire> uiFires = new ArrayList<>();
+                    List<DroneUIApp.Fault> uiFaults = new ArrayList<>();
+
+                    // Collect drone statuses
+                    for (DroneStatus d : drones.values()) {
+                        String severity = d.getCurrentTask().getSeverity();
+                        if (d.getCurrentTask().isDefault()) severity = "";
+                        uiDrones.add(new DroneUIApp.DroneStatus(d.getDroneId(), d.getX(), d.getY(), severity));
+                    }
+
+                    // Collect active fires (queue + assigned)
+                    synchronized (requestQueue) {
+                        for (FireRequest fr : requestQueue) {
+                            uiFires.add(new DroneUIApp.Fire(fr.getId(), fr.getSeverity(), fr.getZoneId()));
+                        }
+                    }
+
+                    // Collect offline drones as faults
+                    for (DroneStatus d : drones.values()) {
+                        if (d.getState().equals("[OFFLINE]")) {
+                            uiFaults.add(new DroneUIApp.Fault(d.getDroneId(), "DRONE OFFLINE"));
+                        }
+                    }
+
+                    DroneUIApp.UIUpdate update = new DroneUIApp.UIUpdate(uiDrones, uiFires, uiFaults);
+                    String serialized = serializeUpdate(update);
+                    byte[] data = serialized.getBytes();
+                    DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), UI_RECEIVER_PORT);
+                    socket.send(packet);
+                }
+            } catch (Exception e) {
+                System.err.println("UIUpdatePusher error: " + e.getMessage());
+            }
+        }
+        private String serializeUpdate(DroneUIApp.UIUpdate update) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("DRONES=[");
+            for (DroneUIApp.DroneStatus d : update.droneStatuses) {
+                sb.append(String.format("(%d,%d,%d,%s);", d.droneId, d.x, d.y, d.fireStatus));
+            }
+            sb.append("];");
+
+            sb.append("FIRES=[");
+            for (DroneUIApp.Fire f : update.activeFires) {
+                sb.append(String.format("(%s,%s,%d);", f.fireId, f.severity, f.zoneId));
+            }
+            sb.append("];");
+
+            sb.append("FAULTS=[");
+            for (DroneUIApp.Fault fault : update.faults) {
+                sb.append(String.format("(%d,%s);", fault.droneId, fault.faultDescription));
+            }
+            sb.append("];");
+
+            return sb.toString();
+        }
+    }
+
 }
