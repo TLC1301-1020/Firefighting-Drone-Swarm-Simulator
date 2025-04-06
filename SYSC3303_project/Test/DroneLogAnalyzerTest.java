@@ -127,6 +127,10 @@ public class DroneLogAnalyzerTest {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Tests the {@link DroneLogAnalyzer#averageDeploy(List)} method.
+     * Verifies correct deployment time calculation and handling of event order and empty logs.
+     */
     @Test
     public void TestAverageDeploy(){
         try {

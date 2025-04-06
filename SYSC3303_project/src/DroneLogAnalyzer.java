@@ -209,8 +209,13 @@ public class DroneLogAnalyzer {
         return utilization;
     }
 
-    //check average deploy time for the drone
-    public static double averageDeploy(List<LogEntry> logs){
+    /**
+     * Calculates the average deployment time from the list of logs.
+     * "Deploying" marks the start, and "payload complete" marks the end.
+     *
+     * @param logs List of {@link LogEntry} containing deployment events.
+     * @return Average deployment time in seconds, or 0 if no deployments are found.
+     */    public static double averageDeploy(List<LogEntry> logs){
         if(logs.isEmpty()){
             System.out.println("Average Deploy Time: Not available");
             return 0;
