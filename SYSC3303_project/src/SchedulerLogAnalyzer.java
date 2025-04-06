@@ -6,24 +6,58 @@ import java.util.*;
 import java.util.regex.*;
 
 public class SchedulerLogAnalyzer {
-    private static final String LOG_FILE = "scheduler_event_log.txt";
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+    private final String LOG_FILE = "scheduler_event_log.txt";
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
     /** Stores response times for each thread from the parsed entry logs*/
-    private static Map<String, List<Double>> responseTimesByThread = new HashMap<>();
+    private Map<String, List<Double>> responseTimesByThread = new HashMap<>();
     /** Stores total thread lifetimes for each thread from the parsed entry logs*/
-    private static Map<String, Double> threadLifetimes = new HashMap<>();
+    private Map<String, Double> threadLifetimes = new HashMap<>();
 
-    private static int countCompletedFireRequests = 0;
-    private static int countFireRequestCreated = 0;
-    private static int countFireRequests = 0;
-    private static int countSuccessfulDroneAssignments = 0;
-    private static int countReassignmentsOptimum = 0;
-    private static int countReassignmentsFaults = 0;
-    private static int countFaults = 0;
-    private static int countFailedAssignments = 0;
+    private int countCompletedFireRequests = 0;
+    private int countFireRequestCreated = 0;
+    private int countFireRequests = 0;
+    private int countSuccessfulDroneAssignments = 0;
+    private int countReassignmentsOptimum = 0;
+    private int countReassignmentsFaults = 0;
+    private int countFaults = 0;
+    private int countFailedAssignments = 0;
 
+    /**
+     Helper class to store parsed events
+     <p>format: [timestamp] [level] [component] [threadTag] message </p>
+     <p>format example: <p> [19:10:57.507] [DEBUG] [Scheduler] [SD] Received drone message: 0:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}
+     </p>
+     */
+    public class ParsedLogEntry
+    {
+        private final LocalTime timestamp;
+        private final String level;
+        private final String component;
+        private final String threadTag;
+        private final String message;
 
-    public static void analyzeLogs() {
+        public ParsedLogEntry(LocalTime timestamp, String level, String component, String threadTag, String message) {
+            this.timestamp = timestamp;
+            this.level = level;
+            this.component = component;
+            this.threadTag = threadTag;
+            this.message = message;
+        }
+
+        public String toString() {
+            return String.format("[%s] [%s] [%s] [%s] %s",
+                    formatter.format(timestamp), level, component, threadTag, message);
+        }
+
+        // Getters here for future filtering/analysis
+        public LocalTime getTimestamp() { return timestamp; }
+        public String getLevel() { return level; }
+        public String getComponent() { return component; }
+        public String getThreadTag() { return threadTag; }
+        public String getMessage() { return message; }
+    }
+
+    public void analyzeLogs() {
         //TODO: Uncomment analyzeLogs() in Scheduler -> main()
         List<ParsedLogEntry> entries = parseLogFile();
         if (entries.isEmpty()) {
@@ -80,9 +114,10 @@ public class SchedulerLogAnalyzer {
                     // store logs based on contents for metrics
                     if ( entry.level.equals("ERROR") )  countFaults++;
                     else if ( entry.message.contains("Task is being reassigned") ) countReassignmentsFaults++;
-                    else if ( entry.message.equals("Listening to DroneSubsystem...") ) firstSDLog = entry;
                     else if( entry.message.contains("Received drone message:") )
                     {
+                        if ( entry.message.contains("Received drone message: 0:[IDLE]:INIT:")) firstSDLog = entry;
+
                         int id = getDroneId( entry.message );
                         if (id!=-1) lastSDMap.put(id, entry);
                     }
@@ -166,9 +201,9 @@ public class SchedulerLogAnalyzer {
                     break;
             }
         }
-        SchedulerLogAnalyzer.responseTimesByThread.put("SD",rtbtSD);
-        SchedulerLogAnalyzer.responseTimesByThread.put("SP",rtbtSP);
-        SchedulerLogAnalyzer.responseTimesByThread.put("SF",new ArrayList<>());
+        responseTimesByThread.put("SD",rtbtSD);
+        responseTimesByThread.put("SP",rtbtSP);
+        responseTimesByThread.put("SF",new ArrayList<>());
 
         calcSDMetrics(firstSDLog, lastSDLog);
         calcSPMetrics(firstSPLog, lastSFLog, lastSPMap);
@@ -177,9 +212,11 @@ public class SchedulerLogAnalyzer {
     }
 
     /**
-     METRICS SD: data for to respond to drone, after receiving request
+     * METRICS SD: data for to respond to drone, after receiving request
+     *
+     * @return
      */
-    private static void calcSDMetrics(ParsedLogEntry firstSDLog, ParsedLogEntry lastSDLog)
+    private double[] calcSDMetrics(ParsedLogEntry firstSDLog, ParsedLogEntry lastSDLog)
     {
         List<Double> rtbtSD = responseTimesByThread.remove("SD");
         double lifeTimeSD = calculateTimeDuration( firstSDLog, lastSDLog );
@@ -190,7 +227,7 @@ public class SchedulerLogAnalyzer {
 
         System.out.println("\n==================================================================");
         System.out.println(" * Scheduler Thread - SD - For Drone <-> Scheduler Communication * ");
-        System.out.println("                          Start Time: " + firstSDLog.timestamp);
+        System.out.println("                 First Drone Request: " + firstSDLog.timestamp);
         System.out.println("                            End Time: " + lastSDLog.timestamp);
         System.out.printf("                            Lifetime: %.4f s\n", lifeTimeSD);
         System.out.printf("                            BusyTime: %.4f s\n\n", busyTimeSD);
@@ -198,17 +235,20 @@ public class SchedulerLogAnalyzer {
         System.out.printf("                         Utilization: %.4f\n", utilizationSD);
         System.out.printf("Total Communication events w. Drones: %s\n", rtbtSD.size());
         System.out.printf("               Average Response Time: %.4f s\n", avgResponseSD);
+
+        double[] output = {lifeTimeSD, busyTimeSD, utilizationSD, avgResponseSD};
+        return output;
     }
 
     /**
      METRICS SF: Data for making/adding, then pass fire requests to Scheduler processing queue when first received fire incident
      */
-    private static void calcSFMetrics(ParsedLogEntry firstFireIncident,
-                                      ParsedLogEntry lastSFLog,
-                                      Map<Integer, ParsedLogEntry> firstSFMap,
-                                      Map<Integer, ParsedLogEntry> lastSFMap)
+    private double[] calcSFMetrics(ParsedLogEntry firstFireIncident,
+                                           ParsedLogEntry lastSFLog,
+                                           Map<Integer, ParsedLogEntry> firstSFMap,
+                                           Map<Integer, ParsedLogEntry> lastSFMap)
     {
-        List<Double> rTSF = SchedulerLogAnalyzer.responseTimesByThread.remove("SF");
+        List<Double> rTSF = responseTimesByThread.remove("SF");
 
         double busyTimeSF = 0.000;
         // iterate through keys in firstSFMap to get ids of fire requests
@@ -234,16 +274,19 @@ public class SchedulerLogAnalyzer {
         System.out.printf("                         Utilization: %.4f\n", utilizationSF);
         System.out.printf("  Total Communication events w. FISS: %s\n", countFireRequests);
         System.out.printf("               Average Response Time: %.4f s\n", avgResponseSF);
+
+        double[] output = {lifeTimeSF, busyTimeSF, utilizationSF, avgResponseSF};
+        return output;
     }
 
     /**
      METRICS SP: Data for assigning fire requests to drones
      */
-    private static void calcSPMetrics(ParsedLogEntry firstSPLog,
+    private double[] calcSPMetrics(ParsedLogEntry firstSPLog,
                                       ParsedLogEntry lastSPLog,
                                       Map<String, ParsedLogEntry> lastSPMap)
     {
-        List<Double> rtbtSP = SchedulerLogAnalyzer.responseTimesByThread.remove("SP");
+        List<Double> rtbtSP = responseTimesByThread.remove("SP");
 
         double busyTimeSP = 0.000;
         for ( Double rt : rtbtSP ) busyTimeSP+=rt;
@@ -265,18 +308,21 @@ public class SchedulerLogAnalyzer {
 
         System.out.printf("                         Utilization: %.4f\n", utilizationSP);
         System.out.printf("               Average Response Time: %.4f s\n", avgResponseSP);
+
+        double[] output = {lifeTimeSP, busyTimeSP, utilizationSP, avgResponseSP};
+        return output;
     }
 
     /**
      METRICS General: data for Scheduler system as a whole (System of all three threads working together)
      */
-    private static void calcGeneralMetrics(ParsedLogEntry firstSchedulerLog,
+    private double calcGeneralMetrics(ParsedLogEntry firstSchedulerLog,
                                            ParsedLogEntry lastSchedulerLog,
                                            ParsedLogEntry firstFireIncident)
     {
         double lifeTimeScheduler = calculateTimeDuration(firstSchedulerLog, lastSchedulerLog);
         double lifeTimeServicingFires = calculateTimeDuration(firstFireIncident, lastSchedulerLog);
-
+        double throughPut = (double)countFireRequests/lifeTimeServicingFires;
         System.out.println("\n==================================================================");
         System.out.println(" * Scheduler General Metrics * ");
         System.out.println("                          Start Time: " + firstSchedulerLog.timestamp);
@@ -287,11 +333,12 @@ public class SchedulerLogAnalyzer {
         System.out.printf(" #of Drone Missions Required to Service Fires: %s\n", countFireRequestCreated);
         System.out.printf("                 #of Drone Missions Completed: %s\n", countCompletedFireRequests);
         System.out.printf("                             #of Drone Faults: %s\n", countFaults);
-        System.out.printf("        Fires Serviced With Drones Throughput: %.4f /s\n", (double)countFireRequests/lifeTimeServicingFires);
+        System.out.printf("        Fires Serviced With Drones Throughput: %.4f /s\n", throughPut);
+        return throughPut;
     }
 
 
-    private static List<ParsedLogEntry> parseLogFile() {
+    private List<ParsedLogEntry> parseLogFile() {
         List<ParsedLogEntry> parsedEntries = new ArrayList<>();
         Pattern logPattern = Pattern.compile(
                 "\\[(.*?)\\] \\[(.*?)\\] \\[(.*?)\\] \\[(.*?)\\] (.*)"
@@ -321,42 +368,7 @@ public class SchedulerLogAnalyzer {
         return parsedEntries;
     }
 
-
-    /**
-     Helper class to store parsed events
-     <p>format: [timestamp] [level] [component] [threadTag] message </p>
-     <p>format example: <p> [19:10:57.507] [DEBUG] [Scheduler] [SD] Received drone message: 0:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}
-     </p>
-     */
-    private static class ParsedLogEntry {
-        private final LocalTime timestamp;
-        private final String level;
-        private final String component;
-        private final String threadTag;
-        private final String message;
-
-        public ParsedLogEntry(LocalTime timestamp, String level, String component, String threadTag, String message) {
-            this.timestamp = timestamp;
-            this.level = level;
-            this.component = component;
-            this.threadTag = threadTag;
-            this.message = message;
-        }
-
-        public String toString() {
-            return String.format("[%s] [%s] [%s] [%s] %s",
-                    formatter.format(timestamp), level, component, threadTag, message);
-        }
-
-        // Getters here for future filtering/analysis
-        public LocalTime getTimestamp() { return timestamp; }
-        public String getLevel() { return level; }
-        public String getComponent() { return component; }
-        public String getThreadTag() { return threadTag; }
-        public String getMessage() { return message; }
-    }
-
-    private static int getDroneId(String message)
+    private int getDroneId(String message)
     {
         String[] items = message.split("\\[");
 
@@ -402,6 +414,7 @@ public class SchedulerLogAnalyzer {
 
     public static void main(String[] args)
     {
-        SchedulerLogAnalyzer.analyzeLogs();
+        SchedulerLogAnalyzer sla = new SchedulerLogAnalyzer();
+        sla.analyzeLogs();
     }
 }

@@ -10,8 +10,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.DatagramSocket;
-import java.util.HashMap;
-import java.util.Queue;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 class SchedulerTest {
@@ -785,6 +785,7 @@ class SchedulerTest {
         }
     }
 
+
 //    @Test
 //    void testParseZoneFile() {
 //        // Assuming a test file exists
@@ -826,4 +827,233 @@ class SchedulerTest {
 //        scheduler.setState(newState);
 //        assertEquals(newState, scheduler.getCurrentState(), "Scheduler state should update");
 //    }
+}
+
+
+class SchedulerLogAnalyzerTest
+{
+
+    @Test
+    public void testConvertToTimeValue_variousTimes() {
+        LocalTime time = LocalTime.of(10, 0, 0, 0);
+        assertEquals(36000.0, SchedulerLogAnalyzer.convertToTimeValue(time), 1e-9);
+
+        time = LocalTime.of(0, 1, 30, 500_000_000);
+        assertEquals(90.5, SchedulerLogAnalyzer.convertToTimeValue(time), 1e-9);
+
+        time = LocalTime.of(23, 59, 59, 999_000_000);
+        assertEquals(86399.999, SchedulerLogAnalyzer.convertToTimeValue(time), 1e-6);
+    }
+
+    @Test
+    public void testCalculateTimeDuration_intricateCases() {
+        // 1. Zero duration
+        var entry1 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:00.000"), "INFO", "Scheduler", "SD", "Start"
+        );
+        var entry2 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:00.000"), "INFO", "Scheduler", "SD", "End"
+        );
+        assertEquals(0.0, SchedulerLogAnalyzer.calculateTimeDuration(entry1, entry2), 1e-9);
+
+        // 2. Short millisecond precision
+        entry1 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:00.100"), "INFO", "Scheduler", "SD", "Start"
+        );
+        entry2 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:00.250"), "INFO", "Scheduler", "SD", "End"
+        );
+        assertEquals(0.150, SchedulerLogAnalyzer.calculateTimeDuration(entry1, entry2), 1e-6);
+
+        // 3. Across minute boundary
+        entry1 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:59.999"), "INFO", "Scheduler", "SD", "Start"
+        );
+        entry2 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:01:00.001"), "INFO", "Scheduler", "SD", "End"
+        );
+        assertEquals(0.002, SchedulerLogAnalyzer.calculateTimeDuration(entry1, entry2), 1e-6);
+
+        // 4. Across hour boundary
+        entry1 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("09:59:59.999"), "INFO", "Scheduler", "SD", "Start"
+        );
+        entry2 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:00.001"), "INFO", "Scheduler", "SD", "End"
+        );
+        assertEquals(0.002, SchedulerLogAnalyzer.calculateTimeDuration(entry1, entry2), 1e-6);
+
+        // 5. Full second plus milliseconds
+        entry1 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:01.123"), "INFO", "Scheduler", "SD", "Start"
+        );
+        entry2 = new SchedulerLogAnalyzer().new ParsedLogEntry(
+                LocalTime.parse("10:00:03.456"), "INFO", "Scheduler", "SD", "End"
+        );
+        assertEquals(2.333, SchedulerLogAnalyzer.calculateTimeDuration(entry1, entry2), 1e-3);
+    }
+
+    @Test
+    public void testCalcGeneralMetrics() throws Exception {
+        SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();
+
+        var startLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:00.000"), "INFO", "Scheduler", "MAIN", "Scheduler is now online"
+        );
+        var fireLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:10.000"), "INFO", "Scheduler", "SF", "Received fire message: id=1"
+        );
+        var endLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:40.000"), "INFO", "Scheduler", "MAIN", "All threads have finished. Log file ready for analysis."
+        );
+
+        // set countFireRequests = 3 using reflection
+        Field countFireRequestsField = SchedulerLogAnalyzer.class.getDeclaredField("countFireRequests");
+        countFireRequestsField.setAccessible(true);
+        countFireRequestsField.setInt(analyzer, 3);
+
+        // invoke calcGeneralMetrics()
+        Method calcGeneralMetrics = SchedulerLogAnalyzer.class.getDeclaredMethod(
+                "calcGeneralMetrics",
+                SchedulerLogAnalyzer.ParsedLogEntry.class,
+                SchedulerLogAnalyzer.ParsedLogEntry.class,
+                SchedulerLogAnalyzer.ParsedLogEntry.class
+        );
+        calcGeneralMetrics.setAccessible(true);
+        double throughput = (double) calcGeneralMetrics.invoke(analyzer, startLog, endLog, fireLog);
+
+        assertEquals(0.1, throughput, 0.0001); // 3 requests / 30 seconds = 0.1 /s
+    }
+
+
+    @Test
+    public void testCalcSPMetrics() throws Exception {
+        SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();
+
+        // Prepare mock log entries for SP thread
+        var firstSPLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:00.000"), "INFO", "Scheduler", "SP", "Attempting assignment: id=1A"
+        );
+        var lastSPLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:10.000"), "INFO", "Scheduler", "SP", "this fire request: id=1A"
+        );
+
+        // Set mock response time list
+        Field rtbtField = SchedulerLogAnalyzer.class.getDeclaredField("responseTimesByThread");
+        rtbtField.setAccessible(true);
+        Map<String, List<Double>> rtbtMap = new HashMap<>();
+        List<Double> rtbtSP = new ArrayList<>();
+        rtbtSP.add(2.0);
+        rtbtSP.add(3.0);
+        rtbtMap.put("SP", rtbtSP);
+        rtbtField.set(analyzer, rtbtMap);
+
+        // Invoke calcSPMetrics via reflection
+        Method method = SchedulerLogAnalyzer.class.getDeclaredMethod(
+                "calcSPMetrics",
+                SchedulerLogAnalyzer.ParsedLogEntry.class,
+                SchedulerLogAnalyzer.ParsedLogEntry.class,
+                Map.class
+        );
+        method.setAccessible(true);
+
+        double[] result = (double[]) method.invoke(analyzer, firstSPLog, lastSPLog, new HashMap<>());
+
+        assertEquals(10.0, result[0], 0.001);  // lifetime
+        assertEquals(5.0, result[1], 0.001);   // busy time (2.0 + 3.0)
+        assertEquals(0.5, result[2], 0.001);   // utilization
+        assertEquals(2.5, result[3], 0.001);   // average response time
+    }
+
+    @Test
+    public void testCalcSFMetrics() throws Exception {
+        SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();
+
+        // First and last SF log entries
+        var firstFireIncident = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:00.000"), "INFO", "Scheduler", "SF", "Received fire message: id=1"
+        );
+        var lastSFLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:10.000"), "INFO", "Scheduler", "SF", "Sending to FireIncident Subsystem..."
+        );
+
+        // FireRequest log mappings
+        Map<Integer, SchedulerLogAnalyzer.ParsedLogEntry> firstSFMap = new HashMap<>();
+        Map<Integer, SchedulerLogAnalyzer.ParsedLogEntry> lastSFMap = new HashMap<>();
+
+        firstSFMap.put(1, analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:01.000"), "INFO", "Scheduler", "SF", "Received fire message: id=1"
+        ));
+        lastSFMap.put(1, analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:04.000"), "INFO", "Scheduler", "SF", "Scheduler acknowledged id=1"
+        ));
+
+        firstSFMap.put(2, analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:05.000"), "INFO", "Scheduler", "SF", "Received fire message: id=2"
+        ));
+        lastSFMap.put(2, analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:09.000"), "INFO", "Scheduler", "SF", "Scheduler acknowledged id=2"
+        ));
+
+        // Set mock response time list container
+        Field rtbtField = SchedulerLogAnalyzer.class.getDeclaredField("responseTimesByThread");
+        rtbtField.setAccessible(true);
+        Map<String, List<Double>> rtbtMap = new HashMap<>();
+        rtbtMap.put("SF", new ArrayList<>());
+        rtbtField.set(analyzer, rtbtMap);
+
+        // Invoke method
+        Method method = SchedulerLogAnalyzer.class.getDeclaredMethod(
+                "calcSFMetrics",
+                SchedulerLogAnalyzer.ParsedLogEntry.class,
+                SchedulerLogAnalyzer.ParsedLogEntry.class,
+                Map.class,
+                Map.class
+        );
+        method.setAccessible(true);
+
+        double[] result = (double[]) method.invoke(analyzer, firstFireIncident, lastSFLog, firstSFMap, lastSFMap);
+
+        assertEquals(10.0, result[0], 0.001); // lifetime: 00 to 10
+        assertEquals(7.0, result[1], 0.001);  // busy time: (3 + 4)
+        assertEquals(0.7, result[2], 0.001);  // utilization
+        assertEquals(3.5, result[3], 0.001);  // avg response time
+    }
+
+    @Test
+    public void testCalcSDMetrics() throws Exception {
+        SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();
+
+        var firstSDLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:00.000"), "DEBUG", "Scheduler", "SD", "Received drone message: 1"
+        );
+        var lastSDLog = analyzer.new ParsedLogEntry(
+                LocalTime.parse("10:00:20.000"), "DEBUG", "Scheduler", "SD", "Responding to drone with: ACK"
+        );
+
+        // Set mock response time list for SD
+        Field rtbtField = SchedulerLogAnalyzer.class.getDeclaredField("responseTimesByThread");
+        rtbtField.setAccessible(true);
+        Map<String, List<Double>> rtbtMap = new HashMap<>();
+        List<Double> rtbtSD = new ArrayList<>();
+        rtbtSD.add(5.0);
+        rtbtSD.add(3.0);
+        rtbtMap.put("SD", rtbtSD);
+        rtbtField.set(analyzer, rtbtMap);
+
+        // Invoke calcSDMetrics
+        Method method = SchedulerLogAnalyzer.class.getDeclaredMethod(
+                "calcSDMetrics",
+                SchedulerLogAnalyzer.ParsedLogEntry.class,
+                SchedulerLogAnalyzer.ParsedLogEntry.class
+        );
+        method.setAccessible(true);
+
+        double[] result = (double[]) method.invoke(analyzer, firstSDLog, lastSDLog);
+
+        assertEquals(20.0, result[0], 0.001); // lifetime
+        assertEquals(8.0, result[1], 0.001);  // busy time (5 + 3)
+        assertEquals(0.4, result[2], 0.001);  // utilization
+        assertEquals(4.0, result[3], 0.001);  // average response time
+    }
 }
