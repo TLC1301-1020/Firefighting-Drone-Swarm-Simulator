@@ -462,9 +462,10 @@ public class DroneSubsystem implements Runnable {
     }
 
     /**
-     * gracefull exit for all thread function loops. running set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
+     * gracefully exit for all thread function loops. running set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
     private void shutdown() {
         this.running = false;
+        DroneEventLogger.getInstance().info("All", "All", "Program ended, shutting down.");
 
         // close sockets if they are open
         if (sendSocket != null && !sendSocket.isClosed()) sendSocket.close();

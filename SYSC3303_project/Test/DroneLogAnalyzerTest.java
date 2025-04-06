@@ -76,6 +76,8 @@ public class DroneLogAnalyzerTest {
             writer.write("[12:01:00.000] [INFO] [DroneSubsystem] [ProcessFaults] Drone fault\n");
             writer.write("[12:02:00.000] [INFO] [DroneSubsystem] [run] General event\n");
             writer.write("[12:03:00.000] [INFO] [Drone] [1] Drone initialized\n");
+            writer.write("[12:03:00.000] [INFO] [All] [All] Shutdown\n");
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

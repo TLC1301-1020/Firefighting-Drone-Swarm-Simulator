@@ -25,9 +25,11 @@ public class DroneLogAnalyzer {
     private static final List<LogEntry> processFaultLogs = new ArrayList<>();
     private static final List<LogEntry> schedulerListenerLogs = new ArrayList<>();
     private static final List<LogEntry> subsystemLogs = new ArrayList<>();
+    private static LocalTime start = null;
+    private static LocalTime end = null;
 
     private static int droneTotal = 0;
-    private static double lifetime;
+    private static double programLife = 0;
     /**
      * Represents a log entry with a timestamp, component, and event code.
      * This class provides a method to parse log lines into LogEntry objects.
@@ -37,6 +39,7 @@ public class DroneLogAnalyzer {
         private String component;
         private String event;
         private String threadType;
+
         /**
          * Parses a log line and creates a LogEntry object.
          *
@@ -102,6 +105,10 @@ public class DroneLogAnalyzer {
             while ((line = reader.readLine()) != null) {
                 LogEntry logEntry = LogEntry.parse(line);
                 if (logEntry != null) {
+                    if(start == null){
+                        start = logEntry.getTimestamp();
+                        System.out.println("Start time of the program: " + start);
+                    }
                     // Separate the logs based on the component type
                     if (logEntry.getComponent().contains("DroneSubsystem")) {
 
@@ -118,13 +125,21 @@ public class DroneLogAnalyzer {
                         //update number of drones if needed
                         if(Integer.parseInt(logEntry.getThreadType()) > droneTotal) droneTotal = Integer.parseInt(logEntry.getThreadType());
                         droneLogs.add(logEntry);
+                    }else if(logEntry.getComponent().contains("All")){
+                        end = logEntry.getTimestamp();
                     }
+                    programLife = Duration.between(start,logEntry.getTimestamp()).toMillis() /1000.0;
                 }
                 //drone starts from 0
                 droneTotal += 1;
             }
+
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        System.out.println("End time of the program: " + end);
+        if(end != null) {
+            programLife = Duration.between(start, end).toMillis() / 1000.0;
         }
     }
     /**
@@ -150,25 +165,22 @@ public class DroneLogAnalyzer {
 
             System.out.println("=================== Subsystem - run ===================\n");
 
-            lifetime = calculateTotalTime(subsystemLogs);
             responseTime(subsystemLogs,"Waiting","Received");
-            throughput(subsystemLogs,lifetime,"Waiting","Received");
+            throughput(subsystemLogs,programLife,"Waiting","Received");
             subsystemLatency();
-            utilization(subsystemLogs,lifetime, "Waiting", "Received");
+            utilization(subsystemLogs,programLife, "Waiting", "Received");
 
             System.out.println("\n============ Subsystem - ListeningToScheduler ============\n");
 
-            lifetime = calculateTotalTime(schedulerListenerLogs);
             responseTime(schedulerListenerLogs,"received","handled");
-            throughput((schedulerListenerLogs),lifetime,"received","handled");
-            utilization(schedulerListenerLogs,lifetime,"received","handled");
+            throughput((schedulerListenerLogs),programLife,"received","handled");
+            utilization(schedulerListenerLogs,programLife,"received","handled");
 
             System.out.println("\n============ Subsystem - ProcessFault ============\n");
 
-            lifetime = calculateTotalTime(processFaultLogs);
             responseTime(processFaultLogs,"Waiting","Received");
-            throughput(processFaultLogs,lifetime,"Waiting", "Received");
-            utilization(processFaultLogs,lifetime,"Waiting", "Received");
+            throughput(processFaultLogs,programLife,"Waiting", "Received");
+            utilization(processFaultLogs,programLife,"Waiting", "Received");
         }
     }
     /**
@@ -206,11 +218,11 @@ public class DroneLogAnalyzer {
         return totalTime;
     }
     /**
-     * Calculates the utilization of drones based on their work time and the total lifetime.
+     * Calculates the utilization of drones based on their work time and the total program lifetime.
      * Utilization is calculated as the ratio of work time to lifetime.
      *
      * @param drone A list of LogEntry objects representing drone logs.
-     * @param lifetime The total lifetime of the drone in seconds.
+     * @param lifetime The total lifetime of the program in seconds.
      * @return The utilization of the drone as a decimal fraction. If no valid logs or lifetime are provided, returns 0.0.
      */
     public static double droneUtilization(List<LogEntry> drone, double lifetime){
@@ -223,19 +235,19 @@ public class DroneLogAnalyzer {
         for(LogEntry log: drone){
             if(log.getEvent().contains("Assigned") && workStart == null){
                 workStart = log.getTimestamp();
-            //TODO: remove FAULT condition if failed to complete task does not count as a part of busy time
             }else if((log.getEvent().contains("Arrived back at base")  || log.getEvent().contains("complete") || log.getEvent().contains("FAULT")) && workStart != null){
                 workTime += Duration.between(workStart, log.getTimestamp()).toMillis() / 1000.0;
                 workStart = null;
             }
         }
-
+        System.out.println("Busy time: " + workTime + "s");
         double utilization = workTime / lifetime;
 
         if (utilization <= 0) {
             System.out.println("Utilization: Not available");
         } else {
             System.out.printf("Utilization: %.4f\n", utilization);
+            System.out.printf("Utilization%%: %.2f%%\n", utilization * 100.00);
         }
         return utilization;
     }
@@ -363,7 +375,7 @@ public class DroneLogAnalyzer {
      * by the occurrences of the specified events (x and y) in the logs.
      *
      * @param logs The list of logs containing event data.
-     * @param lifetime The total lifetime in seconds over which utilization is calculated.
+     * @param lifetime Program lifetime in seconds over which utilization is calculated.
      * @param x The event type indicating the start of a working period.
      * @param y The event type indicating the end of a working period.
      * @return The calculated utilization (working time / lifetime), or 0 if no valid data is found.
@@ -396,7 +408,11 @@ public class DroneLogAnalyzer {
             System.out.println("Utilization: not available");
             return 0.0;
         }
+
+        double utilPercent = utilization * 100.00;
         System.out.printf("Utilization: %.4f\n", utilization);
+        System.out.printf("Utilization%%: %.2f%%\n", utilPercent);
+
         return utilization;
     }
     /**
@@ -501,8 +517,9 @@ public class DroneLogAnalyzer {
 
         for(String key: drones.keySet()){
             System.out.println(" Drone - " + key);
-            double lifetime = calculateTotalTime(drones.get(key));
-            droneUtilization(drones.get(key),lifetime);
+            calculateTotalTime(drones.get(key));
+            droneUtilization(drones.get(key),programLife);
+
             average = averageDeploy(drones.get(key));
             if(average > 0){
                 total += average;
@@ -518,8 +535,10 @@ public class DroneLogAnalyzer {
             }
             System.out.println("--------------------------------");
         }
-        System.out.println("All Drones - Average Deployment Time: " + total/count + "s");
+        total = total/count;
+        System.out.printf("All Drones - Average Deployment Time: %.4fs\n", total);
         System.out.println();
+
     }
 
     //Getters
