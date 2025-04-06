@@ -91,6 +91,7 @@ public class FireIncidentSubsystem implements Runnable {
                         if (receivedCompletions.containsAll(expectedCompletions)) {
                             System.out.println("[ FIRE ] All fire requests completed. Sending SHUTDOWN.");
                             sendIncident("SHUTDOWN");
+
                         }
                     }
                 }
@@ -328,7 +329,6 @@ public class FireIncidentSubsystem implements Runnable {
         }
     }
 
-
     public static void main(String[] args) {
         FireIncidentSubsystem fis = new FireIncidentSubsystem();
         Thread thread = new Thread(fis);
@@ -368,4 +368,5 @@ public class FireIncidentSubsystem implements Runnable {
     public DatagramSocket getReceiveSocket() {
         return receiveSocket;
     }
+
 }

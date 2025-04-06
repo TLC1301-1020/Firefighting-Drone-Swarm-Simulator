@@ -1,0 +1,1714 @@
+[19:09:23.091] [INFO] [DroneSubsystem] [ProcessFaults] Waiting for new Drone faults
+[19:09:23.106] [INFO] [DroneSubsystem] [ProcessFaults] Received Drone fault, injecting
+[19:09:23.098] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:23.131] [INFO] [DroneSubsystem] [ProcessFaults] Waiting for new Drone faults
+[19:09:23.131] [INFO] [DroneSubsystem] [ProcessFaults] Received Drone fault, injecting
+[19:09:23.131] [INFO] [DroneSubsystem] [ProcessFaults] Waiting for new Drone faults
+[19:09:23.131] [INFO] [DroneSubsystem] [ProcessFaults] Received Drone fault, injecting
+[19:09:23.131] [INFO] [DroneSubsystem] [ProcessFaults] Waiting for new Drone faults
+[19:09:23.138] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:23.138] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:23.138] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:23.138] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:23.245] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:23.290] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: WAIT:1:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:23.290] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:23.290] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:23.290] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:23.290] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:23.350] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:23.352] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: WAIT:0:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:23.352] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:23.352] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:23.352] [INFO] [Drone] [0] Received a Scheduler response
+[19:09:23.352] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:23.455] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:23.456] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: WAIT:2:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:23.456] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:23.456] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:23.797] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:23.797] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:23.854] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:23.898] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:23.901] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:23.902] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:23.902] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:23.961] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:24.000] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:24.002] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:24.002] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:24.002] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:24.106] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:24.107] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:24.107] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:24.408] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:24.408] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:24.508] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:24.511] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:24.514] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:24.515] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:24.515] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:24.612] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:24.613] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:24.615] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:24.615] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:24.615] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:24.718] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:24.719] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:24.719] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:25.020] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:25.020] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:25.121] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:25.125] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:25.127] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:25.127] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:25.127] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:25.225] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:25.229] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:25.231] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:25.231] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:25.231] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:25.333] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:25.334] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:25.334] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:25.629] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:25.629] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:25.734] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:25.735] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:25.735] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:25.737] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:25.737] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:25.839] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:25.842] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:25.843] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:25.843] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:25.843] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:25.947] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:25.948] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:25.949] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:26.240] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:26.240] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:26.346] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:26.348] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:26.348] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:26.349] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:26.349] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:26.455] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:26.456] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:26.456] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:26.458] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:26.458] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:26.458] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:26.558] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:26.556] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:26.561] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:26.850] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:26.850] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:26.959] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:26.964] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:26.964] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:26.964] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:26.964] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:26.964] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:27.067] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:27.070] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:27.072] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:27.072] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:27.072] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:27.173] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:27.175] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:27.176] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:27.468] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:27.468] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:27.571] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:27.573] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:27.574] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:27.578] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:27.578] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:27.682] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:27.686] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:27.688] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:27.689] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:27.689] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:27.791] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:27.795] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:27.795] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:28.077] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:28.078] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:28.194] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:28.195] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:28.195] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:28.201] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:28.201] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:28.202] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:28.298] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:28.300] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:28.301] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:28.301] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:28.301] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:28.301] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:28.409] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:28.412] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:28.412] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:28.706] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:28.706] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:28.809] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:28.809] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:28.814] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:28.814] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:28.814] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:28.915] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:28.918] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:28.917] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:28.918] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:28.918] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:28.919] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:29.025] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:29.029] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:29.029] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:29.321] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:29.321] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:29.425] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:29.431] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:29.433] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:29.433] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:29.433] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:29.535] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:29.535] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:29.543] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: NEW:0:[TRAVELING]:NEW_FIRE_REQUEST:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:29.543] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:29.543] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:29.546] [INFO] [Drone] [0] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:29.548] [INFO] [Drone] [0] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[19:09:29.568] [INFO] [Drone] [0] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:29.646] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:29.648] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:29.648] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:29.664] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:29.664] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:29.765] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:29.770] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:29.770] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:29.770] [INFO] [Drone] [0] Received a Scheduler response
+[19:09:29.771] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:29.771] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:29.873] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:29.881] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[ACTIVE][TRAVELING]:DRONE_STUCK:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:29.881] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:29.881] [INFO] [Drone] [0] Received a Scheduler response
+[19:09:29.887] [INFO] [Drone] [0] State Change: [ACTIVE][TRAVELING]->[FAULT][STUCK]
+[19:09:29.887] [INFO] [Drone] [0] Waiting for Scheduler response
+[19:09:29.887] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:29.935] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:29.989] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:29.992] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:0:[FAULT][STUCK]:DRONE_STUCK:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:29.992] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:29.992] [INFO] [Drone] [0] Received a Scheduler response
+[19:09:29.992] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:30.095] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:30.101] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: NEW:1:[TRAVELING]:NEW_FIRE_REQUEST:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:30.101] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:30.102] [INFO] [Drone] [1] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:30.102] [INFO] [Drone] [1] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[19:09:30.103] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:30.153] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:30.153] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:30.217] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:30.256] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:30.258] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:30.258] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:30.258] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:30.362] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:30.371] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: RESEND:1:[ACTIVE][TRAVELING]:CORRUPTED_PACKET:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:30.371] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:30.371] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:30.371] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:30.371] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:30.474] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:30.477] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:30.478] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:30.478] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:30.481] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:30.481] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:30.587] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:30.597] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:30.597] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:30.597] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:30.600] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:30.600] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:30.699] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:30.699] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:30.760] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:30.807] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:30.818] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:56:19:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:30.818] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:30.818] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:30.818] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:30.818] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:30.909] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:30.911] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:30.912] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:30.912] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.015] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:31.020] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:56:19:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:31.020] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:31.020] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:31.021] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:31.021] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:31.108] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.108] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:31.212] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:31.215] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:84:29:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:31.215] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:31.215] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:31.216] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.216] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:31.322] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:31.324] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:84:29:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:31.325] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:31.325] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:31.326] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:31.326] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:31.418] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.418] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:31.419] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:31.523] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:31.528] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:113:39:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:31.528] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:31.528] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:31.528] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:31.530] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.627] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:31.629] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:31.630] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:31.630] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.728] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:31.732] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:113:39:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:31.732] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:31.733] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:31.733] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:31.733] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:31.824] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.824] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:31.930] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:31.935] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:141:49:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:31.936] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:31.936] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:31.937] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:31.937] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.044] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:32.047] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:141:49:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:32.048] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.048] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:32.049] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:32.049] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:32.136] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.136] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:32.140] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.242] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.249] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:32.249] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.249] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.348] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:32.351] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:169:59:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:32.351] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.351] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:32.352] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.352] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.460] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:32.466] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:169:59:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:32.466] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.466] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:32.466] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:32.466] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:32.546] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.546] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.652] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:32.658] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:198:69:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:32.658] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.658] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:32.659] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.659] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.755] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:32.764] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.765] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:198:69:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:32.765] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.765] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:32.765] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:32.766] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:32.766] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:32.862] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.870] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:32.871] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:32.872] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.872] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.974] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:32.978] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:226:79:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:32.978] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:32.978] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:32.979] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:32.979] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:33.080] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:33.084] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:226:79:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:33.084] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:33.084] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:33.084] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:33.084] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:33.170] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:33.170] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:33.277] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:33.286] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:254:89:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:33.286] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:33.286] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:33.287] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:33.287] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:33.377] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:33.392] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:33.396] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:254:89:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:33.396] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:33.396] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:33.396] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:33.396] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:33.396] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:33.480] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:33.499] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:33.500] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:33.501] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:33.501] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:33.605] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:33.607] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:282:99:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:33.608] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:33.608] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:33.608] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:33.608] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:33.715] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:33.719] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:282:99:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:33.722] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:33.723] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:33.726] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:33.728] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:33.807] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:33.807] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:33.913] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:33.915] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:311:109:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:33.915] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:33.915] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:33.915] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:33.915] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.006] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:34.021] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.023] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:311:109:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:34.023] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.023] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:34.023] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:34.024] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:34.024] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:34.112] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.123] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.127] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:34.127] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.127] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.229] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:34.233] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:339:119:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:34.233] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.233] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:34.233] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.233] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.336] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:34.340] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:339:119:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:34.340] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.340] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:34.341] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:34.341] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:34.417] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.417] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.523] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:34.524] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:367:129:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:34.524] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.525] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:34.525] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.525] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.626] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:34.631] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:367:129:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:34.631] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.631] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:34.632] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:34.632] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:34.632] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.632] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:34.711] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.737] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.739] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:34.739] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.740] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.840] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:34.841] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:396:139:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:34.841] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.841] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:34.842] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:34.842] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:34.942] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:34.946] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:396:139:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:34.946] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:34.946] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:34.946] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:34.946] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:35.026] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.026] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.131] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:35.134] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:424:149:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:35.135] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.135] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:35.137] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.137] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.242] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:35.243] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.250] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:424:149:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:35.250] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.250] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:35.250] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:35.251] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:35.251] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:35.330] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.349] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:35.349] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.349] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.349] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.455] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:35.457] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:452:159:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:35.457] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.457] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:35.457] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.457] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.560] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:35.562] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:452:159:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:35.562] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.563] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:35.563] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:35.563] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:35.639] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.639] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.743] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:35.746] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:480:169:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:35.747] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.747] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:35.748] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.748] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.852] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:35.854] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:480:169:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:35.854] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.854] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:35.855] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:35.855] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:35.855] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:35.855] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.931] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:35.960] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:35.963] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:35.963] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:35.964] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.065] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:36.067] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:509:179:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:36.067] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.067] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:36.068] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.068] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:36.174] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:36.179] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:509:179:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:36.180] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.180] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:36.181] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:36.181] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:36.257] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:36.257] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.358] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:36.359] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:537:189:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:36.359] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.359] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:36.360] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.360] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:36.465] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:36.465] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:36.466] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:537:189:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:36.467] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.467] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:36.467] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:36.467] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:36.467] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:36.544] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.571] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:36.577] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:36.577] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.577] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.675] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:36.679] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:565:199:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:36.679] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.679] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:36.680] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.680] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:36.780] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:36.785] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:565:199:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:36.785] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.785] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:36.785] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:36.785] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:36.861] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:36.861] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.964] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:36.965] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:594:209:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:36.966] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:36.966] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:36.966] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:36.966] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.072] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:37.074] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:594:209:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:37.074] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.074] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:37.075] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:37.075] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:37.083] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:37.083] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.153] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.186] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.188] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:37.188] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.188] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.289] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:37.292] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:622:219:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:37.292] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.293] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:37.293] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.293] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.398] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:37.405] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:622:219:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:37.405] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.405] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:37.405] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:37.406] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:37.482] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.482] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.588] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:37.593] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:650:229:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:37.593] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.593] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:37.594] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.594] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.689] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:37.698] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.701] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:650:229:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:37.701] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.701] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:37.701] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:37.701] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:37.701] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:37.778] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.804] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:37.806] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:37.806] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.806] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.908] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:37.909] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:678:239:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:37.909] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:37.909] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:37.909] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:37.909] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.014] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:38.016] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:678:239:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:38.017] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.017] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:38.017] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:38.017] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:38.096] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.096] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:38.201] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:38.205] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:707:249:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:38.206] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.206] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:38.206] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:38.206] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.308] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:38.314] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.320] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:707:249:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:38.320] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.321] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:38.321] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:38.321] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:38.321] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:38.399] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:38.418] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.420] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:38.420] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.420] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:38.522] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:38.524] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:735:259:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:38.524] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.525] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:38.525] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.525] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:38.630] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:38.631] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:735:259:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:38.631] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.631] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:38.632] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:38.632] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:38.709] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.709] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:38.816] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:38.819] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:763:269:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:38.819] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.819] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:38.820] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.820] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:38.921] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:38.921] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:38.922] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:38.924] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:763:269:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:38.925] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:38.925] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:38.925] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:38.925] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:38.925] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:39.004] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.027] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:39.028] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:39.028] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.029] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.127] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:39.130] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:792:279:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:39.130] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.131] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:39.134] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.134] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:39.238] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:39.240] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:792:279:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:39.241] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.241] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:39.241] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:39.241] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:39.324] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.324] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:39.428] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:39.431] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:820:289:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:39.431] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.431] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:39.431] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.431] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:39.534] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:39.534] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:39.538] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:820:289:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:39.538] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.538] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:39.538] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:39.539] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:39.539] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:39.618] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.639] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:39.643] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[IDLE]:STATUS:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:39.643] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.643] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.746] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:39.749] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:STATUS:848:299:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:39.749] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.750] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:39.750] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.750] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:39.855] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:39.862] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:CONTINUING:848:299:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:39.862] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:39.862] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:39.863] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:39.863] [INFO] [Drone] [1] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:39.941] [INFO] [Drone] [1] Arrived at zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:39.941] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:39.941] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.048] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:40.053] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.053] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.053] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:40.056] [INFO] [Drone] [1] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[19:09:40.056] [INFO] [Drone] [1] Opening payload doors
+[19:09:40.069] [INFO] [Drone] [1] Deploying payload
+[19:09:40.069] [INFO] [Drone] [1] Opening payload doors
+[19:09:40.084] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:40.084] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.147] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.189] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.195] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][DEPLOYING]:PAYLOAD_DEPLOY_FAILURE:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.195] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.195] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:40.195] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.199] [INFO] [Drone] [1] State Change: [ACTIVE][DEPLOYING]->[FAULT][DEPLOY FAILURE]
+[19:09:40.199] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:40.290] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.292] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: NEW:2:[TRAVELING]:NEW_FIRE_REQUEST:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.292] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.292] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:40.293] [INFO] [Drone] [2] Assigned Task: FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.293] [INFO] [Drone] [2] State Change: [IDLE]->[ACTIVE][TRAVELING]
+[19:09:40.293] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:40.371] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.397] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.400] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[FAULT][DEPLOY FAILURE]:PAYLOAD_DEPLOY_FAILURE:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.400] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.400] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:40.400] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.402] [INFO] [Drone] [1] State Change: [FAULT][DEPLOY FAILURE]->[ACTIVE][RETURNING]
+[19:09:40.424] [INFO] [Drone] [1] Beginning travel to base
+[19:09:40.499] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:40.501] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.502] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.502] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:40.502] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.502] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.502] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:40.607] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.610] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:28:9:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.610] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.610] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:40.610] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:40.611] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:40.611] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:40.687] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.714] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.720] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:821:290:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.720] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.720] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:40.720] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.721] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:40.721] [INFO] [Drone] [1] Beginning travel to base
+[19:09:40.797] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:40.816] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.818] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:56:19:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.818] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.818] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:40.818] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:40.818] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.923] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:40.928] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:793:280:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:40.928] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:40.929] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:40.929] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:40.929] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:40.929] [INFO] [Drone] [1] Beginning travel to base
+[19:09:41.005] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.025] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.033] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:56:19:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.033] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.033] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:41.033] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.033] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:41.033] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:41.115] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.135] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.139] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:765:270:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.139] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.139] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:41.139] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.140] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:41.140] [INFO] [Drone] [1] Beginning travel to base
+[19:09:41.217] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.243] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.246] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:84:29:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.246] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.246] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:41.246] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.247] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.345] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.347] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:736:260:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.347] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.347] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.347] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:41.347] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:41.347] [INFO] [Drone] [1] Beginning travel to base
+[19:09:41.425] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.448] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.450] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:84:29:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.451] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.451] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.451] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:41.451] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:41.451] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:41.528] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.554] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.557] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:708:250:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.558] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.558] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:41.558] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.558] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:41.558] [INFO] [Drone] [1] Beginning travel to base
+[19:09:41.635] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.656] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.659] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:113:39:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.660] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.660] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:41.660] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.660] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.761] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.770] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:680:240:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.772] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.772] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:41.772] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.772] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:41.772] [INFO] [Drone] [1] Beginning travel to base
+[19:09:41.848] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.866] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.869] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:113:39:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.870] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.870] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:41.870] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:41.871] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:41.871] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:41.948] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.971] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:41.973] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:651:230:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:41.973] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:41.973] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:41.973] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:41.973] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:41.973] [INFO] [Drone] [1] Beginning travel to base
+[19:09:42.053] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.077] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.079] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:141:49:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.080] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.080] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:42.080] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.082] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.182] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.191] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:623:220:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.191] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.191] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:42.191] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.191] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:42.191] [INFO] [Drone] [1] Beginning travel to base
+[19:09:42.268] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.284] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.287] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:141:49:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.287] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.287] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:42.287] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.288] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:42.288] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:42.366] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.390] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.392] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:595:210:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.392] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.393] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:42.393] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.393] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:42.393] [INFO] [Drone] [1] Beginning travel to base
+[19:09:42.472] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.496] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.498] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:169:59:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.498] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.498] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.498] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:42.498] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.599] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.601] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:567:200:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.601] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.601] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.601] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:42.602] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:42.602] [INFO] [Drone] [1] Beginning travel to base
+[19:09:42.679] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.704] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.705] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:169:59:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.706] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.706] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.706] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:42.706] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:42.706] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:42.783] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.810] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.811] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:538:190:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.811] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.811] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:42.811] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:42.811] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:42.811] [INFO] [Drone] [1] Beginning travel to base
+[19:09:42.891] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.915] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:42.916] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:198:69:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:42.917] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:42.917] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:42.917] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:42.917] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.016] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.018] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:510:180:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.018] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.018] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:43.018] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.018] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:43.018] [INFO] [Drone] [1] Beginning travel to base
+[19:09:43.096] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.122] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.124] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:198:69:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.124] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.124] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:43.124] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.124] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:43.124] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:43.201] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.228] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.229] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:482:170:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.229] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.229] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:43.229] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.229] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:43.230] [INFO] [Drone] [1] Beginning travel to base
+[19:09:43.307] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.332] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.333] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:226:79:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.333] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.333] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:43.333] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.333] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.432] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.433] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:453:160:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.433] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.433] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:43.433] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.433] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:43.433] [INFO] [Drone] [1] Beginning travel to base
+[19:09:43.512] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.538] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.539] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:226:79:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.539] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.539] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:43.539] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.539] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:43.539] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:43.616] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.643] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.644] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:425:150:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.644] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.644] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:43.644] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.645] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:43.645] [INFO] [Drone] [1] Beginning travel to base
+[19:09:43.720] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.747] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.749] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:254:89:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.749] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.749] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:43.749] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.749] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.851] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.852] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:397:140:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.852] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.852] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:43.852] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:43.852] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:43.852] [INFO] [Drone] [1] Beginning travel to base
+[19:09:43.929] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.955] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:43.957] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:254:89:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:43.957] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:43.957] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:43.957] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:43.957] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:43.957] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:44.035] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.061] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.063] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:369:130:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.063] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.063] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.063] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:44.063] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:44.063] [INFO] [Drone] [1] Beginning travel to base
+[19:09:44.138] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.167] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.170] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:282:99:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.170] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.171] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.171] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:44.171] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.273] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.276] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:340:120:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.276] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.276] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:44.276] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.276] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:44.277] [INFO] [Drone] [1] Beginning travel to base
+[19:09:44.355] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.378] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.379] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:282:99:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.379] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.379] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:44.379] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.380] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:44.380] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:44.457] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.483] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.485] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:312:110:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.485] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.485] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:44.485] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.486] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:44.486] [INFO] [Drone] [1] Beginning travel to base
+[19:09:44.562] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.589] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.590] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:311:109:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.590] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.590] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:44.590] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.590] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.694] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.695] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:284:100:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.695] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.695] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.695] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:44.695] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:44.695] [INFO] [Drone] [1] Beginning travel to base
+[19:09:44.771] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.797] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.799] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:311:109:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.799] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.799] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:44.799] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:44.799] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:44.799] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:44.881] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.902] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:44.905] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:255:90:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:44.906] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:44.906] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:44.906] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:44.907] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:44.907] [INFO] [Drone] [1] Beginning travel to base
+[19:09:44.983] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.008] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.008] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:339:119:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.008] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.008] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:45.008] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.009] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.113] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.115] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:227:80:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.116] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.116] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:45.116] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.119] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:45.119] [INFO] [Drone] [1] Beginning travel to base
+[19:09:45.196] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.215] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.223] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:339:119:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.223] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.223] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:45.223] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.223] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:45.223] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:45.300] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.316] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.320] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:199:70:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.321] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.321] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:45.322] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.323] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:45.323] [INFO] [Drone] [1] Beginning travel to base
+[19:09:45.403] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.423] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.424] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:367:129:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.425] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.425] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:45.425] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.426] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.529] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.531] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:171:60:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.532] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.532] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:45.532] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.532] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:45.532] [INFO] [Drone] [1] Beginning travel to base
+[19:09:45.608] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.631] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.633] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:367:129:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.633] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.633] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.633] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:45.633] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:45.633] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:45.713] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.737] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.739] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:142:50:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.739] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.739] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:45.739] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.740] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:45.740] [INFO] [Drone] [1] Beginning travel to base
+[19:09:45.816] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.838] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.840] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:396:139:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.840] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.840] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:45.840] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:45.840] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.944] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:45.946] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:114:40:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:45.946] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:45.946] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:45.946] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:45.946] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:45.946] [INFO] [Drone] [1] Beginning travel to base
+[19:09:46.023] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.047] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.049] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:396:139:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.049] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.049] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.049] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:46.049] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:46.049] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:46.126] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.148] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.153] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:86:30:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.153] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.153] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:46.153] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.154] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:46.154] [INFO] [Drone] [1] Beginning travel to base
+[19:09:46.231] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.254] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.256] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:424:149:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.256] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.256] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:46.256] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.256] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.359] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.360] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:57:20:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.360] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.360] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:46.360] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.361] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:46.361] [INFO] [Drone] [1] Beginning travel to base
+[19:09:46.437] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.464] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.465] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:424:149:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.465] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.465] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:46.465] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.465] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:46.465] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:46.544] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.569] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.570] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:29:10:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.570] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.570] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:46.570] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.570] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:46.570] [INFO] [Drone] [1] Beginning travel to base
+[19:09:46.647] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.672] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.673] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:452:159:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.673] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.673] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:46.674] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.674] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.778] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.780] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURN_STATUS:1:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.780] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.780] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.780] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:46.781] [INFO] [Drone] [1] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:46.781] [INFO] [Drone] [1] Beginning travel to base
+[19:09:46.787] [INFO] [Drone] [1] Arrived back at base
+[19:09:46.787] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.882] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.882] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:452:159:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.882] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.882] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:46.882] [INFO] [Drone] [1] Waiting for Scheduler response
+[19:09:46.882] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:46.882] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:46.959] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.987] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:46.991] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:46.991] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:46.991] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:46.991] [INFO] [Drone] [1] Received a Scheduler response
+[19:09:47.090] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:47.096] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:480:169:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:47.096] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:47.096] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:47.096] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:47.096] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:47.201] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:47.206] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:480:169:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:47.206] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:47.206] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:47.206] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:47.206] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:47.282] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:47.282] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:47.388] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:47.392] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:509:179:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:47.392] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:47.392] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:47.393] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:47.393] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:47.498] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:47.499] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:509:179:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:47.500] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:47.500] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:47.500] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:47.500] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:47.577] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:47.577] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:47.681] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:47.684] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:537:189:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:47.684] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:47.684] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:47.684] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:47.684] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:47.788] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:47.794] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:537:189:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:47.794] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:47.794] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:47.794] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:47.794] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:47.870] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:47.870] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:47.976] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:47.984] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:565:199:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:47.984] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:47.984] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:47.984] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:47.984] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:48.090] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:48.094] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:565:199:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:48.094] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:48.094] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:48.094] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:48.094] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:48.173] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:48.173] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:48.280] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:48.283] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:594:209:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:48.283] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:48.283] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:48.284] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:48.284] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:48.392] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:48.394] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:594:209:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:48.395] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:48.395] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:48.395] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:48.395] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:48.471] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:48.471] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:48.573] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:48.576] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:622:219:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:48.576] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:48.576] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:48.576] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:48.576] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:48.678] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:48.679] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:622:219:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:48.679] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:48.679] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:48.679] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:48.679] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:48.758] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:48.758] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:48.863] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:48.865] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:650:229:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:48.865] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:48.866] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:48.866] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:48.866] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:48.972] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:48.975] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:650:229:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:48.975] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:48.975] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:48.980] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:48.980] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:49.056] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:49.056] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:49.161] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:49.162] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:678:239:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:49.164] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:49.164] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:49.167] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:49.167] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:49.272] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:49.273] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:678:239:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:49.273] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:49.273] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:49.273] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:49.273] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:49.351] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:49.351] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:49.458] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:49.461] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:707:249:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:49.461] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:49.461] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:49.462] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:49.462] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:49.564] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:49.566] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:707:249:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:49.566] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:49.567] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:49.567] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:49.568] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:49.644] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:49.644] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:49.752] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:49.754] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:735:259:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:49.755] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:49.755] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:49.755] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:49.755] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:49.856] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:49.858] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:735:259:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:49.858] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:49.858] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:49.858] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:49.858] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:49.935] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:49.935] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:50.042] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:50.047] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:763:269:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:50.047] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:50.047] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:50.047] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:50.047] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:50.151] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:50.153] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:763:269:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:50.154] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:50.154] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:50.154] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:50.154] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:50.231] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:50.231] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:50.337] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:50.341] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:792:279:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:50.341] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:50.341] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:50.341] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:50.341] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:50.447] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:792:279:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:50.448] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:50.448] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:50.445] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:50.448] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:50.449] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:50.526] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:50.526] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:50.633] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:50.641] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:820:289:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:50.641] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:50.641] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:50.642] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:50.642] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:50.747] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:50.749] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:820:289:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:50.749] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:50.749] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:50.750] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:50.750] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:50.830] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:50.830] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:50.936] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:50.938] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:STATUS:848:299:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:50.938] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:50.938] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:50.939] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:50.939] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:51.044] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:51.047] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:CONTINUING:848:299:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:51.047] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:51.047] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:51.047] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][TRAVELING]
+[19:09:51.047] [INFO] [Drone] [2] Beginning travel to zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:51.126] [INFO] [Drone] [2] Arrived at zone Zone{zoneId=4, start=(700,0), end=(1000,600)}
+[19:09:51.126] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:51.126] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:51.230] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:51.232] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][TRAVELING]:PERMISSION_TO_DROP:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:51.233] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:51.233] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:51.233] [INFO] [Drone] [2] State Change: [ACTIVE][TRAVELING]->[ACTIVE][DEPLOYING]
+[19:09:51.233] [INFO] [Drone] [2] Opening payload doors
+[19:09:51.245] [INFO] [Drone] [2] Deploying payload
+[19:09:51.586] [INFO] [Drone] [2] Deployment of payload complete
+[19:09:51.587] [INFO] [Drone] [2] Opening payload doors
+[19:09:51.600] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:51.600] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:51.705] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:51.715] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][DEPLOYING]:PAYLOAD_DROPPED:850:300:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:51.715] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:51.715] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:51.716] [INFO] [Drone] [2] State Change: [ACTIVE][DEPLOYING]->[ACTIVE][RETURNING]
+[19:09:51.716] [INFO] [Drone] [2] Beginning travel to base
+[19:09:51.793] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:51.793] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:51.898] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:51.899] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:821:290:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:51.899] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:51.899] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:51.899] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:51.899] [INFO] [Drone] [2] Beginning travel to base
+[19:09:51.978] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:51.978] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:52.081] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:52.084] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:793:280:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:52.084] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:52.084] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:52.085] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:52.085] [INFO] [Drone] [2] Beginning travel to base
+[19:09:52.161] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:52.161] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:52.266] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:52.270] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:765:270:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:52.271] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:52.271] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:52.271] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:52.271] [INFO] [Drone] [2] Beginning travel to base
+[19:09:52.348] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:52.348] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:52.452] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:52.455] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:736:260:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:52.455] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:52.455] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:52.455] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:52.456] [INFO] [Drone] [2] Beginning travel to base
+[19:09:52.532] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:52.532] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:52.638] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:52.640] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:708:250:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:52.640] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:52.640] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:52.640] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:52.640] [INFO] [Drone] [2] Beginning travel to base
+[19:09:52.717] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:52.717] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:52.818] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:52.820] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:680:240:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:52.821] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:52.821] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:52.821] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:52.821] [INFO] [Drone] [2] Beginning travel to base
+[19:09:52.898] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:52.898] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:53.004] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:53.009] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:651:230:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:53.009] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:53.009] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:53.009] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:53.009] [INFO] [Drone] [2] Beginning travel to base
+[19:09:53.087] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:53.087] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:53.193] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:53.202] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:623:220:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:53.202] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:53.202] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:53.202] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:53.202] [INFO] [Drone] [2] Beginning travel to base
+[19:09:53.280] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:53.280] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:53.382] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:53.386] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:595:210:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:53.386] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:53.386] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:53.386] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:53.386] [INFO] [Drone] [2] Beginning travel to base
+[19:09:53.464] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:53.464] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:53.573] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:53.577] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:567:200:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:53.577] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:53.577] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:53.577] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:53.578] [INFO] [Drone] [2] Beginning travel to base
+[19:09:53.656] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:53.656] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:53.760] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:53.762] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:538:190:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:53.762] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:53.762] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:53.762] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:53.762] [INFO] [Drone] [2] Beginning travel to base
+[19:09:53.838] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:53.838] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:53.940] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:53.943] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:510:180:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:53.943] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:53.943] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:53.943] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:53.943] [INFO] [Drone] [2] Beginning travel to base
+[19:09:54.020] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:54.020] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:54.126] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:54.128] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:482:170:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:54.128] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:54.129] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:54.129] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:54.129] [INFO] [Drone] [2] Beginning travel to base
+[19:09:54.206] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:54.206] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:54.308] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:54.309] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:453:160:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:54.309] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:54.309] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:54.310] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:54.310] [INFO] [Drone] [2] Beginning travel to base
+[19:09:54.386] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:54.386] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:54.493] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:54.496] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:425:150:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:54.496] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:54.496] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:54.496] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:54.496] [INFO] [Drone] [2] Beginning travel to base
+[19:09:54.574] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:54.574] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:54.680] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:54.682] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:397:140:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:54.682] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:54.682] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:54.682] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:54.682] [INFO] [Drone] [2] Beginning travel to base
+[19:09:54.760] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:54.760] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:54.865] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:54.866] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:369:130:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:54.867] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:54.867] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:54.867] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:54.867] [INFO] [Drone] [2] Beginning travel to base
+[19:09:54.943] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:54.943] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:55.048] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:55.051] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:340:120:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:55.051] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:55.051] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:55.051] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:55.051] [INFO] [Drone] [2] Beginning travel to base
+[19:09:55.131] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:55.131] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:55.238] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:55.241] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:312:110:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:55.241] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:55.241] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:55.241] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:55.241] [INFO] [Drone] [2] Beginning travel to base
+[19:09:55.317] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:55.317] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:55.423] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:55.426] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:284:100:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:55.427] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:55.427] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:55.428] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:55.428] [INFO] [Drone] [2] Beginning travel to base
+[19:09:55.505] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:55.505] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:55.606] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:55.611] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:255:90:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:55.611] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:55.611] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:55.611] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:55.611] [INFO] [Drone] [2] Beginning travel to base
+[19:09:55.688] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:55.688] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:55.789] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:55.791] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:227:80:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:55.791] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:55.791] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:55.791] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:55.791] [INFO] [Drone] [2] Beginning travel to base
+[19:09:55.868] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:55.868] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:55.971] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:55.973] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:199:70:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:55.973] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:55.973] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:55.974] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:55.974] [INFO] [Drone] [2] Beginning travel to base
+[19:09:56.050] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:56.050] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:56.155] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:56.160] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:171:60:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:56.160] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:56.160] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:56.161] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:56.161] [INFO] [Drone] [2] Beginning travel to base
+[19:09:56.236] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:56.236] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:56.341] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:56.344] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:142:50:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:56.344] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:56.344] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:56.345] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:56.345] [INFO] [Drone] [2] Beginning travel to base
+[19:09:56.429] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:56.429] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:56.536] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:56.542] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:114:40:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:56.543] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:56.543] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:56.543] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:56.543] [INFO] [Drone] [2] Beginning travel to base
+[19:09:56.620] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:56.620] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:56.722] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:56.725] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:86:30:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:56.726] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:56.726] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:56.727] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:56.727] [INFO] [Drone] [2] Beginning travel to base
+[19:09:56.804] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:56.804] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:56.908] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:56.910] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:57:20:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:56.910] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:56.910] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:56.911] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:56.911] [INFO] [Drone] [2] Beginning travel to base
+[19:09:56.987] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:56.987] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:57.092] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:57.094] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:29:10:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:57.094] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:57.094] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:57.098] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:57.098] [INFO] [Drone] [2] Beginning travel to base
+[19:09:57.176] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:57.176] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:57.281] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:57.285] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURN_STATUS:1:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:57.285] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:57.285] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:57.285] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[ACTIVE][RETURNING]
+[19:09:57.285] [INFO] [Drone] [2] Beginning travel to base
+[19:09:57.290] [INFO] [Drone] [2] Arrived back at base
+[19:09:57.290] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:57.290] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:57.392] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:57.396] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:57.396] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:57.396] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:57.398] [INFO] [Drone] [2] State Change: [ACTIVE][RETURNING]->[REFILLING]
+[19:09:57.398] [INFO] [Drone] [2] Refilling payload
+[19:09:57.424] [INFO] [Drone] [2] Payload refilled
+[19:09:57.424] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:57.424] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:57.530] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:57.537] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: ACK:2:[REFILLING]:REFILL_COMPLETE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=Low, id=1A}
+[19:09:57.537] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:57.537] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:57.539] [INFO] [Drone] [2] Assigned Task: FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:57.539] [INFO] [Drone] [2] State Change: [REFILLING]->[IDLE]
+[19:09:57.539] [INFO] [Drone] [2] Waiting for Scheduler response
+[19:09:57.539] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:57.644] [INFO] [DroneSubsystem] [Run] Waiting for a Drone request
+[19:09:57.646] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: WAIT:2:[IDLE]:NEW_FIRE_REQUEST:0:0:FireRequest{time=0, zone=-1, event=0, severity=0, id=0}
+[19:09:57.646] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:57.646] [INFO] [Drone] [2] Received a Scheduler response
+[19:09:57.768] [INFO] [DroneSubsystem] [ListeningToScheduler] Response received from scheduler: SHUTDOWN
+[19:09:57.768] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:57.768] [INFO] [Drone] [0] Shutting down drone
+[19:09:57.768] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:57.768] [INFO] [Drone] [1] Shutting down drone
+[19:09:57.768] [INFO] [DroneSubsystem] [ListeningToScheduler] Response handled.
+[19:09:58.152] [INFO] [DroneSubsystem] [Run] Received a Drone request, sending to Scheduler
+[19:09:58.157] [INFO] [Drone] [2] Shutting down drone
+[19:09:58.258] [INFO] [All] [All] Program ended, shutting down.

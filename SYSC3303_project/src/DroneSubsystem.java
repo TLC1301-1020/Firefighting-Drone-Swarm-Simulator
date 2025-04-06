@@ -223,6 +223,11 @@ public class DroneSubsystem implements Runnable {
 
                 DroneEventLogger.getInstance().info("DroneSubsystem", "ListeningToScheduler", "Response received from scheduler: " + response);
 
+                if( response.equals("SHUTDOWN") )
+                {
+                    shutdown();
+                    break;
+                }
                 handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
             }
         });
@@ -319,6 +324,17 @@ public class DroneSubsystem implements Runnable {
             // Send UDP packet direct to scheduler with drone request
             sendPacket(request);
         }
+
+        for (Drone drone : allDrones) {
+            try {
+                drone.join();
+                DroneEventLogger.getInstance().info("Drone", String.valueOf(drones.get(id).getDroneId()), "Shutting down drone");
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     /**
@@ -465,11 +481,24 @@ public class DroneSubsystem implements Runnable {
      * gracefully exit for all thread function loops. running set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
     private void shutdown() {
         this.running = false;
-        DroneEventLogger.getInstance().info("All", "All", "Program ended, shutting down.");
+
+//        // wait for threads to complete
+//        try {
+//            for ( Integer id : drones.keySet() )
+//            {
+//
+//                addResponse(id, "SHUTDOWN");
+//                drones.get(id).join();
+//                DroneEventLogger.getInstance().info("Drone", String.valueOf(drones.get(id).getDroneId()), "Shutting down drone");
+//            }
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
         // close sockets if they are open
         if (sendSocket != null && !sendSocket.isClosed()) sendSocket.close();
         if (receiveSocket != null && !receiveSocket.isClosed()) receiveSocket.close();
+//        DroneEventLogger.getInstance().info("All", "All", "Program ended, shutting down.");
     }
 
     public static void main(String[] args)
@@ -477,9 +506,17 @@ public class DroneSubsystem implements Runnable {
         DroneSubsystem dss = new DroneSubsystem();
         dss.readZoneFile("SYSC3303_project/src/zone_file.csv");
         dss.readFaultFile("SYSC3303_project/src/Faults.txt");
-        dss.initializeAllDrones(dss, 10);
+        dss.initializeAllDrones(dss, 3);
 
         Thread droneSubsystem = new Thread( dss );
         droneSubsystem.start();
+
+        // wait for thread to complete
+        try {
+            droneSubsystem.join();
+            DroneEventLogger.getInstance().info("All", "All", "Program ended, shutting down.");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
