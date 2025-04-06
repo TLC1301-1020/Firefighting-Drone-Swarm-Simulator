@@ -380,5 +380,3 @@ class DroneFaultDeploy implements DroneState {
         return String.valueOf(DroneEvent.PAYLOAD_DEPLOY_FAILURE);
     }
 }
-
-

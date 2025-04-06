@@ -934,7 +934,7 @@ public class Scheduler {
     }
 
     /**
-     * gracefull exit for all thread function loops. running set to false only in testing contexts for back to back instances of scheduler threads running */
+     * gracefully exit for all thread function loops. running set to false only in testing contexts for back to back instances of scheduler threads running */
     private void shutdown() {
         this.running = false;
 

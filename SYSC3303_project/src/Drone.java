@@ -91,7 +91,9 @@ public class Drone extends Thread
     public void setState(DroneState newState) {
         DroneState oldState = this.currentState;
         this.currentState = newState;
+
         System.out.println("* DRONE STATE CHANGE * " + oldState.display() + " -> " + this.currentState.display() + "\n\n");
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "State Change: " + oldState.display() + "->" + this.currentState.display());
     }
 
     /**
@@ -134,6 +136,7 @@ public class Drone extends Thread
         FireRequest temp = this.currTask;
         this.currTask = newTask;
 //        System.out.println("[ DRONE ] NEW TASK ASSIGNED :           "+ this.currTask.toString() + "\n");
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Assigned Task: " + this.currTask.toString());
         return temp;
     }
 
@@ -171,6 +174,8 @@ public class Drone extends Thread
         }
         System.out.println( " \nTRAVEL ZONE : "  + finalX + "," + finalY );
 
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Beginning travel to zone " + zone.toString());
+
         // Calculate distance from current position to target.
         double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
         // Calculate travel time in milliseconds.
@@ -206,6 +211,8 @@ public class Drone extends Thread
             this.yPos=finalY;
             System.out.println("\n [ DRONE TRAVEL ]     Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
 
+            DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Arrived at zone " + zone.toString());
+
             // Set boolean to determine that we actually arrived in the zone
             this.continueTravel = false;
         }
@@ -222,6 +229,8 @@ public class Drone extends Thread
     public void activatePayloadDoors()
     {
         System.out.println("[ DRONE ]      Drone " + this.droneId + ": ACTIVATING FEB APPARATUS DOORS ");
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Opening payload doors");
+
         // check fault
         try {
             Thread.sleep(APPARATUS_DOORS_MOVE_TIME);
@@ -239,15 +248,17 @@ public class Drone extends Thread
         {
             System.out.println("[ DRONE ]      Drone " + this.droneId + ": FAULT DROPPING PAYLOAD - EMPTY PAYLOAD");
             // fault
-            setJammedFault();
         }
+
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Deploying payload");
+
         while (this.payloadCount>0)
         {
-            if (checkJammedFault())
-            {
+            if(checkJammedFault()){
                 System.out.println("[ DRONE ]      Drone " + this.droneId + ": FAULT DROPPING PAYLOAD - JAMMED FAULT");
                 return;
             }
+
             // check for fault (stuck?)
             System.out.println("[ DRONE ]      Drone " + this.droneId + ": DROPPING PAYLOAD #" +this.payloadCount);
             this.payloadCount--;
@@ -258,12 +269,16 @@ public class Drone extends Thread
                 // fault
             }
         }
+
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Deployment of payload complete");
     }
 
     /**
      * Simulates the drone loading payload, sets the payload count to MAX_PAYLOAD */
     public void loadPayload()
     {
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Refilling payload");
+
         System.out.println("[ DRONE ]      Drone " + this.droneId + ": LOADING PAYLOAD FROM " +this.payloadCount + " FEBs ");
         try {
             Thread.sleep(2*APPARATUS_DOORS_MOVE_TIME);
@@ -273,6 +288,8 @@ public class Drone extends Thread
         }
         this.payloadCount = MAX_PAYLOAD;
         System.out.println("[ DRONE ]      Drone " + this.droneId + ": LOADED TO " +this.payloadCount + " FEBs ");
+
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Payload refilled");
     }
 
 
@@ -285,6 +302,8 @@ public class Drone extends Thread
         int finalX = 0;
         int finalY = 0;
         System.out.println( " \nTRAVEL BACK : "  + finalX + "," + finalY + "    FEB count :" + this.payloadCount);
+
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Beginning travel to base");
 
         // Calculate distance from current position to target.
         double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
@@ -319,6 +338,8 @@ public class Drone extends Thread
             this.xPos=finalX;
             this.yPos=finalY;
             System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": arrived back at base ready to refill\n");
+
+            DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Arrived back at base");
         }
         else
         {
@@ -411,8 +432,11 @@ public class Drone extends Thread
             // adds the request to the router host
             this.droneSubsystem.addRequest( request );
 
+
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
+
+            DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Received a Scheduler response");
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
 
             // First check to see if Scheduler needs a resend of last request
@@ -550,23 +574,17 @@ public class Drone extends Thread
     }
 
     /**
-     * Set the isJammed boolean using thread safe jammedLock object
+     * Set the isJammed boolean.
      */
     public void setJammedFault() {
-        synchronized (jammedLock)
-        {
+        synchronized (jammedLock){
             this.isJammed = true;
         }
     }
 
-    /**
-     * checks the isJammed boolean using thread safe jammedLock object
-     */
-    public boolean checkJammedFault()
-    {
+    public boolean checkJammedFault(){
         boolean value = false;
-        synchronized (jammedLock)
-        {
+        synchronized (jammedLock){
             value = this.isJammed;
         }
         return value;
@@ -591,7 +609,6 @@ public class Drone extends Thread
         this.xPos = 0;
         this.yPos = 0;
     }
-
     public boolean getIsJammed(){
         return isJammed;
     }
