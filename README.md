@@ -219,11 +219,11 @@ The issues from the previous iteration are resolved
 
 ### Work Breakdown
 
-DroneSubsystem Event logger and analyzer, including the tests - Jake, Tina
+DroneSubsystem Event logger, analyzer, and tests - Jake, Tina
 
-Scheduler Event logger and analyzer, including the tests - Mike, Dylan
+Scheduler Event logger, analyzer, and tests - Mike, Dylan
 
-UI - Andrew, Damon
+FireIncidentSubsystem Event logger and analyzer UI - Andrew, Damon
 
 Debugging, Refactoring, Update tests, and README - all
 
@@ -235,11 +235,15 @@ Debugging, Refactoring, Update tests, and README - all
 - *DroneState.java*: Stores the states to be used for the drones
 - *DroneStatus.java*: Current status of the drone
 - *DroneSubsystem.java* Manages drones, interacts with Scheduler class
+- *DroneUI.java*: UI code for the program
+  
 - *Event.java*: Stores a timed event such as a drone fault or a fire incident
 - *EventScheduler.java*: Handles the proper deployment of Events based on its timestamp
+- *FireIncidentLogAnalyzer.java*: Calculates the metrics for the FireIncidentSubsystem side
 - *FireIncidentSubsystem.java*: Manages fire incidents, interacts with Scheduler class
 - *FireRequest.java*: Data model, manages the variables for each incident
-- *Response.java*: Data model, contains the status of a fire incident request
+- *Response.java*: Data model, Contains the status of a fire incident request
+  
 - *Scheduler.java*: Bridge between the Fire Incident Subsystem and the Drone Subsystem
 - *SchedulerEventClass.java*: Contains the scheduler's event information
 - *SchedulerEventLogger.java*: Contains the method for logging
@@ -257,7 +261,6 @@ Debugging, Refactoring, Update tests, and README - all
 - *SchedulerTest.java*: Contains the test methods for the scheduler source code, focusing on the state transitions
 
 ### Files - Diagrams and others
-- *README.md*: Contains the explanation of the project for this iteration (5), including names of the files, team members, work breakdown, and instruction to set and run the program
 - *Fireincidents.txt*: Contains the incident events, used in FireIncidentSubsystem class
 - *Faults.txt*: Contains the drone fault events, used in DroneSubsystem class
 - *UMLClassDiagram-iteration1*: Shows the relationships and structure of the classes for iteration 1
@@ -271,11 +274,13 @@ Debugging, Refactoring, Update tests, and README - all
 - *DroneSubsystemClassDiagramIteration4.png*: DroneSubsystem's overall structure for iteration 4
 - *SchedulerClasssDiagramIteration4.png*: Scheduler's overall structure for iteration 4
 - *TimingDiagram-iteration4.png*: Shows the behaviour of the objects over time
+
+- *README.md*: Contains the explanation of the project for this iteration (5), including names of the files, team members, work breakdown, and instruction to set and run the program
 - *zone_file.csv*: Zone id, Zone range (x and y)
 - *run.bat*: Command to run the programs
 - *drone_event_log.txt*: The log file for the droneSubsystem (including the drones)
 - *scheduler_event_log.txt*: The log file for the Scheduler
-
+- *firesubsystem_logs.txt*: The log file for the fireSubsystem
 ### Setup instruction
 - Make sure the directory of the Zone file and FireIncident input file is correct
 - Run Scheduler, DroneSubsystem, FireIncidentSubsystem in that order
