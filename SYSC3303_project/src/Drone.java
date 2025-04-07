@@ -13,16 +13,16 @@ public class Drone extends Thread
     private int droneId;
     /**
      * maximum velocity of the drone in meters per second */
-    private final float maxVelocity = 400;
+    private final float maxVelocity = 25*EventScheduler.simulationSpeed;
     /**
      * number of deltaX deltaY increment the drone travels before sending a location update to scheduler  */
     private final float TRAVEL_INCREMENTS = 30;
     /**
      *  time for doors to open or close in ms */
-    private final int APPARATUS_DOORS_MOVE_TIME = 10;
+    private final long APPARATUS_DOORS_MOVE_TIME = 300/EventScheduler.simulationSpeed;
     /**
      *  drop time for each FEB to drop in ms */
-    private final int PAYLOAD_DROP_TIME = 30;
+    private final long PAYLOAD_DROP_TIME = 500/EventScheduler.simulationSpeed;
     /**
      * coordinates representing drone position */
     private double xPos,yPos = 0;

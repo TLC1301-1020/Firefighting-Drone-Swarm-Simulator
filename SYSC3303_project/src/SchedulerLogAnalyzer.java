@@ -324,13 +324,14 @@ public class SchedulerLogAnalyzer {
                                            ParsedLogEntry firstFireIncident)
     {
         double lifeTimeScheduler = calculateTimeDuration(firstSchedulerLog, lastSchedulerLog);
-        double lifeTimeServicingFires = calculateTimeDuration(firstFireIncident, lastSchedulerLog);
+        double lifeTimeServicingFires = calculateTimeDuration(firstFireIncident, lastSchedulerLog)*EventScheduler.simulationSpeed;
         double throughPut = (double)countFireRequests/lifeTimeServicingFires;
         System.out.println("\n==================================================================");
         System.out.println(" * Scheduler General Metrics * ");
         System.out.println("                          Start Time: " + firstSchedulerLog.timestamp);
         System.out.println("                            End Time: " + lastSchedulerLog.timestamp);
-        System.out.printf("                            Lifetime: %.4f s\n\n", lifeTimeScheduler);
+        System.out.printf("                     System Lifetime: %.4f s\n\n", lifeTimeScheduler);
+        System.out.printf(" Lifetime Servicing Fires (adjusted): %.4f s\n\n", lifeTimeServicingFires);
 
         System.out.printf("       Total Fire Incidents Sent to Scheduler: %s\n", countFireRequests);
         System.out.printf(" #of Drone Missions Required to Service Fires: %s\n", countFireRequestCreated);
