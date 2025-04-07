@@ -449,7 +449,7 @@ public class Drone extends Thread
             } else if ( response.equals("SHUTDOWN"))
             {
                 // shutdown received from DSS
-                setAlive();
+                setAlive(false);
                 break;
             }
 
