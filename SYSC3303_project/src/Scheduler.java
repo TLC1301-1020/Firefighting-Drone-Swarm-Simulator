@@ -938,6 +938,8 @@ public class Scheduler {
     private void shutdown() {
         this.running = false;
 
+        sendPacket( droneSendSocket, DRONE_SUBSYSTEM_PORT, "SHUTDOWN" );
+
         // close sockets if they are open
         if (fireReceiveSocket != null && !fireReceiveSocket.isClosed()) fireReceiveSocket.close();
         if (droneReceiveSocket != null && !droneReceiveSocket.isClosed()) droneReceiveSocket.close();

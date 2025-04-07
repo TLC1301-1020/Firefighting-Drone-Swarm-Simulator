@@ -228,7 +228,7 @@ class DroneReturn implements DroneState {
 
             if (drone.getIsJammed()) {
                 System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" has returned to base following a deployment failure. Shutting down...");
-                drone.setAlive();
+                drone.setAlive(false);
             }
             // If the current task is default, transition to idle.
             else if (drone.getCurrTask().isDefault()) {
@@ -337,7 +337,7 @@ class DroneFaultStuck implements DroneState {
         }
         else if (event.equals( DroneEvent.DRONE_STUCK )) {
             System.out.println("[ DRONE STATE ] drone "+drone.getDroneId()+" is still stuck. Shutting down drone...");
-            drone.setAlive();
+            drone.setAlive(false);
         }
     }
 

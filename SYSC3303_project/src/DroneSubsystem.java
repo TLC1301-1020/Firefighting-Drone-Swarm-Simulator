@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -64,6 +63,10 @@ public class DroneSubsystem implements Runnable {
      * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
     private volatile boolean running = true;
 
+    private Thread faultHandler;
+    private Thread schedulerListenerThread;
+    private List<Thread> droneThreads = new ArrayList<>();
+
     /**
      * creates a drone subsystem instance for routing messages to and from all drone threads and
      * the Scheduler
@@ -109,6 +112,7 @@ public class DroneSubsystem implements Runnable {
         {
             while (this.requestQueue.isEmpty())
             {
+                if(!running) return null;
                 try {
                     DroneEventLogger.getInstance().info("DroneSubsystem", "Run", "Waiting for a Drone request");
                     this.requestQueue.wait();
@@ -117,6 +121,10 @@ public class DroneSubsystem implements Runnable {
                     return "REQUESTQUEUE_EMPTY";
                 }
             }
+            if (!running) {
+                return null;
+            }
+
             return this.requestQueue.poll();
         }
     }
@@ -155,6 +163,7 @@ public class DroneSubsystem implements Runnable {
     public String getResponse(int droneId) {
         synchronized (this.responseQueue) {
             while (!this.responseQueue.containsKey(droneId) || this.responseQueue.get(droneId).isEmpty() ) {
+                if (!running) return null;
                 try {
                     DroneEventLogger.getInstance().info("Drone", String.valueOf(droneId), "Waiting for Scheduler response");
                     this.responseQueue.wait();
@@ -216,7 +225,7 @@ public class DroneSubsystem implements Runnable {
     }
 
     private void startListeningToScheduler() {
-        Thread schedulerListener = new Thread(() -> {
+        schedulerListenerThread = new Thread(() -> {
             while (running) {
                 String response = receivePacket();
                 System.out.println("[ S->DSS ] startListeningToScheduler thread received RESPONSE :     " + response);
@@ -226,8 +235,8 @@ public class DroneSubsystem implements Runnable {
                 handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
             }
         });
-        schedulerListener.setDaemon(true);
-        schedulerListener.start();
+        schedulerListenerThread.setDaemon(true);
+        schedulerListenerThread.start();
     }
 
     private class processFaults extends Thread {
@@ -240,7 +249,10 @@ public class DroneSubsystem implements Runnable {
             while (running) {
                 // Block until a fault is ready to process
                 DroneEventLogger.getInstance().info("DroneSubsystem", "ProcessFaults", "Waiting for new Drone faults");
-                String fault = (String)scheduler.getEvent().getEvent();
+                Event event = scheduler.getEvent();
+                if (event == null) break; // shutdown signal
+
+                String fault = (String)event.getEvent();
                 String[] parts = fault.split(":");
 
                 int droneId = -1;
@@ -284,28 +296,31 @@ public class DroneSubsystem implements Runnable {
     public void run() {
         // TODO: determine a proper condition for thread lifespan
         // Start listening to Scheduler messages in a separate thread
-        startListeningToScheduler();
-
-        // Start thread functions for all drones
-        Collection<Drone> allDrones = this.drones.values();
-        for (Drone drone : allDrones) {
-            drone.start();
-        }
-
-        // After readFaultFile(), tasks stores all fault events in faults
-        // Send these faults to our EventScheduler
-        for (Event fault : faults) {
-            scheduler.addEvent(fault);
-        }
-        scheduler.start();
-
-        // Start the processFaults thread
-        Thread faultHandler = new DroneSubsystem.processFaults();
-        faultHandler.start();
+//        startListeningToScheduler();
+//
+//        // Start thread functions for all drones
+//        Collection<Drone> allDrones = this.drones.values();
+//        for (Drone drone : allDrones) {
+//            Thread t = new Thread(drone);
+//            droneThreads.add(t);
+//            t.start();
+//        }
+//
+//        // After readFaultFile(), tasks stores all fault events in faults
+//        // Send these faults to our EventScheduler
+//        for (Event fault : faults) {
+//            scheduler.addEvent(fault);
+//        }
+//        scheduler.start();
+//
+//        // Start the processFaults thread
+//        faultHandler = new DroneSubsystem.processFaults();
+//        faultHandler.start();
 
         while (running) {
             // Check request queue - communication from drones
             String request = getRequest();
+            if (request == null) break;
             DroneEventLogger.getInstance().info("DroneSubsystem", "Run", "Received a Drone request, sending to Scheduler");
             System.out.println("\n[ DSS->S ] HANDLING DRONE REQ :                                         " + request);
 
@@ -335,6 +350,12 @@ public class DroneSubsystem implements Runnable {
             "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
             "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
          */
+        if (response.trim().equalsIgnoreCase("SHUTDOWN")) {
+            System.out.println("[ DSS ] SHUTDOWN received from Scheduler. Initiating shutdown...");
+            shutdown();
+            return;
+        }
+
         String[] items = response.split(":");
 
 //        System.out.println("\n[  DSS  ] parsing scheduler response and sending to drone:        " + Arrays.toString(items) );
@@ -464,12 +485,76 @@ public class DroneSubsystem implements Runnable {
     /**
      * gracefully exit for all thread function loops. running set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
     private void shutdown() {
-        this.running = false;
+        if (!running) return;
+
+        running = false;
         DroneEventLogger.getInstance().info("All", "All", "Program ended, shutting down.");
 
-        // close sockets if they are open
+        // Shut down all drone threads
+        for (Drone drone : drones.values()) {
+            drone.setAlive(false);  // tells drone threads to exit
+        }
+
+        // Wake up any waiting threads
+        synchronized (this.responseQueue) {
+            this.responseQueue.notifyAll();
+        }
+        synchronized (this.requestQueue) {
+            this.requestQueue.notifyAll();
+        }
+
+        if (faultHandler != null) faultHandler.interrupt();
+        if (schedulerListenerThread != null && schedulerListenerThread != Thread.currentThread()) {
+            schedulerListenerThread.interrupt();
+        }
+
+        if (scheduler != null) scheduler.shutdown();
+
+        // Join all drone threads to make sure they finish
+        for (Thread t : droneThreads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        // Close the sockets
         if (sendSocket != null && !sendSocket.isClosed()) sendSocket.close();
         if (receiveSocket != null && !receiveSocket.isClosed()) receiveSocket.close();
+    }
+
+    public void startAllDrones() {
+        Collection<Drone> allDrones = this.drones.values();
+        for (Drone drone : allDrones) {
+            Thread t = new Thread(drone);
+            droneThreads.add(t);
+            t.start();
+        }
+    }
+
+    public void startSchedulerListener() {
+        schedulerListenerThread = new Thread(() -> {
+            while (running) {
+                String response = receivePacket();
+                DroneEventLogger.getInstance().info("DroneSubsystem", "ListeningToScheduler", "Response received from scheduler: " + response);
+                handleDroneResponse(response);
+            }
+        });
+        schedulerListenerThread.setDaemon(true);
+        schedulerListenerThread.start();
+    }
+
+    public void startFaultHandler() {
+        faultHandler = new DroneSubsystem.processFaults();
+        faultHandler.start();
+    }
+
+    public void startEventScheduler() {
+        for (Event fault : faults) {
+            scheduler.addEvent(fault);
+        }
+        scheduler.start();
     }
 
     public static void main(String[] args)
@@ -479,7 +564,35 @@ public class DroneSubsystem implements Runnable {
         dss.readFaultFile("SYSC3303_project/src/Faults.txt");
         dss.initializeAllDrones(dss, 10);
 
-        Thread droneSubsystem = new Thread( dss );
-        droneSubsystem.start();
+        dss.startAllDrones();
+        dss.startEventScheduler();
+        dss.startFaultHandler();
+        dss.startSchedulerListener();
+
+        Thread mainLoop = new Thread(dss);
+        mainLoop.start();
+
+        try {
+            mainLoop.join();  // Wait for main DSS loop to exit
+
+            // Join drone threads
+            for (Thread t : dss.droneThreads) {
+                t.join();
+            }
+
+            // Join fault handler thread
+            if (dss.faultHandler != null) {
+                dss.faultHandler.join();
+            }
+
+            // Join listener thread
+            if (dss.schedulerListenerThread != null) {
+                dss.schedulerListenerThread.join();
+            }
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
     }
 }

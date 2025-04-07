@@ -405,7 +405,7 @@ public class Drone extends Thread
     @Override
     public void run()
     {
-        while (true)
+        while (alive)
         {
             // Determine whether this Drone should keep running
             if (!alive) {
@@ -435,6 +435,10 @@ public class Drone extends Thread
 
             // check the droneSubsystem for next instructions for this drone
             String response = this.droneSubsystem.getResponse(this.droneId);
+            if (response == null) {
+                System.out.println("[ DRONE ] Drone " + droneId + " shutting down.");
+                return;
+            }
 
             DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Received a Scheduler response");
 //            System.out.println("\n[ DRONE RUN ] got response from drone subsystem with id key: " + this.droneId + " :         " + response );
@@ -496,6 +500,11 @@ public class Drone extends Thread
                 droneSubsystem.addRequest(statusRequest);
 
                 String newResponse = droneSubsystem.getResponse(droneId);
+
+                if (newResponse == null) {
+                    System.out.println("[ DRONE " + droneId + " ] Shutdown detected while waiting for new task.");
+                    return;
+                }
 
                 if (newResponse.startsWith("WAIT")) {
                     continue; // still waiting, continue loop
@@ -600,8 +609,8 @@ public class Drone extends Thread
     /**
      * Set the alive boolean to false.
      */
-    public void setAlive() {
-        this.alive = false;
+    public void setAlive(boolean val) {
+        this.alive = val;
     }
 
     public void setBasePosition()

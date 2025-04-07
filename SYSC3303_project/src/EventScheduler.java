@@ -21,6 +21,8 @@ public class EventScheduler {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("HH-mm-ss");
     private final long systemTime;
+    private volatile boolean isShutdown = false;
+
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -43,18 +45,30 @@ public class EventScheduler {
         eventQueue.add(event);
     }
 
+    public void shutdown() {
+        isShutdown = true;
+        scheduler.shutdownNow(); // Interrupt all scheduled tasks
+        synchronized (readyQueue) {
+            readyQueue.notifyAll(); // In case getEvent() is blocked
+        }
+    }
+
     /**
      * Method to be used by the containing object to retrieve Events that are ready to be handled.
      * @return the Event that is ready to be handled.
      */
     public Event getEvent() {
         synchronized (readyQueue) {
-            while (readyQueue.isEmpty()) {
+            while (readyQueue.isEmpty() && !isShutdown) {
                 try {
                     readyQueue.wait();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    Thread.currentThread().interrupt();
+                    return null;
                 }
+            }
+            if (readyQueue.isEmpty() && isShutdown) {
+                return null;
             }
             readyQueue.notifyAll();
             return readyQueue.poll();

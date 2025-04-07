@@ -52,6 +52,10 @@ public class FireIncidentSubsystem implements Runnable {
     private final List<String> receivedCompletions = Collections.synchronizedList(new ArrayList<>());
     private static final String COMPLETED_SUFFIX = ":COMPLETED";
 
+    private volatile boolean running = true;
+    private Thread senderThread, receiverThread;
+    private EventScheduler eventScheduler;
+
     /**
      * Constructs a FireIncidentSubsystem with a given scheduler.
      */
@@ -73,8 +77,9 @@ public class FireIncidentSubsystem implements Runnable {
         @Override
         public void run() {
             System.out.println("\n[ FIRE<-S  ]  -   SCHEDULER IS LISTENING TO DRONE  -   ");
-            while (true) {
+            while (running) {
                 String update = receiveUpdate();
+                if (update == null) break;
                 System.out.println("\n[ FIRE<-S ]  UPDATE IS:       " + update);
                 if (update.endsWith(COMPLETED_SUFFIX)) {
                     String fullId = update.replace(COMPLETED_SUFFIX, "").trim();
@@ -91,6 +96,7 @@ public class FireIncidentSubsystem implements Runnable {
                         if (receivedCompletions.containsAll(expectedCompletions)) {
                             System.out.println("[ FIRE ] All fire requests completed. Sending SHUTDOWN.");
                             sendIncident("SHUTDOWN");
+                            shutdown();
                         }
                     }
                 }
@@ -108,7 +114,7 @@ public class FireIncidentSubsystem implements Runnable {
 
         @Override
         public void run() {
-            while (true) {
+            while (running) {
                 try {
                     FireRequest request;
                     synchronized (readyToSend) {
@@ -139,34 +145,12 @@ public class FireIncidentSubsystem implements Runnable {
      * reads fire incidents, sends requests, and processes responses
      */
     public void run(){
-        // Parse the zone file first.
-        readZoneFile(zoneFile);
-        // For debugging, print the parsed zones.
-        for (Zone zone : zoneMap.values()) {
-            System.out.println("[F] Parsed zone: " + zoneMap.get(zone.getZoneId()));
-        }
 
-        readInputFile(inputFile);
-
-        // After readInputFile(), tasks stores all FireRequests in sorted order by time
-        // Send these FireRequests to our EventScheduler
-        // Pass pointer to this entity so that we can re-add tasks that are ready?
-        EventScheduler scheduler = new EventScheduler();
-        for (FireRequest fr : tasks) {
-            scheduler.addEvent(new Event(fr, fr.getTime()));
-        }
-        scheduler.start();
-
-        // Create and start threads to listen to other subsystems
-        Thread receiver = new FireIncidentSubsystem.ListenToScheduler();
-        Thread sender = new FireIncidentSubsystem.SendToScheduler();
-
-        receiver.start();
-        sender.start();
 
         // Retrieve and store FireRequests that are ready to be sent from the EventScheduler
-        while (true) {
-            Event event = scheduler.getEvent();
+        while (running) {
+            Event event = eventScheduler.getEvent();
+            if(event == null) break;
             synchronized (readyToSend) {
                 FireRequest fr = (FireRequest) event.getEvent();
                 readyToSend.add(fr);
@@ -323,16 +307,71 @@ public class FireIncidentSubsystem implements Runnable {
             return new String(data, 0, receivePacket.getLength());
         } catch (SocketTimeoutException e) {
             return "No updates available";
+        } catch (SocketException e) {
+            if (!running) return null;
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private void shutdown() {
+        if (!running) return;
+
+        System.out.println("[ FIRE ] Shutting down FireIncidentSubsystem...");
+        running = false;
+
+        if (senderThread != null) senderThread.interrupt();
+        if (receiverThread != null) receiverThread.interrupt();
+
+        if (eventScheduler != null) eventScheduler.shutdown();
+
+        synchronized (readyToSend) {
+            readyToSend.notifyAll();
+        }
+
+        if (sendSocket != null && !sendSocket.isClosed()) sendSocket.close();
+        if (receiveSocket != null && !receiveSocket.isClosed()) receiveSocket.close();
+    }
+
+    public void initialize() {
+        readZoneFile(zoneFile);
+        readInputFile(inputFile);
+    }
+
+    public void startScheduler() {
+        eventScheduler = new EventScheduler();
+        for (FireRequest fr : tasks) {
+            eventScheduler.addEvent(new Event(fr, fr.getTime()));
+        }
+        eventScheduler.start();
+    }
+
+    public void startThreads() {
+        receiverThread = new ListenToScheduler();
+        senderThread = new SendToScheduler();
+        receiverThread.start();
+        senderThread.start();
+    }
 
     public static void main(String[] args) {
         FireIncidentSubsystem fis = new FireIncidentSubsystem();
-        Thread thread = new Thread(fis);
-        thread.start();
+        fis.initialize();
+        fis.startScheduler();
+        fis.startThreads();
+
+        Thread mainLoop = new Thread(fis);
+        mainLoop.start();
+
+        try {
+            mainLoop.join(); // wait for event loop to finish
+            if (fis.senderThread != null) fis.senderThread.join();
+            if (fis.receiverThread != null) fis.receiverThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("[ MAIN ] FireIncidentSubsystem shutdown complete.");
     }
 
     /**
