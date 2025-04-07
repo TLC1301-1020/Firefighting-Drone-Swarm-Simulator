@@ -239,7 +239,8 @@ public class DroneLogAnalyzer {
                 workStart = null;
             }
         }
-        System.out.println("Busy time: " + workTime + "s");
+        System.out.printf("Busy time: %.4f s\n",workTime );
+//        System.out.println("Busy time: " + workTime + "s");
         double utilization = workTime / lifetime;
 
         if (utilization <= 0) {

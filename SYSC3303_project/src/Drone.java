@@ -446,6 +446,11 @@ public class Drone extends Thread
             // First check to see if Scheduler needs a resend of last request
             if (response.contains("RESEND")) {
                 continue;
+            } else if ( response.equals("SHUTDOWN"))
+            {
+                // shutdown received from DSS
+                setAlive();
+                break;
             }
 
             // handle instructions given, will trigger travel()
