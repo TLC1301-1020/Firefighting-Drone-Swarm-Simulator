@@ -208,7 +208,7 @@ public class DroneLogAnalyzer {
             }
         }
 
-        double average = (totalTime/countTask)*EventScheduler.simulationSpeed;
+        double average = (totalTime/countTask);
         if(average > 0) {
             System.out.printf("Average running time: %.4fs\n", average);
         }else {
@@ -288,7 +288,7 @@ public class DroneLogAnalyzer {
             System.out.println("Average Deploy Time: not available");
             return 0;
         }
-        totalDeployTime = (totalDeployTime/count)*EventScheduler.simulationSpeed;
+        totalDeployTime = (totalDeployTime/count);
         System.out.println("Total Task Completed: " + count);
         System.out.printf("Average Deploy Time: %.4fs\n", totalDeployTime);
         return totalDeployTime;

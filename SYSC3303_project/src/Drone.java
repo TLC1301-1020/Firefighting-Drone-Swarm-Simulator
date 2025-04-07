@@ -33,6 +33,8 @@ public class Drone extends Thread
      * max payload the drone can carry of fire extinguisher balls */
     private final int MAX_PAYLOAD = 10;
 
+    private int finalX, finalY;
+    private double deltaX, deltaY, travelTime, stepTime, spentTime;
     /**
      * used for when checking what request drone will send.
      * if {@code true} drone will safely send request of location without
@@ -160,52 +162,61 @@ public class Drone extends Thread
      * @return true if travel is interrupted
      */
     public boolean travel() {
-        int finalX, finalY;
-        // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
+//        int finalX, finalY;
+//        // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
+//        Zone zone = droneSubsystem.getZone(currTask.getZoneId());
+//        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
+//        if (zone != null) {
+//            // Calculate the center of the zone as the target destination.
+//            finalX = (zone.getStartX() + zone.getEndX()) / 2;
+//            finalY = (zone.getStartY() + zone.getEndY()) / 2;
+//        } else {
+//            finalX = 0;
+//            finalY = 0;
+//        }
+//        System.out.println( " \nTRAVEL ZONE : "  + finalX + "," + finalY );
+//
+//        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Beginning travel to zone " + zone.toString());
+//
+//        // Calculate distance from current position to target.
+//        double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
+//
+//        // Calculate travel time in milliseconds.
+//        double travelTime = (distance / this.maxVelocity);
+//
+//        // Calculate the number of steps to reach the destination.
+////        double steps = 10;
+//        // Compute change in X and Y per step.
+//        double deltaX = (finalX - this.xPos) / TRAVEL_INCREMENTS;
+//        double deltaY = (finalY - this.yPos) / TRAVEL_INCREMENTS;
+//
+//        // Determine the time per step (simulate one "step" of travel)
+//        double stepTime = travelTime / TRAVEL_INCREMENTS; // in milliseconds
+//
+//        System.out.printf("[DEBUG] Distance: %.2f units | Travel Time: %.2f s | Step Time: %.2f s | Steps: %.2f%n",
+//                distance, travelTime, stepTime, TRAVEL_INCREMENTS);
+//        System.out.printf("[DEBUG] Step delta: ΔX=%.4f, ΔY=%.4f%n", deltaX, deltaY);
+
         Zone zone = droneSubsystem.getZone(currTask.getZoneId());
-        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
-        if (zone != null) {
-            // Calculate the center of the zone as the target destination.
-            finalX = (zone.getStartX() + zone.getEndX()) / 2;
-            finalY = (zone.getStartY() + zone.getEndY()) / 2;
-        } else {
-            finalX = 0;
-            finalY = 0;
-        }
-        System.out.println( " \nTRAVEL ZONE : "  + finalX + "," + finalY );
 
-        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Beginning travel to zone " + zone.toString());
-
-        // Calculate distance from current position to target.
-        double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
-        // Calculate travel time in milliseconds.
-        double travelTime = (distance / this.maxVelocity) * 1000;
-
-        // Determine the time per step (simulate one "step" of travel)
-        double stepTime = 1000 / this.maxVelocity; // in milliseconds
-        // Calculate the number of steps to reach the destination.
-        double steps = travelTime / stepTime;
-        // Compute change in X and Y per step.
-        double deltaX = (finalX - this.xPos) / steps;
-        double deltaY = (finalY - this.yPos) / steps;
-
-        double spentTime = 0;
-        for ( int i = 0 ; (i < TRAVEL_INCREMENTS) ; ++i )
-        {
-            try {
-                Thread.sleep((long) stepTime);
-            } catch (InterruptedException e) {
-                System.out.println("\n[ DRONE TRAVEL ]      Drone " + this.droneId + " interrupted during travel. Sending status update.");
-                // Immediately send a status update with the current location and task.
+        try {
+            Thread.sleep((long) stepTime);
+        } catch (InterruptedException e) {
+            System.out.println("\n[ DRONE TRAVEL ]      Drone " + this.droneId + " interrupted during travel. Sending status update.");
+            // Immediately send a status update with the current location and task.
 //                setSendStatus();
-                return true;
-            }
-            spentTime += stepTime;
-            this.xPos += deltaX;
-            this.yPos += deltaY;
-            System.out.println(" [ DRONE TRAVEL ]       Drone " + this.droneId + " is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
+            return true;
         }
-        if(spentTime>=travelTime)
+
+        this.spentTime += this.stepTime;
+        this.xPos += this.deltaX;
+        this.yPos += this.deltaY;
+
+        System.out.printf(" Drone %d Position: (%.2f, %.2f) | Elapsed Time: %.2fs%n",
+                 this.droneId, this.xPos, this.yPos, this.spentTime);
+        System.out.println(" [ DRONE TRAVEL ]       Drone " + this.droneId + " is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
+//        }
+        if(this.spentTime>=this.travelTime)
         {
             this.xPos=finalX;
             this.yPos=finalY;
@@ -222,6 +233,72 @@ public class Drone extends Thread
             System.out.println("\n [ DRONE TRAVEL ]     Drone " + this.droneId + ": sending status \n");
         }
         return false;
+    }
+
+    private void setTravelData()
+    {
+        // Retrieve the zone from the FireIncidentSubsystem's static zoneMap using the current fire request's zone ID.
+        Zone zone = droneSubsystem.getZone(currTask.getZoneId());
+        System.out.println( " \nTRAVEL ZONE : "  + zone.toString() );
+        if (zone != null) {
+            // Calculate the center of the zone as the target destination.
+            this.finalX = (zone.getStartX() + zone.getEndX()) / 2;
+            this.finalY = (zone.getStartY() + zone.getEndY()) / 2;
+        } else {
+            this.finalX = 0;
+            this.finalY = 0;
+        }
+        System.out.println( " \nTRAVEL ZONE : "  + this.finalX + "," + this.finalY );
+
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Beginning travel to zone " + zone.toString());
+
+        // Calculate distance from current position to target.
+        double distance = Math.sqrt(Math.pow(this.finalX - this.xPos, 2) + Math.pow(this.finalY - this.yPos, 2));
+
+        // Calculate travel time in milliseconds.
+        this.travelTime = (distance / this.maxVelocity);
+
+        // Calculate the number of steps to reach the destination.
+//        double steps = 10;
+        // Compute change in X and Y per step.
+        this.deltaX = (this.finalX - this.xPos) / TRAVEL_INCREMENTS;
+        this.deltaY = (this.finalY - this.yPos) / TRAVEL_INCREMENTS;
+
+        // Determine the time per step (simulate one "step" of travel)
+        this.stepTime = this.travelTime / TRAVEL_INCREMENTS; // in milliseconds
+        this.spentTime = 0.0;
+
+        System.out.printf("[DEBUG] Distance: %.2f units | Travel Time: %.2f s | Step Time: %.2f s | Steps: %.2f%n",
+                distance, travelTime, stepTime, TRAVEL_INCREMENTS);
+        System.out.printf("[DEBUG] Step delta: ΔX=%.4f, ΔY=%.4f%n", deltaX, deltaY);
+    }
+
+    private void setReturnTravelData()
+    {
+        this.finalX = 0;
+        this.finalY = 0;
+
+        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Beginning travel to base");
+
+        // Calculate distance from current position to target.
+        double distance = Math.sqrt(Math.pow(this.finalX - this.xPos, 2) + Math.pow(this.finalY - this.yPos, 2));
+
+        // Calculate travel time in milliseconds.
+        this.travelTime = (distance / this.maxVelocity);
+
+        // Calculate the number of steps to reach the destination.
+//        double steps = 10;
+        // Compute change in X and Y per step.
+        this.deltaX = (this.finalX - this.xPos) / TRAVEL_INCREMENTS;
+        this.deltaY = (this.finalY - this.yPos) / TRAVEL_INCREMENTS;
+
+        // Determine the time per step (simulate one "step" of travel)
+        this.stepTime = this.travelTime / TRAVEL_INCREMENTS; // in milliseconds
+        this.spentTime = 0.0;
+
+        System.out.printf("[DEBUG] Distance: %.2f units | Travel Time: %.2f s | Step Time: %.2f s | Steps: %.2f%n",
+                distance, travelTime, stepTime, TRAVEL_INCREMENTS);
+        System.out.printf("[DEBUG] Step delta: ΔX=%.4f, ΔY=%.4f%n", deltaX, deltaY);
     }
 
     /**
@@ -299,52 +376,37 @@ public class Drone extends Thread
      */
     public void returnTravel()
     {
-        int finalX = 0;
-        int finalY = 0;
-        System.out.println( " \nTRAVEL BACK : "  + finalX + "," + finalY + "    FEB count :" + this.payloadCount);
-
-        DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Beginning travel to base");
-
-        // Calculate distance from current position to target.
-        double distance = Math.sqrt(Math.pow(finalX - this.xPos, 2) + Math.pow(finalY - this.yPos, 2));
-        // Calculate travel time in milliseconds.
-        double travelTime = (distance / this.maxVelocity) * 1000;
-
-        // Determine the time per step (simulate one "step" of travel)
-        double stepTime = 1000 / this.maxVelocity; // in milliseconds
-        // Calculate the number of steps to reach the destination.
-        double steps = travelTime / stepTime;
-        // Compute change in X and Y per step.
-        double deltaX = (finalX - this.xPos) / steps;
-        double deltaY = (finalY - this.yPos) / steps;
-
-        double spentTime = 0;
-        for ( int i = 0 ; (i < TRAVEL_INCREMENTS) ; ++i )
-        {
-            try {
-                Thread.sleep((long) stepTime);
-            } catch (InterruptedException e) {
-                System.out.println("\n[ DRONE RETURN ]      Drone " + this.droneId + ": interrupted during return travel. Sending status update.");
-                setSendStatus();
-            }
-            spentTime += stepTime;
-            this.xPos += deltaX;
-            this.yPos += deltaY;
-            if( this.xPos < 0 ) break; // exits travel function if returned
-            System.out.println(" [ DRONE RETURN ]       Drone " + this.droneId + ": is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
+        try {
+            Thread.sleep((long) stepTime);
+        } catch (InterruptedException e) {
+            System.out.println("\n[ DRONE RETURN ]      Drone " + this.droneId + " interrupted during travel. Sending status update.");
+            // Immediately send a status update with the current location and task.
+//                setSendStatus();
         }
-        if(spentTime>=travelTime)
+
+        this.spentTime += this.stepTime;
+        this.xPos += this.deltaX;
+        this.yPos += this.deltaY;
+
+        System.out.printf(" Drone %d Position: (%.2f, %.2f) | Elapsed Time: %.2fs%n",
+                this.droneId, this.xPos, this.yPos, this.spentTime);
+        System.out.println(" [ DRONE RETURN ]       Drone " + this.droneId + " is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
+//        }
+        if(this.spentTime>=this.travelTime)
         {
             this.xPos=finalX;
             this.yPos=finalY;
-            System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": arrived back at base ready to refill\n");
+            System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": arrived at base ready to refill\n");
 
             DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Arrived back at base");
+
+            // Set boolean to determine that we actually arrived in the zone
+            this.continueTravel = false;
         }
         else
         {
             setSendStatus();
-            System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": sending status \n");
+            System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": sending return status \n");
         }
     }
 
@@ -545,6 +607,10 @@ public class Drone extends Thread
                     FireRequest newTask = new FireRequest(newFireRequest);
                     setCurrTask( newTask );
                 }
+                else if (eventRequest.equals(DroneEvent.PAYLOAD_DROPPED))
+                {
+                    setReturnTravelData();
+                }
                 this.currentState.handleEvent(this, eventRequest);
             }
         }
@@ -558,6 +624,9 @@ public class Drone extends Thread
 
             // Set boolean to continue travelling
             continueTravel = true;
+
+            // set travel parameters
+            setTravelData();
 
             // send an indication that this drone is now traveling expecting no response
             this.currentState.handleEvent(this, DroneEvent.NEW_FIRE_REQUEST);

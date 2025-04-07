@@ -5,7 +5,7 @@ public class Zone {
     private int startY;
     private int endX;
     private int endY;
-    char zoneChar;
+    char zoneChar = '@';
 
     public Zone(int zoneId, int startX, int startY, int endX, int endY) {
         this.zoneId = zoneId;
@@ -22,7 +22,13 @@ public class Zone {
     public int getEndY() { return endY; }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
+        if(zoneChar=='@') return "Zone{" +
+            "zoneId=" + zoneId +
+            ", start=(" + startX + "," + startY + ")" +
+            ", end=(" + endX + "," + endY + ")" +
+            '}';
         return String.format("Zone %d -> %c", zoneId, zoneChar);
     }
 }

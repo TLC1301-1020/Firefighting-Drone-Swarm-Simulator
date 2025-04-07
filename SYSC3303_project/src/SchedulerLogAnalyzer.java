@@ -324,7 +324,7 @@ public class SchedulerLogAnalyzer {
                                            ParsedLogEntry firstFireIncident)
     {
         double lifeTimeScheduler = calculateTimeDuration(firstSchedulerLog, lastSchedulerLog);
-        double lifeTimeServicingFires = calculateTimeDuration(firstFireIncident, lastSchedulerLog)*EventScheduler.simulationSpeed;
+        double lifeTimeServicingFires = calculateTimeDuration(firstFireIncident, lastSchedulerLog);
         double throughPut = (double)countFireRequests/lifeTimeServicingFires;
         System.out.println("\n==================================================================");
         System.out.println(" * Scheduler General Metrics * ");
