@@ -23,7 +23,7 @@ class SchedulerTest {
     }
 
     /**
-        after each test function, calls Scheduler.shutdown() for gracefull exit of 3 scheduler threads */
+        after each test function, calls Scheduler.shutdown() for graceful exit of 3 scheduler threads */
     @AfterEach
     void tearDown() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         try
@@ -445,7 +445,7 @@ class SchedulerTest {
         Method assignFireRequest = Scheduler.class.getDeclaredMethod("assignFireRequest", FireRequest.class);
         assignFireRequest.setAccessible(true);
 
-        // create 2 competing firerequests
+        // create 2 competing fire requests
         FireRequest oldRequest = new FireRequest("FireRequest{time=10-30-00, zone=2, event=FIRE_DETECTED, severity=Low}");
         FireRequest newRequest = new FireRequest("FireRequest{time=10-31-15, zone=4, event=FIRE_DETECTED, severity=Moderate}");
 
@@ -671,7 +671,7 @@ class SchedulerTest {
 
 
     /**
-     * SYSTEM TEST: test that a traveling drone is not reassigned to a new fire request if that drone WONT PASS THROUGH the zone of the same severity
+     * SYSTEM TEST: test that a traveling drone is not reassigned to a new fire request if that drone WON'T PASS THROUGH the zone of the same severity
      */
     @Test
     public void test_assignFireRequest_travelingDroneReassigned_byWontPassThrough() throws Exception {
@@ -715,12 +715,6 @@ class SchedulerTest {
         // check drone now has the old task
         DroneStatus updatedDrone = drones.get(1);
         assertEquals(oldRequest.toString(), updatedDrone.getCurrentTask().toString());
-
-        // check new request was re-added to queue
-        // REMOVED DUE TO SUSPECTED REQUEST QUEUE BEING MODIFIED BY SP THREAD (following pending assignments assert should cover)
-//        requestQueue = (Queue<FireRequest>) requestQueueField.get(this.scheduler);
-//        FireRequest remaining = requestQueue.peek();
-//        assertTrue(remaining.equals(newRequest));
 
         // check that the assignment was not placed in pendingAssignments to so when handleDroneRequest is called nothing is  (removed + assigned)
         Field pendingAssignmentsField = Scheduler.class.getDeclaredField("pendingAssignments");
@@ -784,49 +778,6 @@ class SchedulerTest {
             assertEquals(expectedIds3[i++], fr.getId());
         }
     }
-
-
-//    @Test
-//    void testParseZoneFile() {
-//        // Assuming a test file exists
-//        Scheduler.zoneMap.clear();
-//        scheduler.parseZoneFile("SYSC3303_project/src/zone_file.csv");
-//        assertFalse(Scheduler.zoneMap.isEmpty(), "Zone map should be populated");
-//    }
-//
-//    @Test
-//    void testRegisterDrone() {
-//        String response = scheduler.registerDrone(1);
-//        assertEquals("ACK", response, "Drone should be registered successfully");
-//    }
-//
-//    @Test
-//    void testSelectDrone() {
-//        FireRequest request = new FireRequest("3");
-//        int droneId = scheduler.selectDrone(request);
-//        assertEquals(-1, droneId, "Should return -1 when no drones available");
-//    }
-
-//    @Test
-//    void testFindClosestIdleDrone() {
-//        Zone testZone = new Zone(1, 0, 0, 100, 100);
-//        int droneId = scheduler.findClosestIdleDrone(testZone);
-//        assertEquals(-1, droneId, "Should return -1 when no idle drones available");
-//    }
-//
-//    @Test
-//    void testWillPassThrough() {
-//        DroneStatus drone = new DroneStatus(1);
-//        boolean result = scheduler.willPassThrough(drone, 3);
-//        assertFalse(result, "Drone should not pass through without zone data");
-//    }
-//
-//    @Test
-//    void testSetState() {
-//        SchedulerState newState = new ProcessData(new ReceiveData());
-//        scheduler.setState(newState);
-//        assertEquals(newState, scheduler.getCurrentState(), "Scheduler state should update");
-//    }
 }
 
 
