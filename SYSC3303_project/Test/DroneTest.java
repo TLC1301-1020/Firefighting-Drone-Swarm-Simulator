@@ -1,4 +1,3 @@
-import jdk.jfr.BooleanFlag;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -162,6 +161,11 @@ public class DroneTest
 
         // set state
         drone.setState(new DroneActive(new DroneTravel()));
+
+        Method setTravelData = Drone.class.getDeclaredMethod("setTravelData");
+        setTravelData.setAccessible(true);
+        setTravelData.invoke(drone);
+
         // make drone travel from event
         drone.currentState.handleEvent(drone, DroneEvent.NEW_FIRE_REQUEST);
 
@@ -245,6 +249,10 @@ public class DroneTest
         yPosField.set(drone, 300);
         xPosField.set(drone, 850);
 
+        Method setReturnTravelData = Drone.class.getDeclaredMethod("setTravelData");
+        setReturnTravelData.setAccessible(true);
+        setReturnTravelData.invoke(drone);
+
         // check if it will travel
         drone.travel();
 
@@ -308,6 +316,10 @@ public class DroneTest
         xPosField.set(drone, 850.0);
         yPosField.set(drone, 300.0);
 
+        Method setReturnTravelData = Drone.class.getDeclaredMethod("setReturnTravelData");
+        setReturnTravelData.setAccessible(true);
+        setReturnTravelData.invoke(drone);
+
         Field payloadCount = Drone.class.getDeclaredField("payloadCount");
         payloadCount.setAccessible(true);
         payloadCount.set(drone,0); // empty payload
@@ -344,6 +356,8 @@ public class DroneTest
         xPosField.set(drone, 0.0);
         yPosField.set(drone, 0.0);
 
+        drone.currentState.handleEvent(drone, DroneEvent.RETURN_STATUS); // continue traveling
+
         String result3 = (String) makeRequest.invoke(drone);
 
         assertEquals(result3, "1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
@@ -353,6 +367,22 @@ public class DroneTest
         double yFinal = (double) yPosField.get(drone);
         assertEquals(0.0, xFinal, 0.01);
         assertEquals(0.0, yFinal, 0.01);
+
+        xPosField.set(drone, -10.0);
+        yPosField.set(drone, -10.0);
+
+        drone.currentState.handleEvent(drone, DroneEvent.RETURN_STATUS); // continue traveling
+
+        String result9 = (String) makeRequest.invoke(drone);
+
+        assertEquals(result9, "1:[ACTIVE][RETURNING]:RETURNED_TO_BASE:0:0:FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
+
+        // After return travel, verify xPos and yPos are back at base (0, 0)
+        xFinal = (double) xPosField.get(drone);
+        yFinal = (double) yPosField.get(drone);
+        assertEquals(0.0, xFinal, 0.01);
+        assertEquals(0.0, yFinal, 0.01);
+
 
         // invoke next state, drone refill
         drone.handleEvent(DroneEvent.RETURNED_TO_BASE);

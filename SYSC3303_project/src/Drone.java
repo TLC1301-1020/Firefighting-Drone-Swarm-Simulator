@@ -196,9 +196,20 @@ public class Drone extends Thread
 //        System.out.printf("[DEBUG] Distance: %.2f units | Travel Time: %.2f s | Step Time: %.2f s | Steps: %.2f%n",
 //                distance, travelTime, stepTime, TRAVEL_INCREMENTS);
 //        System.out.printf("[DEBUG] Step delta: ΔX=%.4f, ΔY=%.4f%n", deltaX, deltaY);
-
         Zone zone = droneSubsystem.getZone(currTask.getZoneId());
 
+        if( this.xPos>=finalX && this.yPos>=finalY )
+        {
+            this.xPos=finalX;
+            this.yPos=finalY;
+            System.out.println("\n [ DRONE TRAVEL ]     Drone " + this.droneId + ": arrived at zone " + currTask.getZoneId() + " ready to deploy\n");
+
+            DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Arrived at zone " + zone.toString());
+
+            // Set boolean to determine that we actually arrived in the zone
+            this.continueTravel = false;
+            return false;
+        }
         try {
             Thread.sleep((long) stepTime);
         } catch (InterruptedException e) {
@@ -216,7 +227,7 @@ public class Drone extends Thread
                  this.droneId, this.xPos, this.yPos, this.spentTime);
         System.out.println(" [ DRONE TRAVEL ]       Drone " + this.droneId + " is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
 //        }
-        if(this.spentTime>=this.travelTime)
+        if(this.spentTime>=this.travelTime || (this.xPos>=finalX && this.yPos>=finalY))
         {
             this.xPos=finalX;
             this.yPos=finalY;
@@ -376,6 +387,16 @@ public class Drone extends Thread
      */
     public void returnTravel()
     {
+
+        if( this.xPos<=finalX && this.yPos<=finalY )
+        {
+            this.xPos=finalX;
+            this.yPos=finalY;
+            System.out.println("\n [ DRONE RETURN ]     Drone " + this.droneId + ": arrived at base ready to refill\n");
+            DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Arrived back at base");
+            return;
+        }
+
         try {
             Thread.sleep((long) stepTime);
         } catch (InterruptedException e) {
@@ -392,7 +413,7 @@ public class Drone extends Thread
                 this.droneId, this.xPos, this.yPos, this.spentTime);
         System.out.println(" [ DRONE RETURN ]       Drone " + this.droneId + " is at         (" + String.format("%.2f",this.xPos) + "," +String.format("%.2f",this.yPos) + ") ");
 //        }
-        if(this.spentTime>=this.travelTime)
+        if(this.spentTime>=this.travelTime || (this.xPos<=finalX && this.yPos<=finalY))
         {
             this.xPos=finalX;
             this.yPos=finalY;
@@ -401,7 +422,7 @@ public class Drone extends Thread
             DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Arrived back at base");
 
             // Set boolean to determine that we actually arrived in the zone
-            this.continueTravel = false;
+//            this.continueTravel = false;
         }
         else
         {

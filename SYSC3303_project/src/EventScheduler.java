@@ -17,7 +17,7 @@ public class EventScheduler {
     private Queue<Event> readyQueue;
 
     // Simulation speed can be changed to speed up the processing of Events
-    public static final long simulationSpeed = 120;
+    public static final long simulationSpeed = 120; // this value represents how many seconds will pass in system time for each second in real time
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("HH-mm-ss");
     private final long systemTime;
