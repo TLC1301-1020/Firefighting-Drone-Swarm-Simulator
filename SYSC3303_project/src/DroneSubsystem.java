@@ -223,7 +223,14 @@ public class DroneSubsystem implements Runnable {
 
                 DroneEventLogger.getInstance().info("DroneSubsystem", "ListeningToScheduler", "Response received from scheduler: " + response);
 
-                handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
+                if(response.equals("SHUTDOWN"))
+                {
+                    shutdown();
+                    break;
+                } else
+                {
+                    handleDroneResponse(response);  // function used only for passing scheduler requests to the drone subsystem
+                }
             }
         });
         schedulerListener.setDaemon(true);
@@ -317,7 +324,7 @@ public class DroneSubsystem implements Runnable {
             }
 
             // Send UDP packet direct to scheduler with drone request
-            sendPacket(request);
+            if(running)sendPacket(request);
         }
     }
 

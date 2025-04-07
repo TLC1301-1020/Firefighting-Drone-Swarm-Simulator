@@ -125,7 +125,7 @@ public class DroneLogAnalyzer {
                         //update number of drones if needed
                         if(Integer.parseInt(logEntry.getThreadType()) > droneTotal) droneTotal = Integer.parseInt(logEntry.getThreadType());
                         droneLogs.add(logEntry);
-                    }else if(logEntry.getComponent().contains("All")){
+                    }else if(logEntry.getEvent().contains("Program ended, shutting down.")){
                         end = logEntry.getTimestamp();
                     }
                     programLife = Duration.between(start,logEntry.getTimestamp()).toMillis() /1000.0;
