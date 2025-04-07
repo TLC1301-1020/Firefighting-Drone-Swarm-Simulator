@@ -66,6 +66,7 @@ public class Scheduler {
         } catch (SocketException e) {
             System.err.println(e);
         }
+        this.currentState = new Idle();
     }
 
     /** sets the state of the scheduler
@@ -198,7 +199,9 @@ public class Scheduler {
                 SchedulerEventLogger.getInstance().debug("Scheduler", "SD", "Received drone message: " + request);
 
                 // Parse the packet (assuming we are not actually storing physical Drones anymore, and instead are only storing crucial data for each drone):
+                setState(new ProcessData(new TaskDrone()));
                 String response = handleDroneRequest(request);
+                setState(new Idle());
 
                 System.out.println("\n[SD->D ]  -   SCHEDULER RESPONSE TO DRONE: "+response+ "  -   ");
                 SchedulerEventLogger.getInstance().debug("Scheduler", "SD", "Responding to drone with: " + response);
@@ -230,6 +233,7 @@ public class Scheduler {
                         // request is removed here and added back only if it is not assigned to a drone
                         FireRequest req = requestQueue.remove();
                         System.out.println("\n[  SP  ]  -   SCHEDULER REQUEST QUEUE REMOVED  -       " + req.toString());
+                        setState(new ProcessData(new TaskDrone()));
                         if ( assignFireRequest(req) )   // returns true if drone was assigned this fire request
                         {
                             System.out.println("\n[  SP  ]  -   SCHEDULER SUCCESSFULLY TASKED A DRONE TO ANSWER REQUEST  -       " + req.toString());
@@ -244,6 +248,7 @@ public class Scheduler {
                                 System.out.println("ProcessPendingRequests thread interrupted.");
                             }
                         }
+                        setState(new Idle());
                     }
                 }
                 try {
@@ -678,6 +683,7 @@ public class Scheduler {
      * @return the message received.
      */
     private String receivePacket(DatagramSocket socket) {
+        setState(new ProcessData(new ReceiveData()));
         byte data[] = new byte[DATA_BUFFER_SIZE];
         DatagramPacket receivePacket = new DatagramPacket(data, data.length);
         try {
@@ -689,6 +695,7 @@ public class Scheduler {
             throw new RuntimeException(e);
         }
         int len = receivePacket.getLength();
+        setState(new Idle());
         return new String(data,0,len);
     }
 
@@ -699,6 +706,7 @@ public class Scheduler {
      * @param response message to send.
      */
     private void sendPacket(DatagramSocket socket, int port, String response) {
+        setState(new ProcessData(new SendData()));
         byte msg[] = response.getBytes();
         DatagramPacket packet;
         try {
@@ -711,6 +719,7 @@ public class Scheduler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        setState(new Idle());
     }
 
     /**
