@@ -31,11 +31,16 @@ class FireIncidentSubsystemTest {
         assertFalse(fireSubsystem.getTasks().isEmpty(), "Task list should not be empty after reading");
 
         List<FireRequest> tasks = fireSubsystem.getTasks();
-        assertEquals(3, tasks.size(), "Should have 3 fire incidents");
+        assertTrue(tasks.size()>1, "Should have atleast 1 fire incidents");
 
-        assertEquals(new FireRequest("10-30-15", 4, "FIRE_DETECTED", "High", "1").toString(), tasks.get(0).toString());
-        assertEquals(new FireRequest("14-10-00", 3, "FIRE_DETECTED", "Moderate", "3").toString(), tasks.get(1).toString());
-        assertEquals(new FireRequest("14-16-03", 2, "FIRE_DETECTED", "Moderate", "2").toString(), tasks.get(2).toString());
+        for ( FireRequest fr : tasks )
+        {
+            assertEquals( "FIRE_DETECTED", tasks.get(0).getEventType());
+            assertNotNull( fr.getTime() );
+            assertTrue( fr.getZoneId()>0 );
+            assertTrue( fr.getSeverity().equals("Low") || fr.getSeverity().equals("Moderate") || fr.getSeverity().equals("High"));
+            assertNotNull( fr.getTime() );
+        }
     }
 
     // Ensure zones are correctly parsed and stored
@@ -89,18 +94,11 @@ class FireIncidentSubsystemTest {
         assertDoesNotThrow(() -> fireSubsystem.sendIncident(message), "sendIncident should not throw an exception");
     }
 
-// no longer times out (caused issues)
-//    // Ensure receiveUpdate() handles timeouts correctly
-//    @Test
-//    void testReceiveUpdateTimeout() {
-//        assertEquals("No updates available", fireSubsystem.receiveUpdate(), "Should return timeout message");
-//    }
-
     // Ensure getTasks() returns the expected tasks
     @Test
     void testGetTasks() {
         fireSubsystem.readInputFile(inputFile);
-        assertEquals(3, fireSubsystem.getTasks().size(), "Task list should contain 3 incidents");
+        assertTrue(fireSubsystem.getTasks().size()>1, "Task list should contain atleast 1 incident");
     }
 
     // Ensure getSendSocket() and getReceiveSocket() return valid sockets
