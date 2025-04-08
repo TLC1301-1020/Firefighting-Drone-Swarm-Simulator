@@ -413,7 +413,7 @@ class LoggerDaemon implements Runnable {
 
     @Override
     public void run() {
-        try (FileWriter writer = new FileWriter(logFileName, true)) {
+        try (FileWriter writer = new FileWriter(logFileName, false)) {
             while (running || !logQueue.isEmpty()) {
                 String logEntry = logQueue.poll();
                 if (logEntry != null) {
