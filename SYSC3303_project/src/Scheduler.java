@@ -72,9 +72,11 @@ public class Scheduler {
     /** sets the state of the scheduler
      @param newState next state the scheduler transitions to
      */
-    public void setState(SchedulerState newState){
-        System.out.println("* SCHEDULER STATE CHANGE * " + this.currentState.display() + " -> " + newState.display());
-        this.currentState = newState;
+    public synchronized void setState(SchedulerState newState){
+        if (!this.currentState.display().equals(newState.display())) {
+            System.out.println("* SCHEDULER STATE CHANGE * " + this.currentState.display() + " -> " + newState.display());
+            this.currentState = newState;
+        }
     }
 
     /** creates a {@link DroneStatus} object with the passed drone ID and returns an acknowledgement to be passed to DroneSubsystem to indicate
