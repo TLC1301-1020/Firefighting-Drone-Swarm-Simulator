@@ -1,6 +1,5 @@
-/**
- * StateMachine Event that causes the transitions for drones from
- * one state to another
+ /**
+ * Enum representing events that trigger state transitions for drones
  */
 public enum DroneEvent
 {
@@ -18,23 +17,28 @@ public enum DroneEvent
     CONTINUING("CONTINUING"),
     RETURN_STATUS("RETURN_STATUS");
 
-    /**
-     * string value of event*/
+    /** String representation of the event */
     private final String value;
 
     DroneEvent(String value)
     {
         this.value = value;
     }
-
     /**
-     * @return string value of event */
+     * Returns the string value of the event
+     * @return the event as a string
+     */
     @Override
     public String toString()
     {
         return this.value;
     }
-
+    /**
+     * Parses a string to match a valid DroneEvent
+     * @param stringEvent the string to parse
+     * @return the corresponding DroneEvent
+     * @throws IllegalArgumentException if the string doesn't match any event
+     */
     public static DroneEvent valueOfEvent(String stringEvent) {
         if (stringEvent == null) {
             throw new IllegalArgumentException("Event string cannot be null");

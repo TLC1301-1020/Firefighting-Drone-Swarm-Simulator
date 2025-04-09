@@ -1,3 +1,6 @@
+/**
+ * Represents the status of a drone, including its location, state, task, and battery level
+ */
 public class DroneStatus {
     private final int droneId;
     private String state;   // string
@@ -8,9 +11,9 @@ public class DroneStatus {
     private static final double MAX_BATTERY = 100.0;
 
     /**
-     * initializes drone status for drone object with given drone id,
-     * current state as "[IDLE]" and location at (0,0)
-     @param droneId drone id to be given to drone when initialized
+     * Initializes a drone with ID, idle state, position (0,0), full battery, and no task
+     *
+     * @param droneId the unique ID of the drone
      */
     public DroneStatus(int droneId) {
         this.droneId = droneId;
@@ -20,29 +23,45 @@ public class DroneStatus {
         this.currentTask = new FireRequest();
         this.batteryLevel = MAX_BATTERY;
     }
-
-    public int getDroneId() { return droneId; }
-    public String getState() { return state; }
-    public void setState(String newState) { this.state = newState; }
-    public int getX() { return this.x; }
-    public int getY() { return this.y; }
-    public void setLocation(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-    public FireRequest getCurrentTask() { return currentTask; }
-    public void setCurrentTask(FireRequest fr) { this.currentTask = fr; }
+    /** Charges the battery to 100%. */
     public void chargeBattery() { this.batteryLevel = MAX_BATTERY; }
-    public String getBatteryLevel() { return String.format("%.2f%%", this.batteryLevel); }
+
+    /**
+     * Updates battery level based on Euclidean distance to new (x, y)
+     *
+     * @param x new X coordinate
+     * @param y new Y coordinate
+     */
     public void updateBattery(int x, int y) {
         double distance = Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2));
         double consumptionRate = 0.000015;
         batteryLevel -= distance * consumptionRate;
         batteryLevel = Math.max(batteryLevel, 0);
     }
-    public String toString()
-    {
+
+    /**
+     * @return a string showing drone ID, state, location, and task
+     */
+    public String toString(){
         return this.droneId+":"+this.state+":"+this.x+":"+this.y + ":" + this.currentTask.toString();
     }
+
+    // Setters
+    public void setLocation(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+    public void setState(String newState) { this.state = newState; }
+    public void setCurrentTask(FireRequest fr) { this.currentTask = fr; }
+
+    // Getters
+    public int getDroneId() { return droneId; }
+    public String getState() { return state; }
+    public int getX() { return this.x; }
+    public int getY() { return this.y; }
+    public String getBatteryLevel() { return String.format("%.2f%%", this.batteryLevel); }
+    public FireRequest getCurrentTask() { return currentTask; }
+
+
 }

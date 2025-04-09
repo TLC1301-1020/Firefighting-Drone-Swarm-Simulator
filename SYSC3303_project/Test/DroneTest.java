@@ -10,14 +10,29 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.DatagramSocket;
-
+/**
+ * Unit test class for the {@link Drone} class and its behavior in the DroneSubsystem
+ * This class tests the various state transitions, task assignments, and interactions
+ * that a Drone can have in the system
+ */
 public class DroneTest
 {
     private DroneSubsystem dss;
-
+    /**
+     * Set up the test environment before each test
+     * Initializes the DroneSubsystem instance
+     */
     @BeforeEach
     void setUp() {dss = new DroneSubsystem();}
-
+    /**
+     * Reset the DroneSubsystem after each test to ensure the system is in a clean state
+     * Closes sockets, shuts down threads, and ensures no resource leakage
+     *
+     * @throws NoSuchMethodException If the shutdown method is not found
+     * @throws InvocationTargetException If invoking the shutdown method fails
+     * @throws NoSuchFieldException If the necessary field is not found
+     * @throws IllegalAccessException If accessing a field or method fails
+     */
     @AfterEach
     void resetDroneSubsystem() throws NoSuchMethodException, InvocationTargetException, NoSuchFieldException, IllegalAccessException
     {
@@ -28,8 +43,7 @@ public class DroneTest
         DatagramSocket sendSocket = (DatagramSocket) sendSocketField.get(dss);
 
         // Close the socket
-        if (sendSocket != null && !sendSocket.isClosed())
-        {
+        if (sendSocket != null && !sendSocket.isClosed()){
             sendSocket.close();
         }
 
@@ -41,10 +55,8 @@ public class DroneTest
         {
             receiveSocket.close();
         }
-
         // Close remaining DSS threads
-        try
-        {
+        try{
             Thread.sleep(500);
         } catch (InterruptedException e) {
         }
@@ -54,7 +66,8 @@ public class DroneTest
     }
 
     /**
-     * UNIT TEST: verify is default for instantiating default constructor fireRequest Objects */
+     * Verifies that a FireRequest object is initialized with default values and is in its default state
+     */
     @Test
     void testFireRequestIsDefault() throws Exception
     {
@@ -64,7 +77,8 @@ public class DroneTest
     }
 
     /**
-     * UNIT TEST: checks if drone is correctly initialized to interact with system */
+     * Verifies that a Drone object initializes all fields with the expected default values
+     */
     @Test
     void testDroneInitializesAllFields() throws Exception
     {
@@ -116,7 +130,10 @@ public class DroneTest
     }
 
     /**
-     * UNIT TEST: checks if drone correctly stores the assigned task and can retreive it */
+     * Verifies the functionality of the setCurrTask and getCurrTask methods in the Drone class
+     * Ensures that the task is correctly updated when setCurrTask is called and that the initial
+     * task is returned when getCurrTask is called
+     */
     @Test
     void test_setCurrTask_getCurrTask() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Drone drone = new Drone(dss, 1);
@@ -143,8 +160,13 @@ public class DroneTest
     }
 
     /**
-     * UNIT TEST: checks if drone correctly travels on state transition NEW_FIRE_REQUEST, sets send status, continues traveling with state transition to Continue
-     * arrives at zone, and sends permission to drop to scheduler*/
+     * Verifies the behavior of the Drone class during travel when handling a fire request
+     * This test checks if the drone correctly updates its state, sends status requests, and
+     * makes appropriate permission requests when traveling to a specified zone
+     *
+     * It also validates that the drone's position is correctly updated when arriving at the zone
+     * and that the status and continue travel flags are set as expected
+     */
     @Test
     void test_drone_travel() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
@@ -215,9 +237,11 @@ public class DroneTest
     }
 
     /**
-     * UNIT TEST: tests drone will not travel when at the zone target coordinates, tests drone will deploy full payload and transitions states
-     * and follow up with correct request
-     *  <p>* will print nan as drone does not move * */
+     * Verifies the behavior of the Drone class during payload deployment
+     * This test checks that when the drone reaches the designated zone, it does not move further,
+     * and its payload count remains the same. Upon receiving permission to drop the payload,
+     * the drone sends a correct payload dropped request and the payload count is updated accordingly
+     */
     @Test
     void test_drone_deploy() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
@@ -281,14 +305,15 @@ public class DroneTest
     }
 
     /**
-     * UNIT TEST: to verify the drone returns from the zone it deployed and handles state transitions and correctly refills once returned
+     * Verifies the behavior of the Drone class when returning to base after completing a deployment
+     * This test checks that when the drone has dropped the payload, it properly triggers the return travel process
+     * It verifies that the drone sends the appropriate status requests, returns to the base (0, 0),
+     * and gets refilled with a new payload
      */
     @Test
     void test_drone_returnTravel() throws Exception
     {
         Drone drone = new Drone(dss, 1);
-
-        //
         drone.setState(new DroneActive(new DroneDeploy()));
 
         // Create and store the zone
@@ -300,7 +325,6 @@ public class DroneTest
         FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
         drone.setCurrTask(task);
 
-        //
         Field xPosField = Drone.class.getDeclaredField("xPos");
         Field yPosField = Drone.class.getDeclaredField("yPos");
         xPosField.setAccessible(true);
@@ -359,19 +383,19 @@ public class DroneTest
 
         // check the payload count is filled after refill
         assertEquals( 10, (int) payloadCount.get(drone));
-
         resetDroneSubsystem();
     }
 
     /**
-     * UNIT TEST: to verify the drone switches to idle after refilling
+     * Verifies the behavior of the Drone class when transitioning from the refill state to the idle state
+     * This test ensures that once the drone completes the refill process, it switches to the Idle state,
+     * resets its task to the default task, and prepares for the next fire request
      */
     @Test
     void test_drone_refill_switch_to_Idle() throws Exception
     {
         Drone drone = new Drone(dss, 1);
 
-        //
         drone.setState(new DroneRefill());
 
         // Create and store the zone
@@ -383,7 +407,6 @@ public class DroneTest
         FireRequest task = new FireRequest("FireRequest{time=10-30-15, zone=4, event=FIRE_DETECTED, severity=High, id=1A}");
         drone.setCurrTask(task);
 
-        //
         Field xPosField = Drone.class.getDeclaredField("xPos");
         Field yPosField = Drone.class.getDeclaredField("yPos");
         xPosField.setAccessible(true);
@@ -418,8 +441,5 @@ public class DroneTest
 
         resetDroneSubsystem();
     }
-
-
-
 
 }

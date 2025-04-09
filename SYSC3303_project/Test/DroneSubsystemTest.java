@@ -4,16 +4,24 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Unit tests for the {@link DroneSubsystem} class
+ * This class contains setup and teardown methods for testing the functionality of the DroneSubsystem
+ * It ensures that the DroneSubsystem is initialized and cleaned up correctly before and after each test
+ */
 class DroneSubsystemTest {
     private DroneSubsystem droneSubsystem;
     private final String faultFile = "SYSC3303_project/src/Faults.txt";
-
+    /**
+     * Initializes a new instance of {@link DroneSubsystem} before each test
+     */
     @BeforeEach
     void setUp() {
         droneSubsystem = new DroneSubsystem();
     }
-
+    /**
+     * Closes the receive and send sockets of {@link DroneSubsystem} after each test to clean up resources
+     */
     @AfterEach
     void tearDown() {
         if (droneSubsystem.getReceiveSocket() != null) {
@@ -23,8 +31,11 @@ class DroneSubsystemTest {
             droneSubsystem.getSendSocket().close();
         }
     }
-
-    // Test that requests are added and retrieved properly
+    /**
+     * Test the {@link DroneSubsystem#addRequest(String)} and {@link DroneSubsystem#getRequest()} methods
+     *
+     * <p>This test ensures that requests are added to the subsystem and retrieved in the correct order.</p>
+     */
     @Test
     void testAddAndRetrieveRequest() {
         String request1 = "1:[IDLE]:INIT:0:0:0";
@@ -37,7 +48,11 @@ class DroneSubsystemTest {
         assertEquals(request2, droneSubsystem.getRequest());
     }
 
-    // Test that responses are added and retrieved properly
+    /**
+     * Test the {@link DroneSubsystem#addResponse(int, String)} and {@link DroneSubsystem#getResponse(int)} methods
+     *
+     * <p>This test ensures that responses are added and retrieved for the correct drone IDs.</p>
+     */
     @Test
     void testAddAndRetrieveResponse() {
         int droneId1 = 1, droneId2 = 2;
@@ -51,7 +66,11 @@ class DroneSubsystemTest {
         assertEquals(response2, droneSubsystem.getResponse(droneId2));
     }
 
-    // Test proper closing of sockets
+    /**
+     * Test proper closure of sockets in the {@link DroneSubsystem}
+     *
+     * <p>This test verifies that both the send and receive sockets are properly closed after calling {@link DatagramSocket#close()}.</p>
+     */
     @Test
     void testSocketClosure() {
         DatagramSocket sendSocket = droneSubsystem.getSendSocket();
@@ -63,6 +82,11 @@ class DroneSubsystemTest {
         assertTrue(sendSocket.isClosed());
         assertTrue(receiveSocket.isClosed());
     }
+    /**
+     * Test the reading of fault data from a file
+     *
+     * <p>This test ensures that faults are correctly read from a file, and verifies that the fault list contains valid event types.</p>
+     */
     @Test
     void testReadFaults(){
         assertTrue(droneSubsystem.getFaults().isEmpty(), "Fault list should be empty before reading.");

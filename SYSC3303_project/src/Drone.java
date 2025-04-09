@@ -27,23 +27,21 @@ public class Drone extends Thread
      * coordinates representing drone position */
     private double xPos,yPos = 0;
     /**
-     * number of fire extinguisher balls currently loaded on the drone */
+     * number of fire extinguisher balls currently loaded on the drone
+     */
     private int payloadCount;
     /**
-     * max payload the drone can carry of fire extinguisher balls */
+     * max payload the drone can carry of fire extinguisher balls
+     */
     private final int MAX_PAYLOAD = 10;
 
     /**
-     * used for when checking what request drone will send.
-     * if {@code true} drone will safely send request of location without
-     * disordering state context switching sequence.
+     * Indicates if the drone should safely send a location request without disrupting state transitions.
      * <p>
-     * will only change when is interrupted in the travel function in the DroneTravel state
-     * <p>
-     * see {@code Drone.setSendStatus()} & {@code Drone.checkSendStatus()}
+     * Set when interrupted during travel in {@code DroneTravel}.
+     * See {@code Drone.setSendStatus()} and {@code Drone.checkSendStatus()}.
      */
     private boolean sendStatus = false;
-
     /**
      * Used by the DroneTravel state getRequest() to send back the appropriate DroneEvent
      */
@@ -61,8 +59,6 @@ public class Drone extends Thread
      * Boolean to determine lifespan of this Drone thread, flipped by an unrecoverable fault
      */
     private boolean alive = true;
-
-    // TODO: Add drone attributes such as battery, acceleration etc.
 
     /**
      * Pointer to the DroneSubsystem instance controlling all drones. Purpose
@@ -131,11 +127,9 @@ public class Drone extends Thread
     {
         if( this.currTask == null ) System.out.println(" OLD TASK IS NULL ");
         else {
-//            System.out.println("\n[ DRONE ] OLD TASK ASSIGNED :           "+ this.currTask.toString());
         }
         FireRequest temp = this.currTask;
         this.currTask = newTask;
-//        System.out.println("[ DRONE ] NEW TASK ASSIGNED :           "+ this.currTask.toString() + "\n");
         DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Assigned Task: " + this.currTask.toString());
         return temp;
     }
@@ -230,13 +224,10 @@ public class Drone extends Thread
     {
         System.out.println("[ DRONE ]      Drone " + this.droneId + ": ACTIVATING FEB APPARATUS DOORS ");
         DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Opening payload doors");
-
-        // check fault
         try {
             Thread.sleep(APPARATUS_DOORS_MOVE_TIME);
         } catch (InterruptedException e) {
             System.out.println("\n[ DRONE ]      Drone " + this.droneId + ": interrupted during activateApparatusDoors");
-            // fault
         }
     }
 
@@ -247,7 +238,6 @@ public class Drone extends Thread
         if(this.payloadCount==0)
         {
             System.out.println("[ DRONE ]      Drone " + this.droneId + ": FAULT DROPPING PAYLOAD - EMPTY PAYLOAD");
-            // fault
         }
 
         DroneEventLogger.getInstance().info("Drone", String.valueOf(this.droneId), "Deploying payload");
@@ -259,14 +249,12 @@ public class Drone extends Thread
                 return;
             }
 
-            // check for fault (stuck?)
             System.out.println("[ DRONE ]      Drone " + this.droneId + ": DROPPING PAYLOAD #" +this.payloadCount);
             this.payloadCount--;
             try {
                 Thread.sleep(PAYLOAD_DROP_TIME);
             } catch (InterruptedException e) {
                 System.out.println("\n[ DRONE ]      Drone " + this.droneId + ": interrupted during dropPayload");
-                // fault
             }
         }
 
@@ -284,7 +272,6 @@ public class Drone extends Thread
             Thread.sleep(2*APPARATUS_DOORS_MOVE_TIME);
         } catch (InterruptedException e) {
             System.out.println("\n[ DRONE ]      Drone " + this.droneId + ": interrupted during activateApparatusDoors");
-            // fault
         }
         this.payloadCount = MAX_PAYLOAD;
         System.out.println("[ DRONE ]      Drone " + this.droneId + ": LOADED TO " +this.payloadCount + " FEBs ");
@@ -450,12 +437,12 @@ public class Drone extends Thread
     }
 
     /**
-     * Parse the incoming response and drone proceeds accordingly to a new state.
+     * Parse the incoming response and drone proceeds accordingly to a new state
      * <p>
      * * Also handles if the scheduler tasked the drone to have a new fire request
      * and handles what happens to the old fire request
      * <p>
-     * @param response the incoming response.
+     * @param response the incoming response
      */
     private void handleResponse(String response) {
 
@@ -472,8 +459,7 @@ public class Drone extends Thread
             return;
         }
 
-        if (schedulerInstructions.contains("STATUS"))
-        {
+        if (schedulerInstructions.contains("STATUS")){
             System.out.println("\n[ DRONE ] scheduler keyword is STATUS, returning from handleResponse:         " + Arrays.toString(items)+ "\n     ");
             return;
         }
@@ -490,30 +476,24 @@ public class Drone extends Thread
                 } catch (InterruptedException e) {
                     // interrupted
                 }
-
-                // Send STATUS to Scheduler to check for assignment
                 String statusRequest = makeStatusRequest();
                 droneSubsystem.addRequest(statusRequest);
 
                 String newResponse = droneSubsystem.getResponse(droneId);
 
                 if (newResponse.startsWith("WAIT")) {
-                    continue; // still waiting, continue loop
+                    continue;
                 } else if (newResponse.startsWith("ACK") && newResponse.contains("STATUS")) {
-                    // still just getting status acks, ignore
                     System.out.println("[ DRONE ] Still waiting... got STATUS ACK.");
                     continue;
                 } else {
-                    // this must be a NEW or a non-status ACK (like NEW_FIRE_REQUEST)
+
                     handleResponse(newResponse);
                     break;
                 }
             }
         }
-
-        // if schedulerInstructions is acknowledgement
         else if (schedulerInstructions.equals("ACK")) {
-
             // get the event request
             DroneEvent eventRequest;
             try {
@@ -522,20 +502,15 @@ public class Drone extends Thread
                 System.out.println("ERROR: Unknown drone event: " + items[3]);
                 return;
             }
-            if ( eventRequest.equals(DroneEvent.STATUS) )
-            {
-                // hit if Scheduler responds with ACK when it receives and processes the drones location. drone waits for next instruction
+            if ( eventRequest.equals(DroneEvent.STATUS) ){
                 System.out.println("\n[ DRONE ]   ACK  STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.display() + ")  ...    " +eventRequest.toString() );
                 this.currentState.handleEvent(this, DroneEvent.STATUS);
             }
-            else if ( eventRequest.equals(DroneEvent.RETURN_STATUS) )
-            {
-                // hit if Scheduler responds with ACK when it receives and processes the drones location on return travel. drone waits for next instruction
+            else if ( eventRequest.equals(DroneEvent.RETURN_STATUS) ){
                 System.out.println("\n[ DRONE ]   ACK  RETURN_STATUS order -> drone " + droneId + "    DroneState.handleEvent called from current state (" + this.currentState.display() + ")  ...    " +eventRequest.toString() );
                 this.currentState.handleEvent(this, DroneEvent.RETURN_STATUS);
             }
-            else
-            {
+            else{
                 System.out.println("\n[ DRONE ]   ACK  order -> drone " + droneId + " fulfilling event request ...    " +eventRequest.toString() );
                 if( eventRequest.equals(DroneEvent.NEW_FIRE_REQUEST) )
                 {
@@ -543,45 +518,28 @@ public class Drone extends Thread
                     String newFireRequest= items[6];
                     // handles if currently has a fire request
                     FireRequest newTask = new FireRequest(newFireRequest);
-                    setCurrTask( newTask );
+                    setCurrTask(newTask);
                 }
                 this.currentState.handleEvent(this, eventRequest);
             }
         }
         else if( schedulerInstructions.equals("NEW") )
         {
-            // request = "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y  - for reassigning current task and state
             String newFireRequest = items[6];
             System.out.println("\n[ DRONE ]   NEW  order -> drone " + droneId + " fulfilling new fire request ...    " +newFireRequest );
             FireRequest newTask = new FireRequest(newFireRequest);
             setCurrTask( newTask );
-
             // Set boolean to continue travelling
             continueTravel = true;
 
             // send an indication that this drone is now traveling expecting no response
             this.currentState.handleEvent(this, DroneEvent.NEW_FIRE_REQUEST);
-            // set drone to travel
-//            boolean travelIsInterrupted = travel();
         }
     }
-
     /**
-     * Set the isStuck boolean.
+     * Checks if the drone is jammed
+     * @return true if the drone is jammed, otherwise false
      */
-    public void setStuckFault() {
-        this.isStuck = true;
-    }
-
-    /**
-     * Set the isJammed boolean.
-     */
-    public void setJammedFault() {
-        synchronized (jammedLock){
-            this.isJammed = true;
-        }
-    }
-
     public boolean checkJammedFault(){
         boolean value = false;
         synchronized (jammedLock){
@@ -589,29 +547,51 @@ public class Drone extends Thread
         }
         return value;
     }
-
     /**
-     * Set the packetLoss boolean.
+     * Sets the drone's fault state to stuck
+     */
+    public void setStuckFault() {
+        this.isStuck = true;
+    }
+    /**
+     * Sets the drone's fault state to jammed
+     */
+    public void setJammedFault() {
+        synchronized (jammedLock){
+            this.isJammed = true;
+        }
+    }
+    /**
+     * Sets the drone's fault state to packet loss
      */
     public void setPacketLossFault() {
         this.packetLoss = true;
     }
-
     /**
-     * Set the alive boolean to false.
+     * Marks the drone as not alive
      */
     public void setAlive() {
         this.alive = false;
     }
-
+    /**
+     * Sets the drone's position to the base (0, 0)
+     */
     public void setBasePosition()
     {
         this.xPos = 0;
         this.yPos = 0;
     }
+    /**
+     * Gets whether the drone is jammed
+     * @return true if the drone is jammed, otherwise false
+     */
     public boolean getIsJammed(){
         return isJammed;
     }
+    /**
+     * Gets whether the drone is stuck
+     * @return true if the drone is stuck, otherwise false
+     */
     public boolean getIsStuck(){
         return isStuck;
     }

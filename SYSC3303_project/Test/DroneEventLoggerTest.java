@@ -14,7 +14,7 @@ public class DroneEventLoggerTest {
          logger.getEventBuffer().clear();
     }
     /**
-     * Tests the DroneEventClass constructor and getters.
+     * Tests the DroneEventClass constructor and getters
      */
     @Test
     public void TestDroneEventClass(){
@@ -26,7 +26,7 @@ public class DroneEventLoggerTest {
         Assertions.assertEquals("TEST",test.getMessage());
     }
     /**
-     * Verifies that the log method correctly adds an event to the buffer.
+     * Verifies that the log method correctly adds an event to the buffer
      */
     @Test
     public void TestLog(){
@@ -39,7 +39,7 @@ public class DroneEventLoggerTest {
 
     }
     /**
-     * Verifies the info method adds an event with correct details to the buffer.
+     * Verifies the info method adds an event with correct details to the buffer
      */
     @Test
     public void TestInfo(){
@@ -51,7 +51,7 @@ public class DroneEventLoggerTest {
         Assertions.assertEquals("message",logger.getEventBuffer().get(0).getMessage());
     }
     /**
-     * Verifies the debug method adds an event with correct details to the buffer.
+     * Verifies the debug method adds an event with correct details to the buffer
      */
     @Test
     public void TestDebug(){
@@ -63,7 +63,7 @@ public class DroneEventLoggerTest {
         Assertions.assertEquals("message",logger.getEventBuffer().get(0).getMessage());
     }
     /**
-     * Verifies the warn method adds an event with correct details to the buffer.
+     * Verifies the warn method adds an event with correct details to the buffer
      */
     @Test
     public void TestWarn(){
@@ -75,7 +75,7 @@ public class DroneEventLoggerTest {
         Assertions.assertEquals("message",logger.getEventBuffer().get(0).getMessage());
     }
     /**
-     * Verifies the error method adds an event with correct details to the buffer.
+     * Verifies the error method adds an event with correct details to the buffer
      */
     @Test
     public void TestError(){
@@ -87,7 +87,7 @@ public class DroneEventLoggerTest {
         Assertions.assertEquals("message",logger.getEventBuffer().get(0).getMessage());
     }
     /**
-     * Verifies the error method (with exception) adds an event with correct details to the buffer.
+     * Verifies the error method (with exception) adds an event with correct details to the buffer
      */
     @Test
     public void TestErrorException(){

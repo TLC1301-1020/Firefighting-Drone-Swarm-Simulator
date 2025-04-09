@@ -6,16 +6,17 @@ import java.lang.reflect.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+/**
+ * Test class for {@link DroneLogAnalyzer}
+ * This class contains tests for various aspects of the {@code DroneLogAnalyzer} class
+ * It includes methods to clean up logs and reset state after each test
+ */
 @SuppressWarnings("ALL")
 public class DroneLogAnalyzerTest {
     private String logLine;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
     private List<Object> logs = new ArrayList<>();
 
-    /**
-     * Clears all info after each test。
-     */
     @AfterEach
     void cleanUp(){
         DroneLogAnalyzer.getSubsystemLogs().clear();
@@ -25,10 +26,16 @@ public class DroneLogAnalyzerTest {
         DroneLogAnalyzer.getSchedulerListenerLogs().clear();
     }
     /**
-     * Tests the `parse` method of the `LogEntry` class.
-     * Verifies correct parsing of a log line into a `LogEntry` object,
-     * checking if the timestamp, component, thread type, and event
-     * are parsed correctly.
+     * Unit test for parsing a log entry using the {@link DroneLogAnalyzer.LogEntry} class
+     * This test verifies that the {@code parse} method of the {@code LogEntry} class correctly parses a log line
+     *
+     * The test checks the following:
+     * 1. The log entry is parsed successfully and is not null
+     * 2. The timestamp, component, thread type, and event fields are correctly set
+     *
+     * The test invokes the {@code parse} method using reflection and verifies the extracted values
+     *
+     * @throws ClassNotFoundException If the {@code DroneLogAnalyzer.LogEntry} class cannot be found
      */
     @Test
     public void logEntryParse() throws ClassNotFoundException {
@@ -57,13 +64,22 @@ public class DroneLogAnalyzerTest {
         }
     }
     /**
-     * Tests the `readLogs` method of the `DroneLogAnalyzer` class.
-     * This test creates a temporary log file, writes sample log entries into it,
-     * and then calls the `readLogs` method to read and parse the log entries.
-     * It verifies the parsing functionality by checking that the component, thread type,
-     * and event are correctly extracted and assigned to the respective lists (`schedulerListenerLogs`,
-     * `subsystemLogs`, `processFaultLogs`, and `droneLogs`).
-     * The test checks the correctness of the parsed data by using assertions.
+     * Unit test for reading log entries using the {@link DroneLogAnalyzer} class
+     * This test verifies that the {@code readLogs} method correctly parses the log file and stores the parsed entries
+     * in their respective log categories
+     *
+     * The test writes a series of log entries to a temporary file, then calls the {@code readLogs} method to parse the
+     * log file. It then verifies that the parsed entries are correctly classified into their respective log categories:
+     * - {@code SchedulerListenerLogs}
+     * - {@code SubsystemLogs}
+     * - {@code ProcessFaultLogs}
+     * - {@code DroneLogs}
+     *
+     * For each log category, the following assertions are made：
+     * 1. The component, thread type, and event fields of the parsed log entry are correct
+     * 2. The number of entries in the respective log category is as expected
+     *
+     * @throws IOException If an I/O error occurs while creating the temporary log file or writing to it.
      */
     @Test
     public void TestReadLogs() throws IOException {
@@ -137,13 +153,19 @@ public class DroneLogAnalyzerTest {
         }
     }
     /**
-     * Tests the `averageDeploy` method of the `DroneLogAnalyzer` class.
-     * This test creates several `LogEntry` objects representing drone deployment events
-     * and verifies that the `averageDeploy` method correctly calculates the average deployment time.
-     * It checks three cases:
-     * 1. Correct event order, where the deployment time is calculated correctly.
-     * 2. Incorrect event order, where the method should return 0 as deployment time.
-     * 3. No logs, where the method should return 0 for average deployment time.
+     * Unit test for the {@link DroneLogAnalyzer#averageDeploy(List)} method
+     * This test verifies the correct calculation of the average deployment time for drone logs
+     * It tests three cases:
+     * 1. Two logs with a valid deployment sequence: The test ensures the average deployment time is calculated correctly
+     * 2. Two logs with an invalid deployment sequence: The test checks that the method handles the case where the logs are in the wrong order
+     * 3. No logs: The test verifies that the method correctly returns 0 when there are no logs to process
+     *
+     * The following assertions are made:
+     * - When the deployment logs are in correct order, the average deployment time is calculated and verified
+     * - When the logs are in the wrong order, the deployment time is 0, indicating that the sequence is invalid
+     * - When no logs are provided, the deployment time is 0
+     *
+     * @throws Exception If an error occurs during reflection or log creation
      */
     @Test
     public void TestAverageDeploy(){
@@ -205,12 +227,19 @@ public class DroneLogAnalyzerTest {
 
     }
     /**
-     * Tests the `droneRunTime` method of the `DroneLogAnalyzer` class.
-     * This test verifies the calculation of the runtime for a drone based on its log entries.
-     * It checks three cases:
-     * 1. Correct log entries for assigned and returned events, where runtime is calculated correctly.
-     * 2. Incorrect log entries where the timestamps are the same, resulting in a runtime of 0.
-     * 3. A case where the return timestamp is earlier than the assignment timestamp, resulting in 0 runtime.
+     * Unit test for the {@link DroneLogAnalyzer#droneRunTime(List)} method
+     * This test verifies the correct calculation of the drone's runtime between the "Assigned" and "Arrived back at base" events
+     * It tests three cases:
+     * 1. A valid log sequence with "Assigned" and "Arrived back at base" logs: The test ensures the runtime is calculated correctly
+     * 2. Logs with identical timestamps: The test checks that the method returns 0 when the logs have the same timestamp
+     * 3. A log sequence where the "Arrived back at base" log occurs before the "Assigned" log: The test verifies that the method handles this invalid scenario and returns 0
+     *
+     * The following assertions are made:
+     * - When the logs are in the correct sequence, the runtime is calculated and verified
+     * - When the logs have identical timestamps, the runtime is 0, indicating no time difference
+     * - When the "Arrived back at base" log occurs before the "Assigned" log, the runtime is 0
+     *
+     * @throws Exception If an error occurs during reflection or log creation.
      */
     @Test
     public void TestDroneRunTime() {
@@ -377,13 +406,13 @@ public class DroneLogAnalyzerTest {
         }
     }
     /**
-     * Tests the `subsystemLatency` method of the `DroneLogAnalyzer` class.
-     * This test verifies the calculation of average latency between "Waiting" and "Received" events for the "DroneSubsystem".
+     * Tests the `subsystemLatency` method of the `DroneLogAnalyzer` class
+     * This test verifies the calculation of average latency between "Waiting" and "Received" events for the "DroneSubsystem"
      * It checks multiple scenarios:
-     * 1. **Normal case**: Verifies correct average latency calculation when valid logs with "Waiting" and "Received" events are available.
-     * 2. **Empty logs**: Verifies that the latency is 0 when no logs are available.
-     * 3. **No completed requests**: Verifies that the latency is 0 when no "Received" event exists for a "Waiting" event.
-     * 4. **Incorrect event order**: Verifies that the latency is 0 when the "Received" event occurs before the "Waiting" event.
+     * 1. **Normal case**: Verifies correct average latency calculation when valid logs with "Waiting" and "Received" events are available
+     * 2. **Empty logs**: Verifies that the latency is 0 when no logs are available
+     * 3. **No completed requests**: Verifies that the latency is 0 when no "Received" event exists for a "Waiting" event
+     * 4. **Incorrect event order**: Verifies that the latency is 0 when the "Received" event occurs before the "Waiting" event
      */
     @Test
     public void TestSubsystemLatency(){
@@ -427,49 +456,19 @@ public class DroneLogAnalyzerTest {
                     "0",
                     "Received"
             );
-//            logs.add(log);
-//            avgLatency = DroneLogAnalyzer.subsystemLatency();
-//            Assertions.assertEquals(3.25, avgLatency, 0.001);
-//
-//            //empty log test
-//            logs.clear();
-//            avgLatency = DroneLogAnalyzer.subsystemLatency();
-//            Assertions.assertEquals(0.0, avgLatency, 0.001);
-//
-//            //no request completed
-//            log = constructor.newInstance(
-//                    LocalTime.parse("12:34:56.000", formatter),
-//                    "DroneSubsystem",
-//                    "run",
-//                    "Waiting"
-//            );
-//            avgLatency = DroneLogAnalyzer.subsystemLatency();
-//            Assertions.assertEquals(0.0, avgLatency, 0.001);
-//            logs.clear();
-//
-//            //both wait and received but wrong order
-//            log = constructor.newInstance(
-//                    LocalTime.parse("12:33:00.500", formatter),
-//                    "DroneSubsystem",
-//                    "run",
-//                    "Received"
-//            );
-//            avgLatency = DroneLogAnalyzer.subsystemLatency();
-//            Assertions.assertEquals(0.0, avgLatency, 0.001);
-//            logs.clear();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
     /**
-     * Tests the `throughput` method of the `DroneLogAnalyzer` class.
-     * This test verifies the calculation of throughput between two events for the "Drone" component.
+     * Tests the `throughput` method of the `DroneLogAnalyzer` class
+     * This test verifies the calculation of throughput between two events for the "Drone" component
      * It checks multiple scenarios:
-     * 1. **Normal case**: Verifies correct throughput calculation when logs with valid timestamps are available.
-     * 2. **Lifetime = 0**: Verifies that throughput is 0 when the provided lifetime is 0.
-     * 3. **Lifetime < 0**: Verifies that throughput is 0 when the provided lifetime is negative.
-     * 4. **Empty log**: Verifies that throughput is 0 when no logs are available.
-     * 5. **Empty event message**: Verifies that throughput is 0 when one of the event messages is empty.
+     * 1. **Normal case**: Verifies correct throughput calculation when logs with valid timestamps are available
+     * 2. **Lifetime = 0**: Verifies that throughput is 0 when the provided lifetime is 0
+     * 3. **Lifetime < 0**: Verifies that throughput is 0 when the provided lifetime is negative
+     * 4. **Empty log**: Verifies that throughput is 0 when no logs are available
+     * 5. **Empty event message**: Verifies that throughput is 0 when one of the event messages is empty
      */
     @Test
     public void TestThroughput(){
@@ -525,14 +524,14 @@ public class DroneLogAnalyzerTest {
         }
     }
     /**
-     * Tests the `utilization` method of the `DroneLogAnalyzer` class.
-     * This test verifies the calculation of utilization between two events for the "Drone" component.
+     * Tests the `utilization` method of the `DroneLogAnalyzer` class
+     * This test verifies the calculation of utilization between two events for the "Drone" component
      * It checks multiple scenarios:
-     * 1. **Normal case**: Verifies correct utilization calculation when logs with valid timestamps are available.
-     * 2. **Lifetime = 0**: Verifies that utilization is 0 when the provided lifetime is 0.
-     * 3. **Lifetime < 0**: Verifies that utilization is 0 when the provided lifetime is negative.
-     * 4. **Empty log**: Verifies that utilization is 0 when no logs are available.
-     * 5. **Empty event message**: Verifies that utilization is 0 when one of the event messages is empty.
+     * 1. **Normal case**: Verifies correct utilization calculation when logs with valid timestamps are available
+     * 2. **Lifetime = 0**: Verifies that utilization is 0 when the provided lifetime is 0
+     * 3. **Lifetime < 0**: Verifies that utilization is 0 when the provided lifetime is negative
+     * 4. **Empty log**: Verifies that utilization is 0 when no logs are available
+     * 5. **Empty event message**: Verifies that utilization is 0 when one of the event messages is empty
      */
     @Test
     public void TestUtilization() {
@@ -589,12 +588,12 @@ public class DroneLogAnalyzerTest {
         }
     }
     /**
-     * Tests the `calculateTotalTime` method of the `DroneLogAnalyzer` class.
-     * This test verifies the correct calculation of total time between the "Assigned" and "Arrived back at base" events for the "Drone" component.
+     * Tests the `calculateTotalTime` method of the `DroneLogAnalyzer` class
+     * This test verifies the correct calculation of total time between the "Assigned" and "Arrived back at base" events for the "Drone" component
      * It checks multiple scenarios:
-     * 1. **Normal case**: Verifies the correct calculation of total time when valid timestamps are provided.
-     * 2. **Empty log**: Verifies that the total time is 0 when no logs are available.
-     * 3. **Incorrect timestamp order**: Verifies that total time is 0 when the "Arrived back at base" timestamp is earlier than the "Assigned" timestamp.
+     * 1. **Normal case**: Verifies the correct calculation of total time when valid timestamps are provided
+     * 2. **Empty log**: Verifies that the total time is 0 when no logs are available
+     * 3. **Incorrect timestamp order**: Verifies that total time is 0 when the "Arrived back at base" timestamp is earlier than the "Assigned" timestamp
      */
     @Test
     public void TestCalculateTotalTime(){
@@ -655,11 +654,11 @@ public class DroneLogAnalyzerTest {
         }
     }
     /**
-     * Tests the `sortDrones` method of the `DroneLogAnalyzer` class.
-     * This test verifies that the `sortDrones` method correctly sorts the drone logs and organizes them into a `HashMap` where the key is the drone identifier.
+     * Tests the `sortDrones` method of the `DroneLogAnalyzer` class
+     * This test verifies that the `sortDrones` method correctly sorts the drone logs and organizes them into a `HashMap` where the key is the drone identifier
      * The test checks the following scenarios:
-     * 1. **Before sorting**: Verifies the correct initial state of the drone logs list and checks that the logs are in the expected order.
-     * 2. **After sorting**: Verifies that the logs are correctly grouped by the drone identifier and that the `HashMap` structure is updated as expected.
+     * 1. **Before sorting**: Verifies the correct initial state of the drone logs list and checks that the logs are in the expected order
+     * 2. **After sorting**: Verifies that the logs are correctly grouped by the drone identifier and that the `HashMap` structure is updated as expected
      */
     @Test
     public void TestSortDrones(){

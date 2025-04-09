@@ -7,8 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 /**
- * EventScheduler class that takes in Event objects, delays for an appropriate amount of time based on the Event time,
- * and stores Event objects once they are ready to be handled.
+ * The {@code EventScheduler} class manages the scheduling and processing of {@code Event} objects
+ * <p>
+ * It processes the events based on their scheduled times, and distributes them to be handled once they are ready
+ * The simulation speed can be adjusted, allowing events to be processed at different speeds
+ * </p>
  */
 public class EventScheduler {
 
@@ -23,7 +26,10 @@ public class EventScheduler {
     private final long systemTime;
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-
+    /**
+     * Constructs an {@code EventScheduler} instance with an initial system time
+     * The system time is set to "10-00-00" by default
+     */
     public EventScheduler() {
         // Initialize a system time that comes before any events
         try {
@@ -36,16 +42,19 @@ public class EventScheduler {
     }
 
     /**
-     * Method to be used by the containing object to add Events that should be processed and waited on.
-     * @param event Event to process.
+     * Adds an {@code Event} to the event queue for processing
+     *
+     * @param event The event to process
      */
     public void addEvent(Event event) {
         eventQueue.add(event);
     }
 
     /**
-     * Method to be used by the containing object to retrieve Events that are ready to be handled.
-     * @return the Event that is ready to be handled.
+     * Retrieves and removes the next {@code Event} that is ready to be handled
+     * Blocks until an event is available
+     *
+     * @return The next ready event
      */
     public Event getEvent() {
         synchronized (readyQueue) {
@@ -62,14 +71,14 @@ public class EventScheduler {
     }
 
     /**
-     * Start the scheduler, and start processing Events.
+     * Starts the scheduler and begins processing the events
      */
     public void start() {
         scheduler.execute(this::processEvents);
     }
 
     /**
-     * Schedule the distribution of each Event in eventQueue using a delay based on the current system time.
+     * Processes events by scheduling them with delays based on their times
      */
     private void processEvents() {
         while (!eventQueue.isEmpty()) {
@@ -89,8 +98,9 @@ public class EventScheduler {
     }
 
     /**
-     * Add this event to the thread-safe readyQueue so that the containing object can receive them.
-     * @param event Event that has been flagged as ready.
+     * Distributes the event to the {@code readyQueue} once it is ready for processing
+     *
+     * @param event The event that is ready to be processed
      */
     private void distributeEvent(Event event) {
         synchronized (readyQueue) {
@@ -99,19 +109,18 @@ public class EventScheduler {
         }
     }
     /**
-     * Test class for the {@link EventScheduler} class's {@link EventScheduler#getEventQueue()} method.
-     * This test ensures that the event queue is correctly initialized and can be accessed.
+     * Retrieves the event queue, which holds the events awaiting processing
+     *
+     * @return The event queue
      */
     public Queue<Event> getEventQueue() {
         return eventQueue;
     }
+
     /**
-     * Retrieves the queue of ready events.
+     * Retrieves the queue of ready events that are ready to be processed
      *
-     * This method returns the {@code readyQueue} that holds the events that are ready to be processed or distributed.
-     * This queue is used to manage events that have been processed and are awaiting further handling.
-     *
-     * @return A {@link Queue} of {@link Event} objects representing events that are ready to be processed.
+     * @return The ready queue containing events that can be processed
      */
     public Queue<Event> getReadyQueue(){
         return readyQueue;

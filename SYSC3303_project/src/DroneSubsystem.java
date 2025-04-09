@@ -15,58 +15,34 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Implements {@code Runnable} to execute in a separate thread
  */
 public class DroneSubsystem implements Runnable {
-    /**
-     * datagram sockets for network communication
-     */
+
+    /** Handles sending and receiving of UDP packets */
     private DatagramSocket sendSocket, receiveSocket;
-    /**
-     * list of Drone objects being routed messages by DroneSubsystem process through direction
-     * of the Scheduler
-     */
+    /** Stores all Drone instances, mapped by ID */
     private final HashMap<Integer,Drone> drones = new HashMap<>();
 
-    /**
-     * flag for checking if the drones have been initialized after creating the DroneSubsystem Instance.
-     * <p>{@code true} if drones have already been initialized */
+    /** Indicates whether drones have been initialized */
     private boolean dronesInitialized;
-    /**
-     * thread safe queue for individual drone threads to send requests to the {@code Scheduler} through the
-     * {@code DroneSubsystem}. <p>DroneSubsystem removes request from the queue and, without modifying it, sends
-     * the request to the Scheduler within a datagram packet */
+    /** Thread safe queue for drones to send requests to the Scheduler */
     private final ConcurrentLinkedQueue<String> requestQueue = new ConcurrentLinkedQueue<>();
-
-    /**
-     * thread safe hashmap for individual drone threads to remove responses from the {@code Scheduler} through the
-     * {@code DroneSubsystem}. <p>DroneSubsystem receives responses from the Scheduler and, without modifying it,
-     * puts the response (as the value) in this hashmap with the drone id (as the key) for a drone to check
-     * if it has a response */
-//    private final ConcurrentHashMap<Integer, String> responseQueue = new ConcurrentHashMap<>();
-
+    /** Thread safe map for drones to receive Scheduler responses; key: drone ID, value: response queue */
     private final ConcurrentHashMap< Integer, LinkedList<String> > responseQueue = new ConcurrentHashMap<>();
-
-    /**
-     * A static map that holds zone information parsed from the csv
-     * Key: Zone ID, Value: Zone object
-     */
+    /** Zone data loaded from CSV; key: Zone ID, value: Zone */
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
 
-    /**
-     * {@code EventScheduler} object to process Drone faults and deploy them at desired times.
-     */
+    /** Schedules and triggers drone fault events */
     EventScheduler scheduler = new EventScheduler();
 
-    /**
-     * Array that holds Drone faults read from file to be passed to an {@code EventScheduler}.
-     */
+    /** Stores drone fault events from file for scheduling */
     private ArrayList<Event> faults = new ArrayList<>();
 
-    /**
-     * boolean set for all thread function loops. set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
+    /** Master run flag to stop all threads; disabled only during testing */
     private volatile boolean running = true;
 
     /**
-     * creates a drone subsystem instance for routing messages to and from all drone threads and
-     * the Scheduler
+     * Initializes the DroneSubsystem by creating DatagramSockets for sending and receiving data
+     * The sendSocket is created without a specific port, while the receiveSocket listens on the
+     * DRONE_SUBSYSTEM_PORT defined in the Scheduler
      */
     public DroneSubsystem()
     {
@@ -77,17 +53,28 @@ public class DroneSubsystem implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Returns the DatagramSocket used for sending messages to other components
+     *
+     * @return the send socket
+     */
     DatagramSocket getSendSocket() {
         return sendSocket;
     }
+    /**
+     * Returns the DatagramSocket used for receiving messages from other components
+     *
+     * @return the receive socket
+     */
     DatagramSocket getReceiveSocket() {
         return receiveSocket;
     }
 
     /**
-     * Method used by Drone instances to store a request for the Scheduler.
-     * @param request the Drone's request.
+     * Adds a request to the request queue and notifies all waiting threads
+     * Synchronized to ensure thread safety while modifying the request queue
+     *
+     * @param request the request to be added to the queue
      */
     public void addRequest(String request) {
         synchronized (requestQueue) {
@@ -96,12 +83,12 @@ public class DroneSubsystem implements Runnable {
         }
     }
 
-
     /**
-     * custom blocking take() method <p>
-     * If queue is empty, waits until a request is available.
-     * Removes head of queue (poll)
-     * Uses wait() and notifyAll() for thread-safe blocking
+     * Retrieves and removes the next request from the request queue
+     * If the queue is empty, it waits until a new request is added
+     * Synchronized to ensure thread safety while accessing the request queue
+     *
+     * @return the next request from the queue, or "REQUESTQUEUE_EMPTY" if interrupted
      */
     public String getRequest()
     {
@@ -122,12 +109,15 @@ public class DroneSubsystem implements Runnable {
     }
 
     /**
-     * adds a response for a specific drone by the drone's id
-     * Notifies waiting threads that a response is available.
+     * Adds a response for a specific drone to the response queue
+     * If no entry exists for the drone, a new list is created
+     * Synchronized to ensure thread safety while modifying the response queue
+     *
+     * @param droneId the ID of the drone receiving the response
+     * @param response the response to be added
      */
     public void addResponse(int droneId, String response)
     {
-//        System.out.println( "[  DSS  ]                 adding response to queue drone:"+droneId+":         " + response );
         synchronized (this.responseQueue)
         {
             LinkedList<String> responses = this.responseQueue.get(droneId);
@@ -141,16 +131,16 @@ public class DroneSubsystem implements Runnable {
 
             this.responseQueue.put(droneId, responses);
             DroneEventLogger.getInstance().info("DroneSubsystem", "ListeningToScheduler", "Response handled.");
-//            System.out.println( "\n [ DSS ]  response added" );
             this.responseQueue.notifyAll();
         }
-
     }
 
     /**
-     * used by Drone instances to retrieve Scheduler responses
-     * @param droneId the requesting Drones ID
-     * @return the Scheduler response to the drone request
+     * Retrieves and removes the response for the specified drone
+     * If no response is available, the thread waits until a response is added
+     *
+     * @param droneId the ID of the drone for which the response is retrieved
+     * @return the first response in the queue for the specified drone
      */
     public String getResponse(int droneId) {
         synchronized (this.responseQueue) {
@@ -170,18 +160,13 @@ public class DroneSubsystem implements Runnable {
         }
     }
 
-
     /**
-     * Method for instantiating all drone threads with unique drone id's and a
-     * pointer to the drone Subsystem instance for invoking thread safe requests
-     * and receiving responses from the scheduler via the {@code requestQueue} and
-     * {@code responseQueue} <p>
-     * A datagram packet is sent to the Scheduler to first register the drone and the response
-     * acknowledgement enables the drone instance to be created
-     * @param droneSubsystem pointer to the instance of the DroneSubsystem used in a static
-     *                       context (main)
-     * @param numberOfDrones the number of drone threads to be initialized in the system
+     * Initializes all drones by sending an initialization request to the Scheduler
+     * and waiting for an acknowledgment for each drone. Successfully initialized drones
+     * are added to the drone collection
      *
+     * @param droneSubsystem the DroneSubsystem instance used to manage drone operations
+     * @param numberOfDrones the number of drones to initialize
      */
     public void initializeAllDrones(DroneSubsystem droneSubsystem, int numberOfDrones) {
         // Check if drones are already initialized
@@ -189,19 +174,14 @@ public class DroneSubsystem implements Runnable {
 
         int droneCounter = 0;
         for (int i = 0; i < numberOfDrones; ++i) {
-            // Build the registration request using the expected format:
-            // "DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
             String request = i + ":[IDLE]:INIT:0:0:0";
             System.out.println("\n[ DSS->S ] INIT DRONE REQ:           " + request);
             sendPacket(request);
 
             // Wait for a response from the Scheduler
             String response = receivePacket();
-
             System.out.println("\n[ S->DSS ] INIT DRONE RES:           " + response);
 
-
-            // Check if the response contains "ACK"
             if (response != null && response.trim().contains("ACK")) {
                 // Registration is successful; add the drone thread to the collection.
                 this.drones.put(i, new Drone(droneSubsystem, i));
@@ -215,6 +195,10 @@ public class DroneSubsystem implements Runnable {
         this.dronesInitialized = true;
     }
 
+    /**
+     * Starts a daemon thread that listens for responses from the Scheduler
+     * It processes incoming responses and handles shutdown or passes requests to the DroneSubsystem
+     */
     private void startListeningToScheduler() {
         Thread schedulerListener = new Thread(() -> {
             while (running) {
@@ -236,13 +220,13 @@ public class DroneSubsystem implements Runnable {
         schedulerListener.setDaemon(true);
         schedulerListener.start();
     }
-
+    /**
+     * A thread that listens for faults and injects them into the corresponding drones
+     * Faults include "DRONE_STUCK", "NOZZLE_JAMMED", and "PACKET_LOSS"
+     */
     private class processFaults extends Thread {
         @Override
         public void run() {
-
-            // Retrieve Drone faults that are ready to be processed
-            // Events are in example format "DRONE_STUCK:0"
 
             while (running) {
                 // Block until a fault is ready to process
@@ -278,29 +262,23 @@ public class DroneSubsystem implements Runnable {
             }
         }
     }
-
-
     /**
-     * thread function for the drone subsystem. calls the thread function for all drones in
-     * {@code DroneSubsystem.drones} before proceeding into main loop.<p>
-     * MAIN LOOP:<p>
-     * 1. checks {@code DroneSubsystem.requestQueue} for requests from drones<p>
-     * 2. sends drone requests unmodified in a datagram packet to the Scheduler<p>
-     * 3. receives responses from scheduler and puts them unmodified in {@code DroneSubsystem.responseQueue}
+     * The main execution loop for the DroneSubsystem
+     * <p>
+     * 1. Starts listening for responses from the Scheduler
+     * 2. Initializes and starts all drones
+     * 3. Adds faults to the EventScheduler and starts it
+     * 4. Starts a separate thread to process faults
+     * 5. Continuously checks the request queue, handling drone requests and sending them to the Scheduler
      */
     public void run() {
-        // TODO: determine a proper condition for thread lifespan
-        // Start listening to Scheduler messages in a separate thread
         startListeningToScheduler();
 
-        // Start thread functions for all drones
         Collection<Drone> allDrones = this.drones.values();
         for (Drone drone : allDrones) {
             drone.start();
         }
 
-        // After readFaultFile(), tasks stores all fault events in faults
-        // Send these faults to our EventScheduler
         for (Event fault : faults) {
             scheduler.addEvent(fault);
         }
@@ -329,24 +307,16 @@ public class DroneSubsystem implements Runnable {
     }
 
     /**
-     * handle the response passed to the drone subsystem from the scheduler
+     * Handles a response received from the Scheduler and adds it to the appropriate drone's response queue
      * <p>
-     * response from scheduler is parsed to obtain drone id, once obtained it
-     * passes the full response (unmodified) to the response queue with the drone id as key
-     * @param response String passed from Scheduler to DroneSubsystem to be
-     *                  passed directely to drone
+     * Parses the drone ID from the response and stores it in the response queue for later retrieval
+     *
+     * @param response The response string from the Scheduler
      */
     public void handleDroneResponse(String response)
     {
-        /*  response types
-            "ACK" in format ACK:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK      - for saying acknowledge
-            "NEW" in format NEW:DRONE_ID:STATE:FIREREQUEST:X:Y:CURR_TASK  - for reassigning current task and state
-         */
         String[] items = response.split(":");
 
-//        System.out.println("\n[  DSS  ] parsing scheduler response and sending to drone:        " + Arrays.toString(items) );
-
-        // get drone id     -   in expected format "RESPONSE:DRONE_ID:STATE:REQUEST:X:Y:CURR_TASK"
         int droneId = -1;
         try {droneId = Integer.parseInt(items[1]);}
         catch (NumberFormatException e) {
@@ -359,11 +329,13 @@ public class DroneSubsystem implements Runnable {
     }
 
     /**
-     * Send a UDP packet to the Scheduler.
-     * @param request message to be sent.
+     * Sends a request packet to the Scheduler over UDP
+     * <p>
+     * Converts the request string to bytes and sends it as a DatagramPacket to the Scheduler
+     *
+     * @param request The request to be sent to the Scheduler
      */
     public void sendPacket(String request){
-//        System.out.println("\n x x x SEND PACKET DRONES x x x " + request);
 
         byte msg[] = request.getBytes();
         DatagramPacket packet;
@@ -382,8 +354,12 @@ public class DroneSubsystem implements Runnable {
     }
 
     /**
-     * Receive a UDP packet from the Scheduler.
-     * @return the message received.
+     * Receives a packet from the Scheduler over UDP
+     * <p>
+     * Waits for an incoming DatagramPacket on the received socket, and returns the received data as a string
+     *
+     * @return The received data as a string
+     * @throws RuntimeException If an error occurs while receiving the packet
      */
     public String receivePacket(){
 
@@ -397,16 +373,18 @@ public class DroneSubsystem implements Runnable {
             throw new RuntimeException(e);
         }
         int len = receivePacket.getLength();
-//        System.out.print("\n x x x RECEIVE PACKET DRONES x x x " + new String(data,0,len));
-
-        // Return a String from the byte array
         return new String(data,0,len);
     }
 
+    /**
+     * Reads a fault file and adds faults to the faults list
+     * <p>
+     * The method processes each line in the given file, splitting it into event time and type,
+     * and adds the parsed events to the faults list
+     *
+     * @param inputFile The path of the input file containing fault events
+     */
     public void readFaultFile(String inputFile){
-
-        // Read in faults from file in the example form "10:00:00,DRONE_STUCK:0"
-        // Create an event with the time as the timestamp, and the String "DRONE_STUCK:0" as the event
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))){
             String line;
@@ -428,17 +406,24 @@ public class DroneSubsystem implements Runnable {
         }
 
     }
+    /**
+     * Reads a zone file and stores zone data in a static map
+     * <p>
+     * The method parses each line in the file, extracting zone information including coordinates,
+     * and adds each zone to the zoneMap
+     *
+     * @param zoneFile The path of the zone file to be processed
+     */
     public void readZoneFile(String zoneFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(zoneFile))) {
             String header = reader.readLine(); // Skip header
             String line;
             while ((line = reader.readLine()) != null) {
-                // Expected line format: Zone ID,Zone Start,Zone End
+
                 String[] parts = line.split(",");
                 if (parts.length < 3) continue;
                 int zoneId = Integer.parseInt(parts[0].trim());
 
-                // Parse start coordinates
                 String startStr = parts[1].trim();
                 startStr = startStr.substring(1, startStr.length() - 1); // Remove parentheses
                 String[] startCoords = startStr.split(";");
@@ -461,15 +446,9 @@ public class DroneSubsystem implements Runnable {
         }
     }
 
-    public Zone getZone(int zoneId) {
-        return zoneMap.get(zoneId);
-    }
-    public ArrayList<Event> getFaults(){
-        return faults;
-    }
-
     /**
-     * gracefully exit for all thread function loops. running set to false only in testing contexts for back to back instances of DroneSubsystem threads running */
+     * Gracefully shuts down the program by stopping execution and closing sockets
+     */
     private void shutdown() {
         this.running = false;
         DroneEventLogger.getInstance().info("All", "All", "Program ended, shutting down.");
@@ -477,6 +456,14 @@ public class DroneSubsystem implements Runnable {
         // close sockets if they are open
         if (sendSocket != null && !sendSocket.isClosed()) sendSocket.close();
         if (receiveSocket != null && !receiveSocket.isClosed()) receiveSocket.close();
+    }
+
+    //Getters
+    public Zone getZone(int zoneId) {
+        return zoneMap.get(zoneId);
+    }
+    public ArrayList<Event> getFaults(){
+        return faults;
     }
 
     public static void main(String[] args)
