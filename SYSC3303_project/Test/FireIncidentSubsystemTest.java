@@ -2,16 +2,30 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
+/**
+ * Unit tests for FireIncidentSubsystem
+ * <p>
+ * tests validate fire request parsing, zone file loading, socket setup,
+ * request sending behavior, and task ordering operations
+ */
 class FireIncidentSubsystemTest {
+
+    /** FireIncidentSubsystem instance to be used for each test */
     private FireIncidentSubsystem fireSubsystem;
+    /** file path to be used to read fire incidents from text file  */
     private final String inputFile = "SYSC3303_project/src/fireincidents.txt";
+    /** file path to be used to read zone data from csv file  */
     private final String zoneFile = "SYSC3303_project/src/zone_file.csv";
 
+    /**
+     * Initializes a new FireIncidentSubsystem instance before each test */
     @BeforeEach
     void setUp() {
         fireSubsystem = new FireIncidentSubsystem();
     }
 
+    /**
+     * closes sockets after each test to ensure no issues in subsequent tests */
     @AfterEach
     void tearDown() {
         if (fireSubsystem.getReceiveSocket() != null) {
@@ -22,7 +36,9 @@ class FireIncidentSubsystemTest {
         }
     }
 
-    // Ensure fire incidents are read correctly into tasks
+    /**
+     *      Tests if {@code readInputFile()} correctly reads and stores fire incidents
+     *      into the internal task list with all expected fields loaded with data */
     @Test
     void testReadInputFile() {
         assertTrue(fireSubsystem.getTasks().isEmpty(), "Task list should be empty before reading");
@@ -43,7 +59,10 @@ class FireIncidentSubsystemTest {
         }
     }
 
-    // Ensure zones are correctly parsed and stored
+    /**
+     * Tests whether {@code readZoneFile()} correctly parses zone coordinates from csv file
+     * and populates the {@code FireIncidentSubsystem.zoneMap} with the expected zone data
+     */
     @Test
     void testReadZoneFile() {
         FireIncidentSubsystem.zoneMap.clear();
@@ -87,28 +106,34 @@ class FireIncidentSubsystemTest {
         assertEquals(1500, zone5.getEndY());
     }
 
-    // Ensure sendIncident() does not throw an exception
+    /**
+     * Verifies that {@code sendIncident()} can send a message without throwing exceptions */
     @Test
     void testSendIncident() {
         String message = "FIRE_DATA_REQUEST";
         assertDoesNotThrow(() -> fireSubsystem.sendIncident(message), "sendIncident should not throw an exception");
     }
 
-    // Ensure getTasks() returns the expected tasks
+    /**
+     * Verifies that {@code getTasks()} returns a list of fire incidents after reading fire incidents */
     @Test
     void testGetTasks() {
         fireSubsystem.readInputFile(inputFile);
         assertTrue(fireSubsystem.getTasks().size()>1, "Task list should contain atleast 1 incident");
     }
 
-    // Ensure getSendSocket() and getReceiveSocket() return valid sockets
+
+    /**
+     * Verifies both send and receive sockets are initialized during setup
+     */
     @Test
     void testGetSockets() {
         assertNotNull(fireSubsystem.getSendSocket(), "Send socket should be initialized");
         assertNotNull(fireSubsystem.getReceiveSocket(), "Receive socket should be initialized");
     }
 
-    // Checks the order of the tasks, should be in timestamp order
+    /**
+     * Tests whether {@code addTask()} maintains task list in chronological order by timestamp */
     @Test
     void testAddTasksInOrder(){
         // FireIncidentSubsystem fis = new FireIncidentSubsystem();

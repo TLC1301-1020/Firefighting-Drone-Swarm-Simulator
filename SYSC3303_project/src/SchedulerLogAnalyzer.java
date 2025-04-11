@@ -331,7 +331,7 @@ public class SchedulerLogAnalyzer {
         System.out.println("                          Start Time: " + firstSchedulerLog.timestamp);
         System.out.println("                            End Time: " + lastSchedulerLog.timestamp);
         System.out.printf("                     System Lifetime: %.4f s\n\n", lifeTimeScheduler);
-        System.out.printf(" Lifetime Servicing Fires (adjusted): %.4f s\n\n", lifeTimeServicingFires);
+        System.out.printf("            Lifetime Servicing Fires: %.4f s\n\n", lifeTimeServicingFires);
 
         System.out.printf("       Total Fire Incidents Sent to Scheduler: %s\n", countFireRequests);
         System.out.printf(" #of Drone Missions Required to Service Fires: %s\n", countFireRequestCreated);
@@ -377,7 +377,6 @@ public class SchedulerLogAnalyzer {
         String[] items = message.split("\\[");
 
         String[] subitems = items[0].split(":");
-//        System.out.print( " items->" + Arrays.toString(items) + " subitems->" + Arrays.toString(subitems));
         for (String si : subitems)
         {
             try{
@@ -401,7 +400,7 @@ public class SchedulerLogAnalyzer {
     }
 
     /**
-     * Converts a timestamp string to a double-precision value in seconds.
+     * Converts a timestamp string to a double value in seconds with milliseconds
      *
      * @param time Timestamp in HH:mm:ss.SSS format
      * @return Time as seconds in the format ss.SSS
@@ -416,6 +415,7 @@ public class SchedulerLogAnalyzer {
         return hh*3600.000 + mm*60.000 + ss + SSS;
     }
 
+    /** creates an SchedulerLogAnalyzer instance and calls analyzeLogs */
     public static void main(String[] args)
     {
         SchedulerLogAnalyzer sla = new SchedulerLogAnalyzer();

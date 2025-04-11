@@ -15,16 +15,36 @@ import java.util.concurrent.TimeUnit;
  */
 public class EventScheduler {
 
-    // Queues to store events to be distributed, and events to be sent
+    /**
+     * Queue that stores all upcoming events which are scheduled to be processed.
+     * Events remain in this queue until their scheduled time has arrived.
+     */
     private Queue<Event> eventQueue;
+    /**
+     * Queue that stores events that are ready to be processed.
+     * Events are moved here from {@code eventQueue} once their scheduled time has elapsed.
+     */
     private Queue<Event> readyQueue;
-
-    // Simulation speed can be changed to speed up the processing of Events
+    /**
+     * The simulation speed factor.
+     * Controls how fast the simulation runs relative to real time.
+     * For example, a value of 120 means time is compressed to 1/120th of real-time speed
+     */
     public static final long simulationSpeed = 120;
-
+    /**
+     * Formatter used to parse and format time strings in "HH-mm-ss" format.
+     * Used to compute event delays based on scheduled event times.
+     */
     private final SimpleDateFormat formatter = new SimpleDateFormat("HH-mm-ss");
+    /**
+     * Represents the base system time in milliseconds since epoch.
+     * Used as a reference point to calculate event delays.
+     */
     private final long systemTime;
-
+    /**
+     * Scheduled executor that handles delayed execution of event processing tasks.
+     * Runs the internal event distribution logic based on scheduled delays.
+     */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     /**
      * Constructs an {@code EventScheduler} instance with an initial system time
