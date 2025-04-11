@@ -332,15 +332,42 @@ public class Scheduler {
     }
 
     /**
-     * Parses the Drones request and returns:
-     * <li>an ACK header for permission for that drone to proceed with its next state transition (or to continue waiting for a fire request)</li>
-     * <li>a NEW header with an attached fire request when the drone is to be assigned OR reassigned a new fire request </li>
+     * Parses and handles a request received from a drone. Based on the parsed event,
+     * this method updates the drones state and returns a formatted response to be sent back
+     *
+     * <p>returns one of the following headers as response:</p>
+     * <ul>
+     *     <li><b>ACK:</b> Permission granted or update acknowledged</li>
+     *     <li><b>WAIT:</b> No task available; drone remains idle</li>
+     *     <li><b>NEW:</b> A new task is assigned to the drone</li>
+     *     <li><b>RESEND:</b> Error or unknown request — ask drone to resend</li>
+     * </ul>
      * <p>response format is:<p>
      *     RESPONSE_HEADER:REQUEST<p>
      *     the same as...<p>
      *     RESPONSE_HEADER:DRONE_ID:STATE:REQUEST_BODY:X_POS:Y_POS:CURR)FIREREQUEST
-     @return String value of entire formatted response to send to Drone in {@link listenToDrone}
-     */
+     * <p><b>Switch Case Event Descriptions:</b></p>
+     * <ul>
+     *     <li>{@code NEW_FIRE_REQUEST} — Drone is idle and waiting for assignment. Responds WAIT</li>
+     *     <li>{@code PERMISSION_TO_DROP} — Drone arrives at zone and is now traveling. Responds ACK</li>
+     *     <li>{@code PAYLOAD_DROPPED} — Drone deployed payload successfully. State set to DEPLOYING and notifies FireIncidentSubsystem. Responds ACK</li>
+     *     <li>{@code PAYLOAD_DEPLOY_FAILURE} — Drone failed to deploy. State set to OFFLINE and task is reassigned. Responds ACK</li>
+     *     <li>{@code DEPLOY_FAILURE_ACKNOWLEDGED} — Acknowledgment from drone that it failed. Responds ACK</li>
+     *     <li>{@code RETURNED_TO_BASE} — Drone has returned. Sets state to RETURNING or OFFLINE. Responds ACK</li>
+     *     <li>{@code REFILL_COMPLETE} — Drone completed refill. Moves to IDLE or REFILLING and recharges. Responds ACK</li>
+     *     <li>{@code DRONE_STUCK} — Drone stuck en route. Sets state to OFFLINE and reassigns task. Responds ACK</li>
+     *     <li>{@code STUCK_RESOLVED} — Drone reports it has recovered. Responds with ACK</li>
+     *     <li>{@code STATUS} — Drone requests status update. If pending assignment exists, assign new task. Responds NEW or ACK</li>
+     *     <li>{@code CONTINUING} — Drone confirms continuing on task. Ensures traveling state. Responds ACK</li>
+     *     <li>{@code RETURN_STATUS} — Drone returning to base. Updates state. Responds ACK</li>
+     *     <li>{@code null} — Invalid or malformed request. Requests resend</li>
+     *     <li>{@code default} — Fallback for unexpected values. Requests resend</li>
+     * </ul>
+     *
+     * @param request the incoming drone request string, including drone ID, state, event type, position, and task.
+     * @return the formatted response string to be sent back to the drone.
+     * @see listenToDrone
+     * */
     String handleDroneRequest(String request)
     {
         if (request.startsWith("INIT")) {

@@ -3,9 +3,20 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.util.Queue;
 
+/**
+ * Unit test class for EventScheduler and Event functionality
+ * <p>
+ * <ul>
+ *     <li>Validates correct instantiation of {@code Event} and {@code EventScheduler}.</li>
+ *     <li>Verifies queue operations in {@link EventScheduler}</li>
+ *     <li>Ensures the internal scheduling logic correctly moves events from the event queue to the ready queue based on time.</li>
+ * </ul>
+ */
 class EventSchedulerTest {
 
+    /** A reusable Event object used for test initialization. */
     private Event event;
+    /** The EventScheduler instance being tested. */
     private EventScheduler eventScheduler = new EventScheduler();
     /**
      * Test class for the Event class to verify that the Event object

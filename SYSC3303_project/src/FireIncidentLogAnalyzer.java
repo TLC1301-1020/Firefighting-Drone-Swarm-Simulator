@@ -6,10 +6,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Analyzes a log file from the Fire Incident Subsystem to calculate key metrics:
+ * <ul>
+ *     <li>Lifetime of system activity</li>
+ *     <li>Total fire incidents sent</li>
+ *     <li>Total idle time</li>
+ *     <li>Utilization percentage (active time vs. idle)</li>
+ * </ul>
+ */
 public class FireIncidentLogAnalyzer {
+
+    /**
+     * file name to be read in and parsed for event logs that are then analyzed for metrics */
     private static final String LOG_FILE = "firesubsystem_logs.txt";
+    /**
+     * Formatter instance for printing and parsing date-time objects with the following example format: hour(24):minute:second.millisecond */
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
+    /**
+     * Reads the log file and calculates system metrics such as:
+     * start time, end time, total incidents, idle time, and utilization*/
     public static void main(String[] args) {
         List<LogEntry> entries = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(LOG_FILE))) {
@@ -73,26 +90,49 @@ public class FireIncidentLogAnalyzer {
     }
 }
 
-// Helper class to store each log entry
+/**
+ * Represents a parsed log entry from the fire incident log.
+ * Each log contains a timestamp, action type, and related metadata.
+ */
 class LogEntry {
+    /** The timestamp of the log entry */
     private final LocalTime time;
+    /** The type of action performed (e.g., "Sending Incident", "Idle Start") */
     private final String action;
+    /** Additional information or metadata about the action */
     private final String data;
 
+    /**
+     * Constructs a new {@code LogEntry} with time, action, and data components.
+     *
+     * @param time   The timestamp of the log entry
+     * @param action The type of action performed (e.g., "Sending Incident", "Idle Start")
+     * @param data   Additional information or metadata about the action
+     */
     public LogEntry(LocalTime time, String action, String data) {
         this.time = time;
         this.action = action;
         this.data = data;
     }
 
+    /**
+     * @return The LocalTime of the log
+     */
     public LocalTime getTime() {
         return time;
     }
 
+    /**
+     * @return action as a string for the log
+     */
     public String getAction() {
         return action;
     }
 
+
+    /**
+     * @return the Additional information or metadata about the action for the log
+     */
     public String getData() {
         return data;
     }

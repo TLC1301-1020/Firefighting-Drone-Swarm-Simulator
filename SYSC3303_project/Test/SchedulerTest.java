@@ -14,16 +14,24 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * Unit and system tests for the {@link Scheduler} class.
+ * <p>
+ * Verifies functionality including fire request assignment, drone registration,
+ * socket communication setup, and zone file parsing.
+ */
 class SchedulerTest {
+    /** instance of scheduler to be used for each test */
     private Scheduler scheduler;
 
+    /** creates instance of scheduler to be used for each test */
     @BeforeEach
     void setUp() {
         scheduler = new Scheduler();
     }
 
     /**
-        after each test function, calls Scheduler.shutdown() for graceful exit of 3 scheduler threads */
+        after each test function, calls Scheduler.shutdown() for graceful exit of 3 scheduler threads and their sockets */
     @AfterEach
     void tearDown() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         try
@@ -36,6 +44,7 @@ class SchedulerTest {
         shutdown.invoke(scheduler);
     }
 
+    /** UNIT TEST: testing method isNewRequestMoreSevere to check which fire incident is more severe by severity type */
     @Test
     public void testNewRequestHasHigherSeverity() {
         FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Moderate", "1");
@@ -44,6 +53,7 @@ class SchedulerTest {
         assertTrue(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
+    /** UNIT TEST: testing method isNewRequestMoreSevere to check if equal severity fires are recognized by severity type */
     @Test
     public void testNewRequestHasEqualSeverity() {
         FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Moderate", "1");
@@ -52,6 +62,7 @@ class SchedulerTest {
         assertTrue(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
+    /** UNIT TEST: testing method isNewRequestMoreSevere to check if lower severity fires are recognized by severity type */
     @Test
     public void testNewRequestHasLowerSeverity() {
         FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "High", "1");
@@ -60,6 +71,7 @@ class SchedulerTest {
         assertFalse(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
+    /** UNIT TEST: testing method isNewRequestMoreSevere to check if unknown severity fires are recognized by severity type and handling occurs */
     @Test
     public void testHandlesUnknownSeverityGracefully() {
         FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "High", "1");
@@ -68,6 +80,7 @@ class SchedulerTest {
         assertFalse(scheduler.isNewRequestMoreSevere(current, incoming));
     }
 
+    /** UNIT TEST: testing method isNewRequestMoreSevere to check if unknown severity fires are recognized by severity type and handling occurs for both */
     @Test
     public void testBothSeveritiesUnknown() {
         FireRequest current = new FireRequest("12:00", 1, "FIRE_DETECTED", "Blah", "1");
@@ -76,6 +89,8 @@ class SchedulerTest {
         assertTrue(scheduler.isNewRequestMoreSevere(current, incoming)); // both default to 0 -> equal
     }
 
+    /** SYSTEM TEST: testing method registerDrone + handleDroneRequest for DRONE_STUCK to check if scheduler correctly handles drone stuck event
+     * and sets the drone offline and fire request is preserved for another drone to used  */
     @Test
     void testHandleDroneRequest_DRONE_STUCK_addsBackToQueueAndSetsOffline() throws Exception {
         int droneId = 1;
@@ -106,6 +121,8 @@ class SchedulerTest {
         assertEquals("[OFFLINE]", drone.getState(), "Drone should be marked as OFFLINE");
     }
 
+    /** SYSTEM TEST: testing method registerDrone + handleDroneRequest for PAYLOAD_DEPLOY_FAILURE to check if scheduler correctly handles drone payload deploy failure event
+     * and sets the drone offline and fire request is preserved for another drone to used  */
     @Test
     void testHandleDroneRequest_PAYLOAD_DEPLOY_FAILURE_addsBackToQueueAndSetsOffline() throws Exception {
         int droneId = 2;
@@ -139,7 +156,7 @@ class SchedulerTest {
 
     /**
      *
-     * UNIT TEST: sequential drone requests testing handleDroneRequest responses with testing coupled DroneStatus OBJ updates as requests come
+     * SYSTEM TEST: sequential drone requests testing handleDroneRequest responses with testing coupled DroneStatus OBJ updates as requests come
      */
     @Test
     public void test_handleDroneRequest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
@@ -309,7 +326,7 @@ class SchedulerTest {
 
     /**
      *
-     * UNIT TEST: sequential drone requests testing handleDroneRequest responses with testing coupled DroneStatus OBJ updates as requests come
+     * SYSTEM TEST: sequential drone requests testing handleDroneRequest responses with testing coupled DroneStatus OBJ updates as requests come
      */
     @Test
     public void test_handleDroneRequest_with_InterruptReassignment() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
@@ -780,10 +797,16 @@ class SchedulerTest {
     }
 }
 
-
+/**
+ * Unit tests for the {@link SchedulerLogAnalyzer} class.
+ * Verifies time conversion, duration calculations, and subsystem metric calculations
+ */
 class SchedulerLogAnalyzerTest
 {
 
+    /**
+     * Tests conversion of LocalTime into seconds using {@code convertToTimeValue()}.
+     */
     @Test
     public void testConvertToTimeValue_variousTimes() {
         LocalTime time = LocalTime.of(10, 0, 0, 0);
@@ -796,6 +819,10 @@ class SchedulerLogAnalyzerTest
         assertEquals(86399.999, SchedulerLogAnalyzer.convertToTimeValue(time), 1e-6);
     }
 
+    /**
+     * Tests duration calculation in various edge cases using {@code calculateTimeDuration()}:
+     * including 0 duration, under a second precision, and time boundary carry over
+     */
     @Test
     public void testCalculateTimeDuration_intricateCases() {
         // 1. Zero duration
@@ -844,6 +871,10 @@ class SchedulerLogAnalyzerTest
         assertEquals(2.333, SchedulerLogAnalyzer.calculateTimeDuration(entry1, entry2), 1e-3);
     }
 
+    /**
+     * Tests {@code calcGeneralMetrics()} for correct throughput computation based on
+     * start time, end time, and first fire incident time
+     */
     @Test
     public void testCalcGeneralMetrics() throws Exception {
         SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();
@@ -876,7 +907,10 @@ class SchedulerLogAnalyzerTest
         assertEquals(0.1, throughput, 0.0001); // 3 requests / 30 seconds = 0.1 /s
     }
 
-
+    /**
+     * Tests {@code calcSPMetrics()} for Scheduler thread "SP":
+     * verifies correct lifetime, busy time, utilization, and average response time calculation.
+     */
     @Test
     public void testCalcSPMetrics() throws Exception {
         SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();
@@ -916,6 +950,10 @@ class SchedulerLogAnalyzerTest
         assertEquals(2.5, result[3], 0.001);   // average response time
     }
 
+    /**
+     * Tests {@code calcSFMetrics()} for Scheduler thread "SF":
+     * ensures metrics are computed correctly from parsed logs and response mappings.
+     */
     @Test
     public void testCalcSFMetrics() throws Exception {
         SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();
@@ -971,6 +1009,10 @@ class SchedulerLogAnalyzerTest
         assertEquals(3.5, result[3], 0.001);  // avg response time
     }
 
+    /**
+     * Tests {@code calcSDMetrics()} for Scheduler thread "SD":
+     * verifies accurate lifetime, busy time, utilization, and average response time.
+     */
     @Test
     public void testCalcSDMetrics() throws Exception {
         SchedulerLogAnalyzer analyzer = new SchedulerLogAnalyzer();

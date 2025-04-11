@@ -20,7 +20,12 @@ public class FireRequest {
      * severity level of the fire incident: Low, Moderate, High
      */
     private String severity;
-
+    /**
+     * unique string id of the fire request with 2 parts. <P>Main id is a numerical value based on the order it was passed
+     * from fire incident sub system to Scheduler eg: '1' - is the first fire recorded <P>
+     * Second part is  appended to main id and is a character representing the distinct fire requests that was created for that fire based on severity.
+     * <P>Fires by severity will have the following fire requests made:<P> High - 3x w. codes:{A,B,C} <P>Moderate - 2x w. codes:{A,B}<P>Low - 1x w. codes:{A}
+     */
     private String id;
 
     /**
@@ -29,6 +34,7 @@ public class FireRequest {
      * @param zoneId the identifier of the affected zone
      * @param eventType the type of fire event
      * @param severity the severity level of the fire
+     * @param id the unique string id of this fire mission
      */
     public FireRequest(String time, int zoneId, String eventType, String severity, String id) {
         this.time = time;
@@ -38,6 +44,9 @@ public class FireRequest {
         this.id = id;
     }
 
+    /**
+     * default constructor creates a default fire request when Drone or DroneStatus has no active fire request
+     */
     public FireRequest() {
         this.time = "0";
         this.zoneId = -1;
@@ -47,7 +56,9 @@ public class FireRequest {
     }
 
     /**
-     * Create a FireRequest instance using a String representation created by toString().
+     * Create a FireRequest instance using a String passed in and parsed based on specific formatting: <P>
+     *     eg: 'FireRequest{time=10-30-00, zone=1, event=FIRE_DETECTED, severity=Moderate, id=1A}'
+     * </P>
      * @param request the String representation.
      */
     public FireRequest(String request) {
@@ -126,6 +137,9 @@ public class FireRequest {
                 this.id.equals("0");
     }
 
+    /**
+     * @return String id of this fire request
+     */
     public String getId() {return this.id;}
 
     /**

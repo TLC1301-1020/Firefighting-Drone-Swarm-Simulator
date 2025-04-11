@@ -29,7 +29,7 @@ public class FireIncidentSubsystem implements Runnable {
     private String zoneFile = "SYSC3303_project/src/zone_file.csv";
 
     /**
-     * scheduler instance for managing fire requests
+     * scheduler instance for managing fire requests - used in testing
      */
     private Scheduler scheduler;
     /**
@@ -37,26 +37,36 @@ public class FireIncidentSubsystem implements Runnable {
      * <a href="file:../src/fireincedents.txt">/src/fireincedents.txt</a>
      */
     private List<FireRequest> tasks;
-
-    private DatagramSocket receiveSocket, sendSocket;
-
+    /**
+     * UDP socket for receiving packets from the Scheduler */
+    private DatagramSocket receiveSocket;
+    /**
+     * UDP socket for sending packets to the Scheduler */
+    private DatagramSocket sendSocket;
     /**
      * A static map that holds zone information parsed from the csv
      * Key: Zone ID, Value: Zone object
      */
     public static Map<Integer, Zone> zoneMap = new HashMap<>();
-
+    /**
+     * Formatter instance for printing and parsing date-time objects with the following example format: hour(24):minute:second.millisecond */
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH-mm-ss");
 
     /**
-     * ArrayList that stores FireRequests from an EventScheduler that are ready to be processed.
-     */
+     * ArrayList that stores FireRequests from an EventScheduler that are ready to be processed. */
     private ArrayList<FireRequest> readyToSend = new ArrayList<>();
+    /**
+     * A synchronized list of expected fire request completion IDs to be used for knowing when simulation is complete and sending shutdown message to scheduler.
+     * Each fire request (e.g., high severity) generates multiple sub-requests (e.g., "1A", "1B", "1C") */
     private final List<String> expectedCompletions = Collections.synchronizedList(new ArrayList<>());
+    /**
+     * A synchronized list of actual fire request completion IDs received from the Scheduler to be used for knowing when simulation is complete and sending shutdown message to scheduler. */
     private final List<String> receivedCompletions = Collections.synchronizedList(new ArrayList<>());
-    private static final String COMPLETED_SUFFIX = ":COMPLETED";
 
-    //Logger
+    /** Suffix appended to messages from the Scheduler indicating a task was completed */
+    private static final String COMPLETED_SUFFIX = ":COMPLETED";
+    /**
+     * Logger used to log events and actions from the FireIncidentSubsystem to a log file */
     private static final LoggerDaemon logger = new LoggerDaemon();
 
     /**
@@ -74,7 +84,7 @@ public class FireIncidentSubsystem implements Runnable {
     }
 
     /**
-     * Thread to listen to DroneSubsystem.
+     * Thread to receive acknowledgements and indications when fire request mission is completed
      */
     private class ListenToScheduler extends Thread {
         @Override
@@ -106,10 +116,7 @@ public class FireIncidentSubsystem implements Runnable {
     }
 
     /**
-     * TODO: Thread to listen to DroneSubsystem.
-     * TODO: Make a new list for requests that are ready to send ex) List<FireRequest> readyToSend
-     * TODO: Synchronize on readyToSend
-     * TODO: if there's a request in readyToSend, send it with sendIncident(firerequest.toString())
+     * Thread to send fire data from the readyToSend array of fire data sent to Scheduler to handle with drone fire request missions.
      */
     private class SendToScheduler extends Thread {
 
@@ -200,7 +207,6 @@ public class FireIncidentSubsystem implements Runnable {
             int id = 0;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-//                String time = parts[0].trim();
                 String time = parts[0].trim().replaceAll(":", "-");
 
                 int zoneId = Integer.parseInt(parts[1].trim());
@@ -229,15 +235,19 @@ public class FireIncidentSubsystem implements Runnable {
         }
     }
 
-    /**TODO: Add task to the list by timestamps
+    /**
+     * Inserts a {@link FireRequest} into the internal task list {@link FireIncidentSubsystem#tasks} in chronological order based on timestamp
+     * <p>
+     * performs an insertion sort by task.getTime(). If a task with the same timestamp already exists, the new task is inserted before it.
      *
+     * @param task the {@link FireRequest} to be added to the task list
      */
     public void addTask(FireRequest task){
         System.out.println(task.getTime());
         LocalTime taskLocalTime = LocalTime.parse(task.getTime(), timeFormatter);
         int low = 0;
         int high = tasks.size()-1;
-
+        // insertion sort operation:
         while (low <= high) {
             int mid = (low + high) / 2;
             FireRequest midTask = tasks.get(mid);
@@ -330,8 +340,6 @@ public class FireIncidentSubsystem implements Runnable {
      */
     public String receiveUpdate() {
         try {
-            // Set a timeout of 5000ms (5 seconds)
-//            receiveSocket.setSoTimeout(5000);
             byte data[] = new byte[Scheduler.DATA_BUFFER_SIZE];
             DatagramPacket receivePacket = new DatagramPacket(data, data.length);
             receiveSocket.receive(receivePacket);
@@ -349,7 +357,7 @@ public class FireIncidentSubsystem implements Runnable {
         }
     }
 
-
+    /** creates instance of fire incident subsystem and starts thread function to invoke run to handle the 4 threads of this fire incident system */
     public static void main(String[] args) {
         FireIncidentSubsystem fis = new FireIncidentSubsystem();
         Thread thread = new Thread(fis);
@@ -357,7 +365,7 @@ public class FireIncidentSubsystem implements Runnable {
     }
 
     /**
-     * Getters
+     * Getter used for testing
      *
      * @return The Scheduler instance associated with this subsystem.
      */
@@ -374,43 +382,69 @@ public class FireIncidentSubsystem implements Runnable {
         return tasks;
     }
 
-//    public DatagramPacket getSendPacket() {
-//        return sendPacket;
-//    }
-//
-//    public DatagramPacket getReceivePacket() {
-//        return receivePacket;
-//    }
-
+    /**
+     * Getter
+     * @return the socket used for sending udp packets 'sendSocket'
+     */
     public DatagramSocket getSendSocket() {
         return sendSocket;
     }
 
+    /**
+     * Getter
+     * @return the socket used for receiving udp packets 'receiveSocket'
+     */
     public DatagramSocket getReceiveSocket() {
         return receiveSocket;
     }
 }
 
-
+/**
+ * A background logging utility that asynchronously writes timestamped log entries to a file.
+ * <p>
+ * The logger uses a daemon thread and a blocking queue to collect and write log entries,
+ * ensuring non-blocking and thread-safe logging from multiple sources.
+ */
 class LoggerDaemon implements Runnable {
+    /**
+     * Thread-safe queue to hold log entries before they are written to file */
     private final BlockingQueue<String> logQueue = new LinkedBlockingQueue<>();
+    /**
+     * Flag to control the logging loop. When set to false, the logger will finish writing remaining entries and stop */
     private volatile boolean running = true;
+    /**
+     * Name of the file to which log entries will be written */
     private final String logFileName = "firesubsystem_logs.txt";
+    /**
+     * Formatter to apply timestamps in the format HH:mm:ss.SSS */
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
+    /**
+     * Constructs and starts the logger daemon thread, and thread is marked as a daemon so it will not prevent JVM shutdown */
     public LoggerDaemon() {
         Thread thread = new Thread(this);
         thread.setDaemon(true); // Daemon thread so it doesn't block JVM exit
         thread.start();
     }
 
-    // Log an event with its action and data.
+    /**
+     * Adds a log entry to the queue with the current timestamp, specified action, and data.
+     *
+     * @param action the type or name of the event being logged
+     * @param data   the associated information to include in the log
+     */
     public void log(String action, String data) {
         String timestamp = LocalDateTime.now().format(formatter);
         String logEntry = timestamp + " - " + action + " - " + data;
         logQueue.add(logEntry);
     }
 
+    /**
+     * The main logging loop executed by the daemon thread
+     * <p>
+     * Continuously polls the queue and writes available entries to the log file,
+     * flushing after each write. Sleeps briefly if no entries are available
+     */
     @Override
     public void run() {
         try (FileWriter writer = new FileWriter(logFileName, false)) {
@@ -429,6 +463,11 @@ class LoggerDaemon implements Runnable {
         }
     }
 
+    /**
+     * Signals the logger main loop to stop running after it has flushed all remaining log entries
+     * <p>
+     * Intended to be called during shutdown to gracefully terminate logging operations when simulation is complete
+     */
     public void shutdown() {
         running = false;
     }

@@ -2,9 +2,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.io.*;
 
+/**
+ * Unit test class for FireIncidentLogAnalyzer
+ * <p>
+ * test verifies that the log analyzer correctly parses and reports key metrics
+ * from a simulated fire incident log file
+ */
 class FireIncidentLogAnalyzerTest {
+
+    /** Name of the test log file used during testing */
     private final String logFileName = "firesubsystem_logs.txt";
 
+    /**
+     * Sets up a sample log file before each test.
+     * The file includes timestamp of entries that simulate fire incidents and idle periods
+     */
     @BeforeEach
     void setUp() throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName))) {
@@ -15,6 +27,9 @@ class FireIncidentLogAnalyzerTest {
         }
     }
 
+    /**
+     * Cleans up by deleting the test log file after each test.
+     */
     @AfterEach
     void tearDown() {
         File file = new File(logFileName);
@@ -23,6 +38,10 @@ class FireIncidentLogAnalyzerTest {
         }
     }
 
+    /**
+     * Tests the output of FireIncidentLogAnalyzer to ensure
+     * it contains expected metrics: start time, end time, idle time, incident count, and utilization.
+     */
     @Test
     void testAnalyzerMainOutput() {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
