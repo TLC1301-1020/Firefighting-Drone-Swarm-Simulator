@@ -331,7 +331,7 @@ public class SchedulerLogAnalyzer {
         System.out.println("                          Start Time: " + firstSchedulerLog.timestamp);
         System.out.println("                            End Time: " + lastSchedulerLog.timestamp);
         System.out.printf("                     System Lifetime: %.4f s\n\n", lifeTimeScheduler);
-        System.out.printf(" Lifetime Servicing Fires (adjusted): %.4f s\n\n", lifeTimeServicingFires);
+        System.out.printf("            Lifetime Servicing Fires: %.4f s\n\n", lifeTimeServicingFires);
 
         System.out.printf("       Total Fire Incidents Sent to Scheduler: %s\n", countFireRequests);
         System.out.printf(" #of Drone Missions Required to Service Fires: %s\n", countFireRequestCreated);
